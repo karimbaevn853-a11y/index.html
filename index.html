@@ -65,10 +65,9 @@ button:focus-visible{outline:2px solid #fff;outline-offset:3px}
 .nav-btn{border:0;background:transparent;color:#858b9a;border-radius:15px;padding:6px 3px;display:grid;justify-items:center;gap:3px;font-size:11px;font-weight:800}
 .nav-btn span{font-size:23px;line-height:1.2}.nav-btn.active{color:#43aaff;background:#14283b}
 
-.market-note{margin:-6px 2px 14px;color:var(--muted);font-size:12px;line-height:1.45}
 .market-search{width:100%;padding:13px 15px;border-radius:15px;background:#151923;border:1px solid var(--line);color:var(--text);outline:none;margin-bottom:13px}
 .market-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}
-.market-item{min-width:0;display:flex;align-items:center;gap:10px;padding:11px;border:1px solid var(--line);border-radius:17px;background:linear-gradient(145deg,#171923,#101119)}
+.market-item{min-width:0;display:flex;align-items:center;gap:10px;padding:11px;border:1px solid var(--line);border-radius:17px;background:linear-gradient(145deg,#171923,#101119);cursor:pointer}
 .market-emoji{width:45px;height:45px;flex:0 0 45px;border-radius:14px;display:grid;place-items:center;font-size:27px;background:linear-gradient(145deg,#ffffff18,#ffffff05)}
 .market-item b{font-size:11px;line-height:1.25;overflow-wrap:anywhere}
 .market-item small{display:block;color:var(--muted);font-size:9px;margin-top:4px}
@@ -83,7 +82,10 @@ button:focus-visible{outline:2px solid #fff;outline-offset:3px}
 <body>
 <main class="app">
   <header class="topbar">
-    <button class="profile" id="profileOpen" style="border:0;background:transparent;color:inherit;text-align:left;padding:0"><div class="avatar">N</div><div><strong>Nursultan</strong><small>PROFIL</small></div></button>
+    <button class="profile" id="profileOpen" style="border:0;background:transparent;color:inherit;text-align:left;padding:0">
+      <div class="avatar" id="userAvatar">N</div>
+      <div><strong id="userName">Foydalanuvchi</strong><small>PROFIL</small></div>
+    </button>
     <div class="balance-pair">
       <div class="balance">💎 <span id="tonBalance">0.00</span> TON</div>
       <div class="balance stars-balance">⭐ <span id="starsBalance">0</span> Stars</div>
@@ -110,7 +112,7 @@ button:focus-visible{outline:2px solid #fff;outline-offset:3px}
 
   <section id="page-market" class="page">
     <h1 class="page-title">🛍️ NFT BOZOR</h1>
-    <p class="market-note">Telegram collectible to'plamlari katalogi.</p>
+    <p class="market-note">Sotib olish uchun NFT ustiga bosing (Admin: @sots12)</p>
     <input class="market-search" id="marketSearch" type="search" placeholder="NFT nomini qidirish..." aria-label="NFT nomini qidirish">
     <div class="market-grid" id="marketGrid"></div>
   </section>
@@ -119,11 +121,11 @@ button:focus-visible{outline:2px solid #fff;outline-offset:3px}
     <h1 class="page-title">📦 INVENTAR</h1>
     <div class="info-card">
       <b>💳 Balansni to'ldirish</b>
-      <p>TON hamyon manzili: <code style="font-size:10px;word-break:break-all;color:#59d9ff">UQA4qQ6E8Kf0vHXXCti_PzO71qXi7KiEeN5d71UO7xWiTL-w</code></p>
-      <p>Stars to'lov uchun: <b style="color:#ffd36b">@sots12</b></p>
-      <div style="display:flex;gap:10px;margin-top:10px">
-        <button class="action" onclick="topUpTon()" style="background:#1888f8;border:0;padding:10px;border-radius:10px;font-weight:bold;color:#fff;flex:1">TON To'ldirish</button>
-        <button class="action" onclick="topUpStars()" style="background:#ffd36b;border:0;padding:10px;border-radius:10px;font-weight:bold;color:#000;flex:1">Stars To'ldirish</button>
+      <p style="font-size:12px; margin-top:5px;">TON hamyon: <code style="color:#59d9ff;word-break:break-all">UQA4qQ6E8Kf0vHXXCti_PzO71qXi7KiEeN5d71UO7xWiTL-w</code></p>
+      <p style="font-size:12px; margin-top:5px;">Stars uchun: <b style="color:#ffd36b">@sots12</b></p>
+      <div style="display:flex;gap:10px;margin-top:12px">
+        <button onclick="topUpTon()" style="flex:1;background:#1888f8;border:0;padding:10px;border-radius:10px;color:#fff;font-weight:bold">TON To'ldirish</button>
+        <button onclick="topUpStars()" style="flex:1;background:#ffd36b;border:0;padding:10px;border-radius:10px;color:#000;font-weight:bold">Stars To'ldirish</button>
       </div>
     </div>
     <div class="info-card"><b>🎁 Yutuqlar kolleksiyasi</b><div class="inventory-grid" id="inventoryGrid"><div class="market-empty">Hozircha yutuq sovg‘alar yo‘q</div></div></div>
@@ -133,32 +135,36 @@ button:focus-visible{outline:2px solid #fff;outline-offset:3px}
     <h1 class="page-title">📋 VAZIFALAR</h1>
     <div class="info-card">
       <b>Kunlik vazifalar</b>
-      <div class="task">
-        <span style="font-size:24px">📢</span>
-        <span style="flex:1"><b>GiftLand kanaliga obuna bo‘lish</b><small>Obuna bo'lib mukofotni tanlang</small></span>
-      </div>
-      <div style="display:flex;gap:10px;margin-top:10px">
-        <a href="https://t.me/GiftLanda" target="_blank" rel="noopener" style="background:#1888f8;padding:10px;border-radius:10px;color:#fff;text-decoration:none;font-weight:bold;text-align:center;flex:1">Kanalga o'tish</a>
-        <button onclick="claimReward('ton')" style="background:#22c55e;border:0;padding:10px;border-radius:10px;color:#fff;font-weight:bold;cursor:pointer;flex:1">+0.1 TON olish</button>
-        <button onclick="claimReward('stars')" style="background:#eab308;border:0;padding:10px;border-radius:10px;color:#fff;font-weight:bold;cursor:pointer;flex:1">+5 Stars olish</button>
+      <div class="task"><span style="font-size:24px">📢</span><span style="flex:1"><b>GiftLand kanaliga obuna bo‘lish</b><small>Kanalga o'tib obuna bo'ling</small></span></div>
+      <div style="display:flex;gap:8px;margin-top:12px">
+        <a href="https://t.me/GiftLanda" target="_blank" rel="noopener" onclick="markSubscribed()" style="background:#1888f8;padding:10px;border-radius:10px;color:#fff;text-decoration:none;font-weight:bold;text-align:center;flex:1;font-size:12px">Kanalga o'tish</a>
+        <button onclick="claimReward('ton')" style="background:#22c55e;border:0;padding:10px;border-radius:10px;color:#fff;font-weight:bold;cursor:pointer;flex:1;font-size:12px">+0.1 TON olish</button>
+        <button onclick="claimReward('stars')" style="background:#eab308;border:0;padding:10px;border-radius:10px;color:#fff;font-weight:bold;cursor:pointer;flex:1;font-size:12px">+5 Stars olish</button>
       </div>
     </div>
   </section>
 
   <section id="page-leaders" class="page">
     <h1 class="page-title">🏆 LIDERLAR</h1>
-    <div class="info-card"><b>Haftalik faollik reytingi</b><p class="empty-rating">Reyting hali yo‘q</p></div>
+    <div class="info-card">
+      <b>Zinapoya bo'yicha faollik reytingi</b>
+      <div id="leaderboardList" style="margin-top:12px"></div>
+    </div>
   </section>
 
   <section id="page-profile" class="page">
     <h1 class="page-title">👤 PROFIL</h1>
     <div class="info-card">
-      <b>Foydalanuvchi: Nursultan</b>
-      <p>GIFTLAND profilingiz.</p>
+      <strong id="profileUserName" style="font-size:16px">Foydalanuvchi</strong>
+      <p style="margin-top:5px">Sizning shaxsiy profilingiz va to'lovlar tarixingiz.</p>
+    </div>
+    <div class="info-card">
+      <b>🧾 To'lovlar tarixi</b>
+      <div id="paymentHistory" style="margin-top:8px;font-size:12px"><p class="market-empty">Hozircha to'lovlar tarixi yo'q</p></div>
     </div>
     <div class="info-card">
       <b>🎟️ Promo kod</b>
-      <p>Promo kodni kiriting:</p>
+      <p style="margin-top:5px">Promo kodni kiriting:</p>
       <input class="market-search" id="promoInput" type="text" placeholder="Promo kodni kiriting" autocomplete="off" style="margin-top:8px">
       <button class="action" id="promoOpen" style="background:#1888f8;border:0;border-radius:10px;padding:10px;color:#fff;font-weight:bold;width:100%">Tasdiqlash</button>
       <p id="promoResult" aria-live="polite" style="margin-top:8px;font-size:12px"></p>
@@ -176,46 +182,146 @@ button:focus-visible{outline:2px solid #fff;outline-offset:3px}
 
 <div class="toast" id="toast" role="status" aria-live="polite"></div>
 
+<script src="https://telegram.org/js/telegram-web-app.js"></script>
 <script>
 (() => {
   const $ = s => document.querySelector(s);
+  const tg = window.Telegram.WebApp;
+  tg.expand();
 
-  let userBalance = JSON.parse(localStorage.getItem('giftland_user_bal')) || { ton: 0, stars: 0, claimed: false };
-
-  function updateBalanceDisplay() {
-    $('#tonBalance').textContent = userBalance.ton.toFixed(2);
-    $('#starsBalance').textContent = userBalance.stars;
-    localStorage.setItem('giftland_user_bal', JSON.stringify(userBalance));
+  // Har bir foydalanuvchi uchun alohida profil (Telegram ID yoki User ID bo'yicha)
+  let userId = 'user_default';
+  let userName = 'Nursultan';
+  
+  if (tg.initDataUnsafe && tg.initDataUnsafe.user) {
+    userId = 'user_' + tg.initDataUnsafe.user.id;
+    userName = tg.initDataUnsafe.user.first_name || 'Nursultan';
   }
-  updateBalanceDisplay();
 
+  $('#userName').textContent = userName;
+  $('#profileUserName').textContent = 'Foydalanuvchi: ' + userName;
+  $('#userAvatar').textContent = userName.charAt(0).toUpperCase();
+
+  // Foydalanuvchi ma'lumotlarini yuklash
+  let db = JSON.parse(localStorage.getItem(userId)) || {
+    ton: 0,
+    stars: 0,
+    history: [],
+    subscribed: false,
+    claimed: false
+  };
+
+  // Umumiy liderlar bazasi (zinapoya usuli)
+  let globalLeaders = JSON.parse(localStorage.getItem('giftland_leaders')) || [];
+
+  function saveData() {
+    localStorage.setItem(userId, JSON.stringify(db));
+    $('#tonBalance').textContent = db.ton.toFixed(2);
+    $('#starsBalance').textContent = db.stars;
+    
+    // To'lovlar tarixini chiqarish
+    const histEl = $('#paymentHistory');
+    if (db.history.length === 0) {
+      histEl.innerHTML = '<p class="market-empty">Hozircha to\'lovlar tarixi yo\'q</p>';
+    } else {
+      histEl.innerHTML = db.history.map(h => `<div style="padding:6px 0;border-bottom:1px solid rgba(255,255,255,0.05)">${h}</div>`).join('');
+    }
+  }
+
+  saveData();
+
+  // TON to'ldirish (klaviatura orqali miqdor kiritish va adminga o'tkazish)
   window.topUpTon = function() {
-    userBalance.ton += 1.00; // Simulyatsiya qilingan to'lov hamyondan kelishi
-    updateBalanceDisplay();
-    showToast("UQA4qQ6E8Kf0vHXXCti_PzO71qXi7KiEeN5d71UO7xWiTL-w manzilidan +1.00 TON qo'shildi!");
+    let amountStr = prompt("Qancha TON to'lamoqchisiz?", "1.0");
+    if(!amountStr) return;
+    let amount = parseFloat(amountStr);
+    if(isNaN(amount) || amount <= 0) {
+      alert("Noto'g'ri miqdor kiritildi!");
+      return;
+    }
+
+    // Admin hamyoniga yo'naltirish simulyatsiyasi
+    let wallet = "UQA4qQ6E8Kf0vHXXCti_PzO71qXi7KiEeN5d71UO7xWiTL-w";
+    db.ton += amount;
+    let record = `💎 +${amount} TON to'landi (Manzil: ${wallet.substring(0,6)}...)`;
+    db.history.push(record);
+    
+    updateLeaderboard(userName, amount * 10); // Liderlarga qo'shish
+    saveData();
+    showToast(`Muvaffaqiyatli! +${amount} TON qo'shildi.`);
   }
 
+  // Stars to'ldirish
   window.topUpStars = function() {
-    userBalance.stars += 50; // @sots12 ga tushgan Stars
-    updateBalanceDisplay();
-    showToast("@sots12 orqali +50 Stars qo'shildi!");
+    let amountStr = prompt("Qancha Stars to'lamoqchisiz?", "50");
+    if(!amountStr) return;
+    let amount = parseInt(amountStr);
+    if(isNaN(amount) || amount <= 0) {
+      alert("Noto'g'ri miqdor kiritildi!");
+      return;
+    }
+
+    db.stars += amount;
+    let record = `⭐ +${amount} Stars to'landi (Admin: @sots12)`;
+    db.history.push(record);
+
+    updateLeaderboard(userName, amount); // Liderlarga qo'shish
+    saveData();
+    showToast(`Muvaffaqiyatli! +${amount} Stars qo'shildi.`);
+  }
+
+  window.markSubscribed = function() {
+    db.subscribed = true;
+    localStorage.setItem(userId, JSON.stringify(db));
   }
 
   window.claimReward = function(type) {
-    if(userBalance.claimed) {
-      showToast("Siz allaqachon mukofotni olgansiz!");
+    if(!db.subscribed) {
+      alert("Avval kanalga obuna bo'lishingiz shart!");
       return;
     }
+    if(db.claimed) {
+      alert("Siz bu mukofotni allaqachon olgansiz!");
+      return;
+    }
+
     if(type === 'ton') {
-      userBalance.ton += 0.1;
+      db.ton += 0.1;
       showToast("Tabriklaymiz! +0.1 TON qo'shildi.");
     } else {
-      userBalance.stars += 55;
+      db.stars += 5;
       showToast("Tabriklaymiz! +5 Stars qo'shildi.");
     }
-    userBalance.claimed = true;
-    updateBalanceDisplay();
+    db.claimed = true;
+    saveData();
   }
+
+  function updateLeaderboard(name, score) {
+    let found = globalLeaders.find(l => l.name === name);
+    if(found) {
+      found.score += score;
+    } else {
+      globalLeaders.push({ name: name, score: score });
+    }
+    globalLeaders.sort((a,b) => b.score - a.score);
+    localStorage.setItem('giftland_leaders', JSON.stringify(globalLeaders));
+    renderLeaders();
+  }
+
+  function renderLeaders() {
+    const listEl = $('#leaderboardList');
+    if(globalLeaders.length === 0) {
+      listEl.innerHTML = '<p class="market-empty">Hozircha reyting bo\'sh</p>';
+      return;
+    }
+    listEl.innerHTML = globalLeaders.map((l, index) => `
+      <div style="display:flex;justify-content:space-between;padding:8px 10px;background:#151923;border-radius:10px;margin-bottom:6px;border:1px solid rgba(255,255,255,0.05)">
+        <span><b>#${index + 1}</b> ${l.name}</span>
+        <span style="color:#59d9ff;font-weight:bold">${l.score.toFixed(1)} ball</span>
+      </div>
+    `).join('');
+  }
+  renderLeaders();
 
   // Barcha 123 ta Telegram Collectible NFT ro'yxati
   const marketCollections = [
@@ -226,31 +332,44 @@ button:focus-visible{outline:2px solid #fff;outline-offset:3px}
   const marketSearch = $("#marketSearch");
 
   function renderMarket(query="") {
-    const q=query.trim().toLocaleLowerCase();
-    const filtered=marketCollections.filter(([name])=>name.toLocaleLowerCase().includes(q));
-    marketGrid.innerHTML=filtered.length
-      ? filtered.map(([name,emoji])=>`<article class="market-item"><span class="market-emoji">${emoji}</span><span><b>${name}</b><small>Telegram collectible</small></span></article>`).join("")
+    const q = query.trim().toLocaleLowerCase();
+    const filtered = marketCollections.filter(([name]) => name.toLocaleLowerCase().includes(q));
+    marketGrid.innerHTML = filtered.length
+      ? filtered.map(([name, emoji]) => `
+          <article class="market-item" onclick="buyNft('${name}')">
+            <span class="market-emoji">${emoji}</span>
+            <span><b>${name}</b><small>Telegram collectible</small></span>
+          </article>
+        `).join("")
       : `<div class="market-empty">Hech narsa topilmadi</div>`;
   }
 
   renderMarket();
-  marketSearch.addEventListener("input",()=>renderMarket(marketSearch.value));
+  marketSearch.addEventListener("input", () => renderMarket(marketSearch.value));
+
+  // NFT sotib olish (Admin @sots12 ga xabar yuborish)
+  window.buyNft = function(nftName) {
+    if(confirm(`Siz "${nftName}" NFT ni sotib olmoqchimisiz? Admin (@sots12) ga xabar yuboriladi.`)) {
+      let msg = encodeURIComponent(`Salom admin, men ${userName} (${userId}) ushbu NFTni sotib olmoqchiman: ${nftName}`);
+      window.open(`https://t.me/sots12?text=${msg}`, '_blank');
+    }
+  }
 
   let toastTimer;
   const showToast = message => {
-    const el=$("#toast");
-    el.textContent=message;
+    const el = $("#toast");
+    el.textContent = message;
     el.classList.add("show");
     clearTimeout(toastTimer);
-    toastTimer=setTimeout(()=>el.classList.remove("show"),2200);
+    toastTimer = setTimeout(() => el.classList.remove("show"), 2200);
   };
 
-  document.querySelectorAll("[data-tab]").forEach(btn => btn.addEventListener("click",()=>{
-    const tab=btn.dataset.tab;
-    document.querySelectorAll(".page").forEach(p=>p.classList.remove("active"));
-    $("#page-"+tab).classList.add("active");
-    document.querySelectorAll("[data-tab]").forEach(b=>b.classList.toggle("active",b===btn));
-    window.scrollTo({top:0,behavior:"smooth"});
+  document.querySelectorAll("[data-tab]").forEach(btn => btn.addEventListener("click", () => {
+    const tab = btn.dataset.tab;
+    document.querySelectorAll(".page").forEach(p => p.classList.remove("active"));
+    $("#page-" + tab).classList.add("active");
+    document.querySelectorAll("[data-tab]").forEach(b => b.classList.toggle("active", b === btn));
+    window.scrollTo({top:0, behavior:"smooth"});
   }));
 
   $('#promoOpen').addEventListener("click", () => {
@@ -267,4 +386,3 @@ button:focus-visible{outline:2px solid #fff;outline-offset:3px}
 </script>
 </body>
 </html>
- 
