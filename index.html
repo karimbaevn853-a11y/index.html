@@ -16,8 +16,8 @@
 </head>
 <body class="p-4 pb-28">
 
-    <!-- Ovozli effekt (Raketa uchganda chaliladigan ovoz) -->
-    <audio id="game-sound" preload="auto">
+    <!-- Siz yuborgan videodagi ovoz va trek -->
+    <audio id="bg-music" preload="auto">
         <source src="https://www.myinstants.com/media/sounds/chto-za-biznes-suka.mp3" type="audio/mpeg">
     </audio>
 
@@ -30,9 +30,13 @@
                 <p class="text-[10px] text-zinc-400">DO IRON 👑</p>
             </div>
         </div>
-        <div class="flex items-center bg-zinc-900 border border-zinc-800 px-3 py-1.5 rounded-full space-x-2">
-            <span class="text-sm font-extrabold text-cyan-400" id="user-balance">10.00 💎</span>
-            <span class="text-xs text-zinc-500">Balans</span>
+        <div class="flex items-center space-x-2">
+            <button onclick="toggleMusic()" id="music-btn" class="bg-zinc-900 border border-zinc-800 px-3 py-1.5 rounded-full text-xs text-zinc-300 hover:text-white transition shadow">
+                🔊 <span id="music-status">Ovoz: Yoqish</span>
+            </button>
+            <div class="flex items-center bg-zinc-900 border border-zinc-800 px-3 py-1.5 rounded-full space-x-1">
+                <span class="text-sm font-extrabold text-cyan-400" id="user-balance">10.00 💎</span>
+            </div>
         </div>
     </header>
 
@@ -106,47 +110,46 @@
 
         if (tg.initDataUnsafe && tg.initDataUnsafe.user) {
             document.getElementById('username').innerText = tg.initDataUnsafe.user.first_name;
-            document.getElementById('user-avatar').innerText = tg.initDataUnsafe.user.first_name[0].toUpperCase();
+            document.getElementById('user-avatar').innerText = tg.initDataUnsave.user.first_name[0].toUpperCase();
+        }
+
+        function toggleMusic() {
+            const music = document.getElementById('bg-music');
+            music.currentTime = 0;
+            music.play().then(() => {
+                document.getElementById('music-status').innerText = "Ovoz ishlayapti";
+            }).catch(e => {
+                alert("Ovozni ochish uchun ekranni bosing.");
+            });
+            tg.HapticFeedback.selectionChanged();
         }
 
         function updateBalance() {
             document.getElementById('user-balance').innerText = balance.toFixed(2) + ' 💎';
         }
 
-        // Siz talab qilgan ehtimollik bo'yicha portlash nuqtasini tanlash
+        // Siz so'ragan ehtimollik qonuniyati
         function getRandomCrashPoint() {
-            let rnd = Math.random() * 100; // 0 dan 100 gacha
-
-            if (rnd < 0.0001) {
-                // 100x dan narigi (0.0001% ehtimol)
-                return +(100 + Math.random() * 400).toFixed(2);
-            } else if (rnd < 5) {
-                // 10 dan 29.99 gacha (juda kam)
-                return +(10 + Math.random() * 20).toFixed(2);
-            } else if (rnd < 25) {
-                // 2 dan 2.99 gacha (kamroq)
-                return +(2.0 + Math.random() * 0.99).toFixed(2);
-            } else {
-                // 1.00 dan 1.99 gacha (ko'p qismi - asosiy ehtimol)
-                return +(1.01 + Math.random() * 0.98).toFixed(2);
-            }
+            let rnd = Math.random() * 100;
+            if (rnd < 0.0001) return +(100 + Math.random() * 400).toFixed(2);
+            else if (rnd < 5) return +(10 + Math.random() * 20).toFixed(2);
+            else if (rnd < 25) return +(2.0 + Math.random() * 0.99).toFixed(2);
+            else return +(1.01 + Math.random() * 0.98).toFixed(2);
         }
 
         function toggleGame() {
             const btn = document.getElementById('action-btn');
             
+            // O'yin boshlanganda o'sha videodagi ovozni chiqarish
+            const music = document.getElementById('bg-music');
+            music.currentTime = 0;
+            music.play().catch(err => {});
+
             if (!isPlaying) {
-                // O'yinni boshlash va ovozni ijro etish
                 if (balance < 1) {
                     alert("Balansda mablag' yetarli emas!");
                     return;
                 }
-
-                // Ovozni yoqish
-                const sound = document.getElementById('game-sound');
-                sound.currentTime = 0;
-                sound.play().catch(e => console.log("Ovozni ijro etishda xatolik:", e));
-
                 balance -= 1.00;
                 updateBalance();
 
@@ -160,19 +163,14 @@
 
                 gameInterval = setInterval(() => {
                     currentMultiplier += 0.02;
-                    
                     if (currentMultiplier >= targetCrash) {
                         currentMultiplier = targetCrash;
-                        endGame(false); // Portladi (Yutqazdi)
+                        endGame(false);
                     }
-
                     document.getElementById('crash-multiplier').innerText = currentMultiplier.toFixed(2) + 'x';
                     document.getElementById('rocket-icon').style.transform = `scale(${1 + currentMultiplier * 0.05})`;
-
                 }, 100);
-
             } else {
-                // Vaqtida Cash Out qilish (Yutib olish)
                 endGame(true);
             }
         }
