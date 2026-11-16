@@ -3,219 +3,164 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>GiftLand - 3D Mini App</title>
-    <!-- Telegram Web App SDK -->
+    <title>GiftLand - Mini App</title>
     <script src="https://telegram.org/js/telegram-web-app.js"></script>
-    <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
-    <!-- Three.js (3D animatsiyalar uchun) -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
     <style>
-        body {
-            background-color: #000000;
-            color: #ffffff;
-            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
-            overflow-x: hidden;
-        }
-        .card-bg {
-            background: linear-gradient(135deg, #111113 0%, #1a1a1e 100%);
-            border: 1px solid rgba(255, 255, 255, 0.08);
-            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.5);
-        }
-        .neon-border {
-            border: 1px solid rgba(239, 68, 68, 0.5);
-            box-shadow: 0 0 20px rgba(239, 68, 68, 0.25);
-        }
-        /* 3D Kanvas konteyneri */
-        #canvas-container {
-            width: 100%;
-            height: 180px;
-            border-radius: 1rem;
-            overflow: hidden;
-            position: relative;
-        }
+        body { background-color: #000; color: #fff; font-family: sans-serif; overflow-x: hidden; }
+        .card { background: #111113; border: 1px solid rgba(255,255,255,0.08); border-radius: 16px; }
+        #canvas-container { width: 100%; height: 160px; }
+        .tab-content { display: none; }
+        .tab-content.active { display: block; }
     </style>
 </head>
-<body class="pb-24">
+<body class="p-4 pb-24">
 
     <!-- HEADER (Profil va Balans) -->
-    <header class="flex justify-between items-center p-4 border-b border-zinc-800/80 bg-black/60 sticky top-0 z-50 backdrop-blur-md">
+    <header class="flex justify-between items-center mb-4 cursor-pointer" onclick="openProfile()">
         <div class="flex items-center space-x-3">
-            <div class="w-10 h-10 rounded-full bg-gradient-to-tr from-red-500 to-pink-500 flex items-center justify-center font-bold text-lg shadow-lg" id="user-avatar">N</div>
+            <div class="w-10 h-10 rounded-full bg-red-500 flex items-center justify-center font-bold text-lg" id="user-avatar">N</div>
             <div>
-                <div class="font-bold text-sm tracking-wide" id="user-name">Nursultan</div>
-                <div class="text-[11px] text-zinc-400 flex items-center space-x-1">
-                    <span>до IRON</span>
-                    <span class="text-amber-400">⚔️</span>
-                </div>
+                <h1 class="font-bold text-sm" id="username">Nursultan</h1>
+                <p class="text-[10px] text-zinc-400">Profilni ko'rish ⚙️</p>
             </div>
         </div>
-        <div class="flex items-center bg-zinc-900/90 border border-zinc-800 rounded-full px-3 py-1.5 space-x-2 shadow-inner">
-            <span class="font-extrabold text-sm text-cyan-400" id="user-balance">0.03 💎</span>
-            <button onclick="topUp()" class="w-7 h-7 bg-blue-600 rounded-full flex items-center justify-center text-white font-bold text-base hover:bg-blue-500 transition shadow-md">+</button>
+        <div class="flex items-center bg-zinc-900 border border-zinc-800 px-3 py-1.5 rounded-full space-x-2">
+            <span class="text-sm font-bold text-cyan-400" id="user-balance">0.00 💎</span>
+            <button onclick="event.stopPropagation(); topUpBalance()" class="w-6 h-6 bg-blue-600 rounded-full flex items-center justify-center text-xs font-bold">+</button>
         </div>
     </header>
 
-    <!-- MAIN CONTENT -->
-    <main class="p-4 space-y-4">
-
-        <!-- 3D INTERACTIVE OBJECT CONTAINER -->
-        <div class="card-bg p-2 rounded-2xl neon-border relative">
-            <div class="absolute top-3 left-4 z-10 flex items-center space-x-2">
-                <span class="bg-red-500/20 text-red-400 text-[10px] px-2.5 py-1 rounded-full font-bold uppercase tracking-wider">🔥 3D Gift Live</span>
-            </div>
+    <!-- TAB 1: O'YINLAR (GAMES) -->
+    <div id="tab-games" class="tab-content active space-y-3">
+        <!-- 3D Element -->
+        <div class="card p-2 relative">
             <div id="canvas-container"></div>
         </div>
 
-        <!-- SLOTS BO'LIMI -->
-        <div class="card-bg rounded-2xl p-4 relative overflow-hidden active:scale-[0.99] transition cursor-pointer" onclick="openGame('Слоты')">
-            <div class="flex justify-between items-center mb-3">
-                <span class="bg-red-500/20 text-red-400 text-xs px-2.5 py-1 rounded-full font-semibold">✨ Новинка</span>
-                <span class="text-xs text-zinc-400 font-bold">🎰 СЛОТЫ</span>
-            </div>
-            <div class="flex justify-around items-center py-3 bg-black/60 rounded-xl border border-zinc-800/50">
-                <div class="text-3xl animate-bounce">🍎</div>
-                <div class="text-3xl animate-pulse">🐸</div>
-                <div class="text-3xl animate-bounce">🧢</div>
-            </div>
-        </div>
-
-        <!-- CRASH O'YINI -->
-        <div class="card-bg rounded-2xl p-4 relative overflow-hidden flex justify-between items-center active:scale-[0.99] transition cursor-pointer" onclick="openGame('Crash')">
+        <!-- Slots O'yini -->
+        <div class="card p-4 flex justify-between items-center cursor-pointer active:scale-95 transition" onclick="playGame('Slots')">
             <div>
-                <span class="bg-blue-500/20 text-blue-400 text-[10px] px-2.5 py-1 rounded-full font-semibold">📈 Хит</span>
-                <h2 class="text-xl font-extrabold tracking-wide mt-2">CRASH</h2>
-                <p class="text-xs text-zinc-400 mt-0.5">Tezkor raundlar va koeffitsiyentlar</p>
+                <span class="text-xs text-red-400 font-bold">✨ SLOTS</span>
+                <h2 class="text-lg font-bold">Omadli o'yin</h2>
             </div>
-            <div class="text-4xl bg-blue-500/10 p-3 rounded-2xl border border-blue-500/20">🚀</div>
+            <span class="text-2xl">🎰</span>
         </div>
 
-        <!-- BOSHQA O'YINLAR GRIDI -->
-        <div class="grid grid-cols-1 gap-3">
-            <div class="card-bg rounded-2xl p-4 flex items-center justify-between active:scale-[0.99] transition cursor-pointer" onclick="openGame('Кейсы')">
-                <div>
-                    <span class="text-xs text-emerald-400 font-semibold">💎 Классика</span>
-                    <h3 class="text-lg font-bold mt-0.5">КЕЙСЫ</h3>
-                </div>
-                <div class="text-3xl">🎁</div>
+        <!-- Crash O'yini -->
+        <div class="card p-4 flex justify-between items-center cursor-pointer active:scale-95 transition" onclick="playGame('Crash')">
+            <div>
+                <span class="text-xs text-blue-400 font-bold">📈 CRASH</span>
+                <h2 class="text-lg font-bold">Raketa parvozi</h2>
             </div>
-
-            <div class="card-bg rounded-2xl p-4 flex items-center justify-between active:scale-[0.99] transition cursor-pointer" onclick="openGame('Mines')">
-                <div>
-                    <span class="text-xs text-blue-400 font-semibold">💣 Стратегия</span>
-                    <h3 class="text-lg font-bold mt-0.5">MINES</h3>
-                </div>
-                <div class="text-3xl">💎</div>
-            </div>
-
-            <div class="card-bg rounded-2xl p-4 flex items-center justify-between active:scale-[0.99] transition cursor-pointer" onclick="openGame('Апгрейд')">
-                <div>
-                    <span class="text-xs text-amber-400 font-semibold">❤️ Популярное</span>
-                    <h3 class="text-lg font-bold mt-0.5">АПГРЕЙД</h3>
-                </div>
-                <div class="text-3xl">🧸</div>
-            </div>
+            <span class="text-2xl">🚀</span>
         </div>
+    </div>
 
-    </main>
+    <!-- TAB 2: INVENTAR -->
+    <div id="tab-inventory" class="tab-content space-y-3">
+        <h2 class="text-lg font-bold mb-2">📦 Sizning yutuqlaringiz</h2>
+        <div class="card p-4 text-center text-zinc-400 text-sm">
+            Hozircha inventar bo'sh. O'yinlarni o'ynab sovg'alar yutib oling!
+        </div>
+    </div>
 
-    <!-- PASTKI NAVIGATSIYA MENYusi -->
-    <nav class="fixed bottom-0 left-0 right-0 bg-zinc-950/95 backdrop-blur-xl border-t border-zinc-800/80 flex justify-around py-3 px-2 z-50">
-        <button onclick="switchTab('inventory')" class="flex flex-col items-center text-zinc-400 hover:text-white transition">
-            <span class="text-xl">📦</span>
-            <span class="text-[10px] mt-1 font-medium">Инвентарь</span>
-        </button>
-        <button onclick="switchTab('games')" class="flex flex-col items-center text-blue-500 transition">
-            <span class="text-xl">🎮</span>
-            <span class="text-[10px] mt-1 font-medium">Игры</span>
-        </button>
-        <button onclick="switchTab('tasks')" class="flex flex-col items-center text-zinc-400 hover:text-white transition">
-            <span class="text-xl">💎</span>
-            <span class="text-[10px] mt-1 font-medium">Задания</span>
-        </button>
-        <button onclick="switchTab('leaders')" class="flex flex-col items-center text-zinc-400 hover:text-white transition">
-            <span class="text-xl">🏆</span>
-            <span class="text-[10px] mt-1 font-medium">Лидеры</span>
-        </button>
+    <!-- TAB 3: ZADANIYA -->
+    <div id="tab-tasks" class="tab-content space-y-3">
+        <h2 class="text-lg font-bold mb-2">💎 Kunlik vazifalar</h2>
+        <div class="card p-4 flex justify-between items-center">
+            <div>
+                <h3 class="font-bold text-sm">Do'st taklif qilish</h3>
+                <p class="text-xs text-zinc-400">+0.50 💎 mukofot</p>
+            </div>
+            <button onclick="alert('Havola nusxalandi!')" class="bg-blue-600 px-3 py-1.5 rounded-xl text-xs font-bold">Bajarish</button>
+        </div>
+    </div>
+
+    <!-- TAB 4: LIDERLAR -->
+    <div id="tab-leaders" class="tab-content space-y-3">
+        <h2 class="text-lg font-bold mb-2">🏆 Top O'yinchilar</h2>
+        <div class="card p-3 flex justify-between items-center">
+            <span class="text-sm">🥇 1. Nursultan</span>
+            <span class="text-sm font-bold text-cyan-400">12.50 💎</span>
+        </div>
+    </div>
+
+    <!-- PASTKI MENYU -->
+    <nav class="fixed bottom-0 left-0 right-0 bg-zinc-950 border-t border-zinc-800 flex justify-around py-3">
+        <button onclick="switchTab('inventory')" id="nav-inventory" class="flex flex-col items-center text-zinc-400 text-xs">📦 Inventar</button>
+        <button onclick="switchTab('games')" id="nav-games" class="flex flex-col items-center text-blue-500 font-bold text-xs">🎮 O'yinlar</button>
+        <button onclick="switchTab('tasks')" id="nav-tasks" class="flex flex-col items-center text-zinc-400 text-xs">💎 Zadaniya</button>
+        <button onclick="switchTab('leaders')" id="nav-leaders" class="flex flex-col items-center text-zinc-400 text-xs">🏆 Liderlar</button>
     </nav>
 
     <script>
-        // Telegram WebApp sozlamalari
-        let tg = window.Telegram.WebApp;
+        const tg = window.Telegram.WebApp;
         tg.expand();
-
         if (tg.initDataUnsafe && tg.initDataUnsafe.user) {
-            let user = tg.initDataUnsafe.user;
-            document.getElementById('user-name').innerText = user.first_name || "Nursultan";
-            document.getElementById('user-avatar').innerText = (user.first_name || "N")[0].toUpperCase();
+            document.getElementById('username').innerText = tg.initDataUnsafe.user.first_name;
+            document.getElementById('user-avatar').innerText = tg.initDataUnsafe.user.first_name[0].toUpperCase();
         }
 
-        function topUp() {
-            tg.showAlert("Balansni to'ldirish oynasi ochilmoqda...");
+        // Balansni to'ldirish funksiyasi
+        function topUpBalance() {
+            tg.showAlert("Balansni to'ldirish uchun botga to'lov qiling yoki administratorga murojaat qiling!");
         }
 
-        function openGame(gameName) {
+        // Profilga bosganda nima yutgani chiqishi
+        function openProfile() {
+            tg.showAlert("Profil: Nursultan\nBalans: 0.00 💎\nYutuqlar: Hozircha yutuqlar yo'q.");
+        }
+
+        // O'yinlarni ochish
+        function playGame(gameName) {
             tg.HapticFeedback.impactOccurred('medium');
-            tg.showAlert(gameName + " o'yini tez orada ishga tushadi!");
+            let balance = 0.00; // Balans 0
+            if (balance <= 0) {
+                tg.showAlert("Balansda yetarli mablag' yo'q! O'ynash uchun balansni to'ldiring.");
+            } else {
+                tg.showAlert(gameName + " o'yini boshlanmoqda!");
+            }
         }
 
-        function switchTab(tabName) {
+        // Pastki menyularni boshqarish
+        function switchTab(tab) {
+            document.querySelectorAll('.tab-content').forEach(el => el.classList.remove('active'));
+            document.querySelectorAll('nav button').forEach(el => {
+                el.classList.remove('text-blue-500', 'font-bold');
+                el.classList.add('text-zinc-400');
+            });
+
+            document.getElementById('tab-' + tab).classList.add('active');
+            let activeNav = document.getElementById('nav-' + tab);
+            activeNav.classList.remove('text-zinc-400');
+            activeNav.classList.add('text-blue-500', 'font-bold');
             tg.HapticFeedback.selectionChanged();
         }
 
-        // --- 3D THREE.JS ANIMATSIYA (Aylanib turuvchi 3D sovg'a/kristal) ---
+        // 3D Three.js Animation
         const container = document.getElementById('canvas-container');
         const scene = new THREE.Scene();
         const camera = new THREE.PerspectiveCamera(60, container.clientWidth / container.clientHeight, 0.1, 1000);
         const renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
-        
         renderer.setSize(container.clientWidth, container.clientHeight);
-        renderer.setPixelRatio(window.devicePixelRatio);
         container.appendChild(renderer.domElement);
 
-        // Neon yorug'lik qo'shish
-        const ambientLight = new THREE.AmbientLight(0xffffff, 1.2);
-        scene.add(ambientLight);
-        const pointLight = new THREE.PointLight(0x3b82f6, 3, 50);
-        pointLight.position.set(5, 5, 5);
-        scene.add(pointLight);
-
-        // 3D Geometriya (Icosahedron - kristal shakli)
+        scene.add(new THREE.AmbientLight(0xffffff, 1.5));
         const geometry = new THREE.IcosahedronGeometry(1.2, 0);
-        const material = new THREE.MeshStandardMaterial({
-            color: 0x3b82f6,
-            metalness: 0.8,
-            roughness: 0.1,
-            wireframe: false
-        });
+        const material = new THREE.MeshStandardMaterial({ color: 0x3b82f6, metalness: 0.8, roughness: 0.2 });
         const crystal = new THREE.Mesh(geometry, material);
         scene.add(crystal);
+        camera.position.z = 3.5;
 
-        // Ikkinchi 3D halqa element
-        const torusGeo = new THREE.TorusGeometry(1.8, 0.03, 16, 100);
-        const torusMat = new THREE.MeshStandardMaterial({ color: 0xef4444, metalness: 0.9, roughness: 0.2 });
-        const torus = new THREE.Mesh(torusGeo, torusMat);
-        scene.add(torus);
-
-        camera.position.z = 4;
-
-        // Animatsiya sikli (Aylanish)
         function animate() {
             requestAnimationFrame(animate);
             crystal.rotation.x += 0.01;
             crystal.rotation.y += 0.015;
-            torus.rotation.x -= 0.008;
-            torus.rotation.y -= 0.012;
             renderer.render(scene, camera);
         }
         animate();
-
-        // Oyna o'lchami o'zgarganda moslashish
-        window.addEventListener('resize', () => {
-            camera.aspect = container.clientWidth / container.clientHeight;
-            camera.updateProjectionMatrix();
-            renderer.setSize(container.clientWidth, container.clientHeight);
-        });
     </script>
 </body>
 </html>
