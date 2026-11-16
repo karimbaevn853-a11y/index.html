@@ -78,6 +78,8 @@ button:focus-visible{outline:2px solid #fff;outline-offset:3px}
 
 @keyframes pageIn{from{opacity:0;transform:translateY(5px)}to{opacity:1;transform:none}}
 </style>
+<!-- Telegram WebApp CDN xavfsiz ulanishi -->
+<script src="https://telegram.org/js/telegram-web-app.js"></script>
 </head>
 <body>
 <main class="app">
@@ -175,19 +177,29 @@ button:focus-visible{outline:2px solid #fff;outline-offset:3px}
 
 <div class="toast" id="toast" role="status" aria-live="polite"></div>
 
-<script src="https://telegram.org/js/telegram-web-app.js"></script>
 <script>
 (() => {
   const $ = s => document.querySelector(s);
-  const tg = window.Telegram.WebApp;
-  tg.expand();
-
-  let userId = 'user_default';
-  let userName = 'Nursultan';
   
-  if (tg.initDataUnsafe && tg.initDataUnsafe.user && tg.initDataUnsafe.user.first_name) {
-    userName = tg.initDataUnsafe.user.first_name;
-    userId = 'user_' + tg.initDataUnsafe.user.id;
+  // Telegram WebApp xavfsiz ishga tushirish
+  let userName = 'Nursultan';
+  let userId = 'user_default';
+
+  try {
+    if (window.Telegram && window.Telegram.WebApp) {
+      const tg = window.Telegram.WebApp;
+      tg.expand();
+      if (tg.initDataUnsafe && tg.initDataUnsafe.user) {
+        if (tg.initDataUnsafe.user.first_name) {
+          userName = tg.initDataUnsafe.user.first_name;
+        }
+        if (tg.initDataUnsafe.user.id) {
+          userId = 'user_' + tg.initDataUnsafe.user.id;
+        }
+      }
+    }
+  } catch (e) {
+    console.log("Telegram WebApp muhiti aniqlanmadi, standart qiymatlar ishlatiladi.");
   }
 
   $('#userName').textContent = userName;
@@ -210,7 +222,6 @@ button:focus-visible{outline:2px solid #fff;outline-offset:3px}
     $('#tonBalance').textContent = db.ton.toFixed(2);
     $('#starsBalance').textContent = db.stars;
     
-    // To'lovlar va yutuqlar tarixi
     const histEl = $('#paymentHistory');
     if (db.history.length === 0) {
       histEl.innerHTML = '<p class="market-empty">Hozircha tarix yo‘q</p>';
@@ -218,7 +229,6 @@ button:focus-visible{outline:2px solid #fff;outline-offset:3px}
       histEl.innerHTML = db.history.map(h => `<div style="padding:6px 0;border-bottom:1px solid rgba(255,255,255,0.05)">${h}</div>`).join('');
     }
 
-    // Inventar yutuqlarini chiqarish
     const invGrid = $('#inventoryGrid');
     if(db.inventory.length === 0) {
       invGrid.innerHTML = '<div class="market-empty">Hozircha yutuq sovg‘alar yo‘q</div>';
@@ -241,7 +251,6 @@ button:focus-visible{outline:2px solid #fff;outline-offset:3px}
     window.scrollTo({top:0, behavior:"smooth"});
   });
 
-  // TON to'ldirish va admin tasdig'i
   window.topUpTon = function() {
     let amountStr = prompt("Qancha TON to'lamoqchisiz?", "1.0");
     if(!amountStr) return;
@@ -262,7 +271,6 @@ button:focus-visible{outline:2px solid #fff;outline-offset:3px}
         let record = `💎 +${amount} TON to'landi va tasdiqlandi ✓`;
         db.history.push(record);
         
-        // Ballar: 0.1 ton = 1 ball
         let points = (amount / 0.1);
         updateLeaderboard(userName, points);
         saveData();
@@ -271,7 +279,6 @@ button:focus-visible{outline:2px solid #fff;outline-offset:3px}
     }, 2000);
   }
 
-  // Stars to'ldirish va admin tasdig'i
   window.topUpStars = function() {
     let amountStr = prompt("Qancha Stars to'lamoqchisiz?", "50");
     if(!amountStr) return;
@@ -291,7 +298,6 @@ button:focus-visible{outline:2px solid #fff;outline-offset:3px}
         let record = `⭐ +${amount} Stars to'landi va tasdiqlandi ✓`;
         db.history.push(record);
 
-        // Ballar: 5 stars = 1 ball
         let points = (amount / 5);
         updateLeaderboard(userName, points);
         saveData();
@@ -355,7 +361,6 @@ button:focus-visible{outline:2px solid #fff;outline-offset:3px}
   }
   renderLeaders();
 
-  // Barcha 123 ta Telegram Collectible NFT ro'yxati
   const marketCollections = [
     ["Intelligence Cups", "🏆"], ["Algorithm Cups", "🧠"], ["Lucky Lockets", "🔐"], ["Durov’s Glasses", "🕶️"], ["Resistance Dogs", "🐕"], ["Heart Lockets", "💗"], ["Heroic Helmets", "🪖"], ["Mighty Arms", "💪"], ["Mirage Lamps", "🪔"], ["Nail Bracelets", "💅"], ["Precious Peaches", "🍑"], ["Perfume Bottles", "🧴"], ["Mini Oscars", "🏆"], ["Gem Signets", "💍"], ["Bling Binkies", "🍼"], ["Plush Pepes", "🐸"], ["Ion Gems", "💎"], ["Genie Lamps", "🧞"], ["Ionic Dryers", "💨"], ["Astral Shards", "✨"], ["Bonded Rings", "💍"], ["Artisan Bricks", "🧱"], ["Durov’s Caps", "🧢"], ["Magic Potions", "🧪"], ["Love Candles", "🕯️"], ["Surge Boards", "🛹"], ["Khabib’s Papakhas", "🧢"], ["Rare Birds", "🦜"], ["Fine Pens", "🖊️"], ["Sharp Tongues", "👅"], ["Valentine Boxes", "💝"], ["Neko Helmets", "🐱"], ["Joyful Bundles", "🎁"], ["Electric Skulls", "💀"], ["Sleigh Bells", "🔔"], ["Snow Mittens", "🧤"], ["Westside Signs", "🪧"], ["Record Players", "📀"], ["Eternal Roses", "🌹"], ["Cupid Charms", "💘"], ["Pretty Posies", "💐"], ["Sky Stilettos", "👠"], ["Loot Bags", "🛍️"], ["Holiday Drinks", "🥤"], ["Snow Globes", "❄️"], ["Mad Pumpkins", "🎃"], ["Flying Brooms", "🧹"], ["Low Riders", "🚗"], ["Love Potions", "💗"], ["Lush Bouquets", "💐"], ["Bunny Muffins", "🐰"], ["UFC Strikes", "🥊"], ["Skull Flowers", "💀"], ["Hanging Stars", "⭐"], ["Signet Rings", "💍"], ["Kissed Frogs", "🐸"], ["Mousse Cakes", "🍰"], ["Crystal Balls", "🔮"], ["Diamond Rings", "💎"], ["Bow Ties", "🎀"], ["Vintage Cigars", "🚬"], ["Jingle Bells", "🛎️"], ["Berry Boxes", "🫐"], ["Top Hats", "🎩"], ["Hypno Lollipops", "🍭"], ["Star Notepads", "📝"], ["Timeless Books", "📚"], ["Trapped Hearts", "❤️"], ["Money Pots", "💰"], ["Restless Jars", "🫙"], ["Winter Wreaths", "🎄"], ["Snake Boxes", "🐍"], ["Swiss Watches", "⌚"], ["Voodoo Dolls", "🪆"], ["Tama Gadgets", "🎮"], ["Happy Brownies", "🍫"], ["Pet Snakes", "🐍"], ["Faith Amulets", "📿"], ["Spiced Wines", "🍷"], ["Eternal Candles", "🕯️"], ["Fresh Socks", "🧦"], ["Santa Hats", "🎅"], ["Big Years", "🎉"], ["Moon Pendants", "🌙"], ["Jester Hats", "🤡"], ["Spring Baskets", "🧺"], ["Cookie Hearts", "🍪"], ["Jelly Bunnies", "🐇"], ["Scared Cats", "🐈"], ["Sakura Flowers", "🌸"], ["Hex Pots", "⚗️"], ["Input Keys", "⌨️"], ["Jolly Chimps", "🐵"], ["Whip Cupcakes", "🧁"], ["Victory Medals", "🏅"], ["Mood Packs", "🎭"], ["Jacks-in-the-Box", "🤹"], ["Xmas Stockings", "🧦"], ["Pool Floats", "🛟"], ["Stellar Rockets", "🚀"], ["Candy Canes", "🍬"], ["Light Swords", "⚔️"], ["Evil Eyes", "🧿"], ["Ginger Cookies", "🍪"], ["Snoop Cigars", "🚬"], ["Clover Pins", "🍀"], ["Lunar Snakes", "🐍"], ["Swag Bags", "🎒"], ["Party Sparklers", "🎇"], ["B-Day Candles", "🎂"], ["Liberty Figures", "🗽"], ["Instant Ramens", "🍜"], ["Easter Eggs", "🥚"], ["Spy Agarics", "🍄"], ["Toy Bears", "🧸"], ["Witch Hats", "🧙"], ["Homemade Cakes", "🎂"], ["Desk Calendars", "📅"], ["Ice Creams", "🍦"], ["Chill Flames", "🔥"], ["Vice Creams", "🍨"], ["Snoop Doggs", "🐶"], ["Lol Pops", "🍭"]
   ];
