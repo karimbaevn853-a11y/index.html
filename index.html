@@ -2,622 +2,454 @@
 <html lang="uz">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 <meta name="theme-color" content="#050609">
 <title>STONKS</title>
-
 <script src="https://telegram.org/js/telegram-web-app.js"></script>
 
 <style>
-*{margin:0;padding:0;box-sizing:border-box}
-
-:root{
- --bg:#050609;
- --card:#111319;
- --blue:#168cff;
- --green:#35e68b;
- --text:#fff;
- --muted:#858b99;
-}
+*{box-sizing:border-box;margin:0;padding:0}
 
 body{
- background:var(--bg);
- color:var(--text);
- font-family:Arial,Helvetica,sans-serif;
- min-height:100vh;
+ background:#050609;
+ color:white;
+ font-family:Arial,sans-serif;
  overflow-x:hidden;
 }
-
-button{font-family:inherit;color:inherit}
 
 .app{
  max-width:700px;
  margin:auto;
- padding:12px 13px 105px;
+ padding:15px 14px 110px;
 }
 
-/* HEADER */
-
-.header{
+header{
  display:flex;
- align-items:center;
  justify-content:space-between;
- margin-bottom:18px;
+ align-items:center;
+ margin-bottom:24px;
 }
 
-.user{
- display:flex;
- align-items:center;
- gap:10px;
-}
+.profile{display:flex;align-items:center;gap:10px}
 
 .avatar{
- width:47px;
- height:47px;
+ width:46px;height:46px;
+ display:grid;place-items:center;
  border-radius:50%;
- background:linear-gradient(140deg,#ff7777,#ed285b);
- display:grid;
- place-items:center;
- font-size:22px;
- font-weight:900;
- border:2px solid #ffffff25;
- box-shadow:0 0 18px #ff426b35;
+ background:linear-gradient(140deg,#ff7777,#e52e64);
+ font-size:22px;font-weight:900;
 }
 
-.username{
- font-weight:800;
- font-size:15px;
-}
-
-.rank{
- color:#8b91a0;
- font-size:11px;
- margin-top:4px;
-}
+.name{font-weight:900}
+.rank{font-size:11px;color:#888;margin-top:4px}
 
 .balance{
- display:flex;
- align-items:center;
- gap:8px;
- background:#14161d;
- border:1px solid #ffffff13;
- padding:7px 8px 7px 13px;
+ background:#171b25;
+ padding:10px 14px;
  border-radius:30px;
- font-weight:900;
+ border:1px solid #ffffff18;
+ color:#40d7ff;font-weight:900;
 }
 
-.balance b{color:#48cfff}
-
-.plus{
- width:36px;
- height:36px;
- border:0;
- border-radius:50%;
- background:#087fe8;
- font-size:25px;
- font-weight:300;
-}
-
-/* TOP MINI STICKERS */
-
-.sticker-row{
+.heading{
  display:flex;
- gap:9px;
+ justify-content:space-between;
+ align-items:center;
+ margin:22px 3px 14px;
+}
+
+.heading h2{font-size:19px}
+.heading span{font-size:11px;color:#777}
+
+.gifts{
+ display:flex;
+ gap:10px;
  overflow-x:auto;
- padding:5px 2px 16px;
  scrollbar-width:none;
+ padding-bottom:8px;
 }
 
-.sticker-row::-webkit-scrollbar{display:none}
+.gifts::-webkit-scrollbar{display:none}
 
-.sticker{
- flex:0 0 76px;
- height:70px;
+.gift{
+ flex:0 0 105px;
+ height:110px;
+ background:#15171c;
+ border:1px solid #ffffff13;
  border-radius:17px;
- background:linear-gradient(145deg,#171b27,#0d111a);
- border:1px solid #ffffff12;
  display:flex;
+ flex-direction:column;
  align-items:center;
  justify-content:center;
+ gap:7px;
+}
+
+.gift-image{
+ width:75px;
+ height:75px;
+ background-image:url("nft_sprite.webp");
+ background-repeat:no-repeat;
+ background-size:400% 300%;
+ animation:giftFloat 3s ease-in-out infinite;
+ filter:drop-shadow(0 5px 9px #000);
+}
+
+.gift small{
+ font-size:10px;
+ color:#c4cbd6;
+ font-weight:bold;
+}
+
+@keyframes giftFloat{
+ 0%,100%{transform:translateY(0)}
+ 50%{transform:translateY(-7px)}
+}
+
+/* NFT SPRITE POSITIONS */
+
+.g0{background-position:0% 0%}
+.g1{background-position:33.333% 0%}
+.g2{background-position:66.666% 0%}
+.g3{background-position:100% 0%}
+.g4{background-position:0% 50%}
+.g5{background-position:33.333% 50%}
+.g6{background-position:66.666% 50%}
+.g7{background-position:100% 50%}
+.g8{background-position:0% 100%}
+.g9{background-position:33.333% 100%}
+.g10{background-position:66.666% 100%}
+.g11{background-position:100% 100%}
+
+/* PANELS */
+
+.games{
+ display:flex;
  flex-direction:column;
- gap:3px;
+ gap:15px;
 }
 
-.sticker-icon{
- font-size:31px;
- animation:stickerFloat 2.2s ease-in-out infinite;
-}
-
-.sticker:nth-child(2) .sticker-icon{animation-delay:.3s}
-.sticker:nth-child(3) .sticker-icon{animation-delay:.6s}
-.sticker:nth-child(4) .sticker-icon{animation-delay:.9s}
-.sticker small{font-size:9px;color:#9ca6b7}
-
-@keyframes stickerFloat{
- 0%,100%{transform:translateY(0) rotate(-5deg)}
- 50%{transform:translateY(-7px) rotate(5deg)}
-}
-
-/* PROMO */
-
-.promo{
+.panel{
+ --smoke:#168bff;
+ --bg1:#101b2c;
+ --bg2:#102b48;
  position:relative;
+ isolation:isolate;
  overflow:hidden;
- min-height:177px;
+ min-height:158px;
  border-radius:25px;
  padding:21px;
- margin-bottom:15px;
- background:
- radial-gradient(circle at 80% 40%,#174c83 0%,transparent 42%),
- linear-gradient(115deg,#0e1928,#102d49);
- border:1px solid #298bff35;
+ border:1px solid color-mix(in srgb,var(--smoke),transparent 75%);
+ background:linear-gradient(115deg,var(--bg1),var(--bg2));
+ cursor:pointer;
+ transition:transform .2s;
 }
 
-.promo:after{
+.panel:active{transform:scale(.975)}
+
+.panel:before,
+.panel:after{
  content:"";
  position:absolute;
+ z-index:-1;
+ border-radius:50%;
  width:190px;
  height:190px;
- border:1px solid #55aaff20;
- border-radius:50%;
- right:-60px;
- top:-55px;
- box-shadow:0 0 0 15px #55aaff08,0 0 0 35px #55aaff06;
+ right:-30px;
+ top:-35px;
+ background:var(--smoke);
+ filter:blur(55px);
+ opacity:.35;
+ animation:smoke 5s ease-in-out infinite alternate;
 }
 
-.promo-label{
- display:inline-block;
- background:#ffffff16;
- border:1px solid #ffffff1b;
- padding:6px 11px;
- border-radius:9px;
- font-size:11px;
- font-weight:900;
+.panel:after{
+ width:140px;
+ height:140px;
+ top:auto;
+ bottom:-90px;
+ right:100px;
+ opacity:.25;
+ animation-delay:1s;
 }
 
-.promo h1{
- font-size:31px;
- font-weight:1000;
- margin-top:20px;
- letter-spacing:-1px;
+@keyframes smoke{
+ from{transform:translate(15px,20px) scale(.8);opacity:.15}
+ to{transform:translate(-40px,-20px) scale(1.5);opacity:.55}
 }
 
-.promo p{
- font-size:12px;
- color:#aabed2;
- margin-top:7px;
+/* INDIVIDUAL COLORS */
+
+.slots{
+ --smoke:#ed3caa;
+ --bg1:#1b1020;
+ --bg2:#35112d;
 }
 
-.rocket{
- position:absolute;
- right:32px;
- bottom:16px;
- font-size:82px;
- z-index:1;
- filter:drop-shadow(0 9px 14px #0009);
- animation:rocketFloat 3s ease-in-out infinite;
+.crash{
+ --smoke:#168bff;
+ --bg1:#101a2c;
+ --bg2:#102d4d;
 }
 
-@keyframes rocketFloat{
- 0%,100%{transform:translateY(0) rotate(-15deg)}
- 50%{transform:translateY(-12px) rotate(-23deg)}
+.cases{
+ --smoke:#20e5a0;
+ --bg1:#10251f;
+ --bg2:#104638;
 }
 
-/* SECTION */
-
-.section-title{
- display:flex;
- align-items:center;
- justify-content:space-between;
- margin:24px 3px 12px;
+.mines{
+ --smoke:#08d5ff;
+ --bg1:#101d2d;
+ --bg2:#103b54;
 }
 
-.section-title h2{
- font-size:17px;
- font-weight:900;
+.upgrade{
+ --smoke:#63ed81;
+ --bg1:#102419;
+ --bg2:#17442b;
 }
 
-.section-title span{
- color:#777f8e;
- font-size:11px;
-}
-
-/* FEATURE CARDS */
-
-.cards{
- display:flex;
- flex-direction:column;
- gap:13px;
-}
-
-.game-card{
- position:relative;
- overflow:hidden;
- min-height:112px;
- padding:18px;
- border-radius:23px;
- border:1px solid #ffffff10;
- background:#12151c;
- display:flex;
- align-items:center;
- justify-content:space-between;
- isolation:isolate;
-}
-
-.game-card:before{
- content:"";
- position:absolute;
- width:170px;
- height:170px;
- border-radius:50%;
- right:-55px;
- top:-65px;
- background:var(--glow);
- opacity:.18;
- filter:blur(24px);
- z-index:-1;
-}
-
-.card-info{
- position:relative;
- z-index:2;
+.pvp{
+ --smoke:#ff633f;
+ --bg1:#20151b;
+ --bg2:#3c1d20;
 }
 
 .badge{
  display:inline-block;
- font-size:11px;
- font-weight:900;
- border-radius:8px;
- padding:6px 10px;
+ padding:8px 12px;
  background:#ffffff12;
- border:1px solid #ffffff15;
+ border:1px solid #ffffff19;
+ border-radius:11px;
+ font-size:12px;
+ font-weight:bold;
 }
 
-.game-card h3{
- font-size:22px;
- margin-top:13px;
+.panel h3{
+ font-size:25px;
+ margin-top:18px;
  font-weight:1000;
- letter-spacing:-.5px;
 }
 
-.game-card p{
- color:#9ba3b2;
- font-size:11px;
- margin-top:5px;
+.panel p{
+ color:#a3adbc;
+ margin-top:8px;
+ font-size:13px;
 }
 
-.card-art{
- font-size:65px;
- position:relative;
- z-index:2;
- margin-right:10px;
- filter:drop-shadow(0 8px 13px #0008);
- animation:artFloat 3s ease-in-out infinite;
-}
-
-@keyframes artFloat{
- 0%,100%{transform:translateY(0) rotate(-4deg)}
- 50%{transform:translateY(-7px) rotate(4deg)}
-}
-
-/* DIFFERENT COLORS */
-
-.slots{--glow:#ed267a;background:linear-gradient(110deg,#17111c,#1d101d)}
-.crash{--glow:#168cff;background:linear-gradient(110deg,#101b2d,#10253b)}
-.cases{--glow:#20d6a0;background:linear-gradient(110deg,#10251f,#123c32)}
-.mines{--glow:#258cff;background:linear-gradient(110deg,#101c2b,#102b42)}
-.upgrade{--glow:#35e68b;background:linear-gradient(110deg,#102519,#143c25)}
-.pvp{--glow:#ff653e;background:linear-gradient(110deg,#161626,#281c21)}
-.bonus{--glow:#ffbd3d;background:linear-gradient(110deg,#10251d,#183a2a)}
-
-/* STICKER SHOWCASE */
-
-.showcase{
- position:relative;
- overflow:hidden;
- border-radius:24px;
- min-height:155px;
- background:
- radial-gradient(circle at 50% 60%,#202f5b,#10121d 70%);
- border:1px solid #ffffff12;
- display:flex;
- align-items:center;
- justify-content:center;
- margin-top:16px;
-}
-
-.showcase-title{
+.panel-art{
  position:absolute;
- top:14px;
- left:16px;
- font-size:11px;
- color:#a6b6d1;
- font-weight:800;
+ right:19px;
+ top:50%;
+ transform:translateY(-50%);
+ width:105px;
+ height:105px;
+ filter:drop-shadow(0 8px 13px #0009);
+ animation:giftFloat 3s ease-in-out infinite;
 }
 
-.crystal{
- width:88px;
- height:88px;
- background:linear-gradient(135deg,#5bbdff,#1749cb 60%,#102c85);
- clip-path:polygon(50% 0%,90% 22%,100% 66%,50% 100%,0 66%,10% 22%);
- filter:drop-shadow(0 0 18px #258aff);
- animation:crystalMove 4s ease-in-out infinite;
+.panel-art .gift-image{
+ width:100%;
+ height:100%;
 }
 
-@keyframes crystalMove{
- 0%,100%{transform:rotateY(0deg) rotateZ(0deg) scale(1)}
- 50%{transform:rotateY(180deg) rotateZ(8deg) scale(1.08)}
-}
+/* NAVIGATION */
 
-.orbit{
- position:absolute;
- width:140px;
- height:140px;
- border:1px solid #5f9cff42;
- border-radius:50%;
- animation:orbit 8s linear infinite;
-}
-
-.orbit:after{
- content:"✦";
- position:absolute;
- top:10px;
- left:20px;
- color:#a6d8ff;
- font-size:16px;
-}
-
-@keyframes orbit{to{transform:rotate(360deg)}}
-
-/* FOOTER */
-
-.bottom-nav{
+.nav{
  position:fixed;
- z-index:20;
+ z-index:10;
  bottom:0;
  left:50%;
  transform:translateX(-50%);
  width:min(100%,700px);
  display:grid;
  grid-template-columns:repeat(4,1fr);
- padding:9px 8px calc(10px + env(safe-area-inset-bottom));
  background:#090b10ed;
- border:1px solid #ffffff12;
+ border:1px solid #ffffff16;
  border-bottom:0;
  border-radius:25px 25px 0 0;
+ padding:12px 7px calc(12px + env(safe-area-inset-bottom));
  backdrop-filter:blur(20px);
 }
 
-.nav-item{
+.nav button{
  border:0;
  background:none;
+ color:#858b99;
+ font-size:11px;
+ font-weight:bold;
  display:flex;
  flex-direction:column;
  align-items:center;
  gap:5px;
- color:#777e8b;
- font-size:10px;
- font-weight:800;
- padding:6px 2px;
 }
 
-.nav-icon{
- font-size:23px;
- transition:.25s;
-}
-
-.nav-item.active{
- color:#168cff;
-}
-
-.nav-item.active .nav-icon{
- transform:translateY(-3px) scale(1.12);
- filter:drop-shadow(0 0 7px #168cff);
-}
-
-/* TOAST */
+.nav button span:first-child{font-size:24px}
+.nav button.active{color:#168cff}
 
 .toast{
  position:fixed;
- z-index:50;
- bottom:100px;
+ z-index:20;
+ bottom:95px;
  left:50%;
- transform:translate(-50%,20px);
- opacity:0;
- pointer-events:none;
- background:#202b39;
- border:1px solid #ffffff20;
+ transform:translateX(-50%);
+ background:#202938;
  padding:12px 18px;
- border-radius:14px;
- font-size:13px;
+ border-radius:13px;
+ opacity:0;
  transition:.3s;
- white-space:nowrap;
+ pointer-events:none;
+ font-size:13px;
 }
 
-.toast.show{
- opacity:1;
- transform:translate(-50%,0);
-}
-
-/* MOBILE */
+.toast.show{opacity:1}
 
 @media(max-width:380px){
- .app{padding-left:10px;padding-right:10px}
- .promo h1{font-size:27px}
- .rocket{font-size:68px;right:20px}
- .game-card{padding:15px}
- .card-art{font-size:55px}
- .game-card h3{font-size:19px}
-}
-
-@media(prefers-reduced-motion:reduce){
- *,*:before,*:after{
- animation:none!important;
- transition:none!important;
- }
+ .panel{min-height:145px;padding:17px}
+ .panel-art{width:88px;height:88px;right:12px}
+ .panel h3{font-size:22px}
 }
 </style>
 </head>
 
 <body>
-
 <main class="app">
 
-<header class="header">
-
- <div class="user">
+<header>
+ <div class="profile">
   <div class="avatar">N</div>
   <div>
-   <div class="username">N</div>
+   <div class="name">N</div>
    <div class="rank">DO IRON 👑</div>
   </div>
  </div>
-
- <div class="balance">
-  <b id="balance">0.03</b>
-  💎
-  <button class="plus" id="plus">+</button>
- </div>
-
+ <div class="balance">0.03 💎</div>
 </header>
 
-<!-- MINI STICKERS -->
-
-<div class="sticker-row">
- <div class="sticker"><div class="sticker-icon">🚀</div><small>ROCKET</small></div>
- <div class="sticker"><div class="sticker-icon">💎</div><small>DIAMOND</small></div>
- <div class="sticker"><div class="sticker-icon">🎁</div><small>GIFT</small></div>
- <div class="sticker"><div class="sticker-icon">🧸</div><small>BEAR</small></div>
- <div class="sticker"><div class="sticker-icon">🍀</div><small>LUCKY</small></div>
- <div class="sticker"><div class="sticker-icon">👑</div><small>CROWN</small></div>
+<div class="heading">
+ <h2>🎁 NFT GIFTS</h2>
+ <span>COLLECTION</span>
 </div>
 
-<!-- HERO -->
+<section class="gifts" id="gifts"></section>
 
-<section class="promo">
- <span class="promo-label">⚡ STONKS ORIGINAL</span>
- <h1>STONKS</h1>
- <p>Yangi avlod o‘yin platformasi</p>
- <div class="rocket">🚀</div>
-</section>
-
-<!-- STICKER SHOWCASE -->
-
-<section class="showcase">
- <div class="showcase-title">✨ 3D GIFT LIVE</div>
- <div class="orbit"></div>
- <div class="crystal"></div>
-</section>
-
-<!-- GAMES PLACEHOLDER -->
-
-<div class="section-title">
+<div class="heading">
  <h2>🎮 O‘YINLAR</h2>
- <span>YANGI DIZAYN</span>
+ <span>STONKS ORIGINAL</span>
 </div>
 
-<section class="cards">
+<section class="games">
 
- <div class="game-card slots">
-  <div class="card-info">
-   <span class="badge">✨ NOVINKA</span>
-   <h3>SLOTLAR</h3>
-   <p>Yangi bo‘lim tez orada</p>
-  </div>
-  <div class="card-art">🎰</div>
- </div>
+ <article class="panel slots" data-name="SLOTLAR">
+  <span class="badge">✨ NOVINKA</span>
+  <h3>SLOTLAR</h3>
+  <p>Yangi bo‘lim tez orada</p>
+  <div class="panel-art"><div class="gift-image g0"></div></div>
+ </article>
 
- <div class="game-card crash">
-  <div class="card-info">
-   <span class="badge">📈 HIT</span>
-   <h3>CRASH</h3>
-   <p>Yangi bo‘lim tez orada</p>
-  </div>
-  <div class="card-art">🚀</div>
- </div>
+ <article class="panel crash" data-name="CRASH">
+  <span class="badge">📈 HIT</span>
+  <h3>CRASH</h3>
+  <p>Yangi bo‘lim tez orada</p>
+  <div class="panel-art"><div class="gift-image g1"></div></div>
+ </article>
 
- <div class="game-card cases">
-  <div class="card-info">
-   <span class="badge">💎 KLASSIKA</span>
-   <h3>KEYSLAR</h3>
-   <p>Yangi bo‘lim tez orada</p>
-  </div>
-  <div class="card-art">🎁</div>
- </div>
+ <article class="panel cases" data-name="KEYSLAR">
+  <span class="badge">💎 KLASSIKA</span>
+  <h3>KEYSLAR</h3>
+  <p>Yangi bo‘lim tez orada</p>
+  <div class="panel-art"><div class="gift-image g2"></div></div>
+ </article>
 
- <div class="game-card mines">
-  <div class="card-info">
-   <span class="badge">💎 KLASSIKA</span>
-   <h3>MINES</h3>
-   <p>Yangi bo‘lim tez orada</p>
-  </div>
-  <div class="card-art">💎</div>
- </div>
+ <article class="panel mines" data-name="MINES">
+  <span class="badge">💎 KLASSIKA</span>
+  <h3>MINES</h3>
+  <p>Yangi bo‘lim tez orada</p>
+  <div class="panel-art"><div class="gift-image g8"></div></div>
+ </article>
+
+ <article class="panel upgrade" data-name="UPGRADE">
+  <span class="badge">💚 POPULAR</span>
+  <h3>UPGRADE</h3>
+  <p>Yangi bo‘lim tez orada</p>
+  <div class="panel-art"><div class="gift-image g5"></div></div>
+ </article>
+
+ <article class="panel pvp" data-name="PvP">
+  <span class="badge">⚔️ BATTLE</span>
+  <h3>PvP</h3>
+  <p>Yangi bo‘lim tez orada</p>
+  <div class="panel-art"><div class="gift-image g3"></div></div>
+ </article>
 
 </section>
-
 </main>
 
-<!-- NAVIGATION -->
-
-<nav class="bottom-nav">
-
- <button class="nav-item" data-name="Inventar">
-  <span class="nav-icon">📦</span>
-  <span>Inventar</span>
- </button>
-
- <button class="nav-item active" data-name="O‘yinlar">
-  <span class="nav-icon">🎮</span>
-  <span>O‘yinlar</span>
- </button>
-
- <button class="nav-item" data-name="Vazifalar">
-  <span class="nav-icon">📋</span>
-  <span>Vazifalar</span>
- </button>
-
- <button class="nav-item" data-name="Liderlar">
-  <span class="nav-icon">🏆</span>
-  <span>Liderlar</span>
- </button>
-
+<nav class="nav">
+ <button data-page="Inventar"><span>📦</span>Inventar</button>
+ <button class="active" data-page="O‘yinlar"><span>🎮</span>O‘yinlar</button>
+ <button data-page="Vazifalar"><span>📋</span>Vazifalar</button>
+ <button data-page="Liderlar"><span>🏆</span>Liderlar</button>
 </nav>
 
 <div class="toast" id="toast"></div>
 
 <script>
 const tg=window.Telegram?.WebApp;
-
 if(tg){
  tg.ready();
  tg.expand();
 }
+
+const gifts=[
+ ["Clown Box",0],
+ ["Santa Hat",1],
+ ["Wreath",2],
+ ["Bow",3],
+ ["Sweet Box",4],
+ ["Bunny Cake",5],
+ ["Color Gift",6],
+ ["Witch Hat",7],
+ ["Snow Globe",8],
+ ["Heart Gift",9],
+ ["Candle",10],
+ ["Top Hat",11]
+];
+
+const giftArea=document.getElementById("gifts");
+
+gifts.forEach(([name,index])=>{
+ const card=document.createElement("div");
+ card.className="gift";
+ card.innerHTML=`
+  <div class="gift-image g${index}"></div>
+  <small>${name}</small>
+ `;
+ giftArea.appendChild(card);
+});
 
 const toast=document.getElementById("toast");
 
 function message(text){
  toast.textContent=text;
  toast.classList.add("show");
-
- setTimeout(()=>{
-  toast.classList.remove("show");
- },2200);
+ setTimeout(()=>toast.classList.remove("show"),2000);
 }
 
-document.getElementById("plus").onclick=()=>{
- message("💎 Balans bo‘limi keyin ulanadi");
-};
+document.querySelectorAll(".panel").forEach(panel=>{
+ panel.addEventListener("click",()=>{
+  message(panel.dataset.name+" — tez orada!");
+ });
+});
 
-document.querySelectorAll(".nav-item").forEach(button=>{
- button.onclick=()=>{
-  document.querySelectorAll(".nav-item").forEach(x=>{
-   x.classList.remove("active");
-  });
+document.querySelectorAll(".nav button").forEach(button=>{
+ button.addEventListener("click",()=>{
+  document.querySelectorAll(".nav button")
+   .forEach(b=>b.classList.remove("active"));
 
   button.classList.add("active");
-  message(button.dataset.name+" bo‘limi");
- };
+  message(button.dataset.page);
+ });
 });
 </script>
 
