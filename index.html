@@ -8,72 +8,54 @@
     <script src="https://cdn.tailwindcss.com"></script>
     <style>
         body { background-color: #000; color: #fff; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; overflow-x: hidden; }
-        .card-bg { background: linear-gradient(135deg, #111113 0%, #1a1a1e 100%); border: 1px solid rgba(255, 255, 255, 0.08); border-radius: 20px; }
-        .neon-border { border: 1px solid rgba(239, 68, 68, 0.4); box-shadow: 0 0 15px rgba(239, 68, 68, 0.15); }
-        .gift-item { background: #18181c; border: 1px solid rgba(255, 255, 255, 0.06); border-radius: 14px; min-width: 75px; height: 75px; flex-shrink: 0; display: flex; flex-direction: column; align-items: center; justify-content: center; }
+        .card-bg { background: linear-gradient(135deg, #131316 0%, #1c1c22 100%); border: 1px solid rgba(255, 255, 255, 0.08); border-radius: 20px; transition: transform 0.1s ease; }
+        .card-bg:active { transform: scale(0.98); }
+        .neon-border { border: 1px solid rgba(239, 68, 68, 0.4); box-shadow: 0 0 20px rgba(239, 68, 68, 0.12); }
+        .gift-item { background: linear-gradient(135deg, #18181c 100%, #222228 0%); border: 1px solid rgba(255, 255, 255, 0.07); border-radius: 16px; min-width: 78px; height: 78px; flex-shrink: 0; display: flex; flex-direction: column; align-items: center; justify-content: center; }
         .tab-content { display: none; }
         .tab-content.active { display: block; }
-        /* Scrollbar dizayni */
         ::-webkit-scrollbar { display: none; }
     </style>
 </head>
 <body class="p-3 pb-28">
 
     <!-- HEADER ($TONKS$ Uslubi va Balans) -->
-    <header class="flex justify-between items-center mb-3">
+    <header class="flex justify-between items-center mb-3.5">
         <div class="flex items-center space-x-2.5 cursor-pointer" onclick="openProfile()">
-            <div class="w-9 h-9 rounded-full bg-gradient-to-tr from-red-500 to-pink-500 flex items-center justify-center font-bold text-base shadow-md" id="user-avatar">N</div>
+            <div class="w-9 h-9 rounded-full bg-gradient-to-tr from-red-500 to-pink-500 flex items-center justify-center font-bold text-base shadow-lg" id="user-avatar">N</div>
             <div>
                 <h1 class="font-bold text-xs flex items-center space-x-1">
-                    <span id="username">N</span>
+                    <span id="username">Nursultan</span>
                     <span class="text-[10px] text-zinc-400">до IRON ⚔️</span>
                 </h1>
             </div>
         </div>
-        <div class="flex items-center bg-zinc-900/90 border border-zinc-800 px-3 py-1.5 rounded-full space-x-2 shadow-inner">
+        <div class="flex items-center bg-zinc-900/90 border border-zinc-800 px-3.5 py-1.5 rounded-full space-x-2 shadow-inner">
             <span class="text-sm font-extrabold text-cyan-400" id="user-balance">0.03 💎</span>
-            <button onclick="topUpBalance()" class="w-6 h-6 bg-blue-600 rounded-full flex items-center justify-center text-white font-bold text-xs hover:bg-blue-500 transition">+</button>
+            <button onclick="topUpBalance()" class="w-6 h-6 bg-blue-600 rounded-full flex items-center justify-center text-white font-bold text-xs hover:bg-blue-500 transition shadow-md">+</button>
         </div>
     </header>
 
     <!-- YUQORIGI SOVG'ALAR QATORI (Horizontal Scroll) -->
     <div class="flex space-x-2 overflow-x-auto mb-4 py-1">
-        <div class="gift-item">
-            <span class="text-xl">🧞‍♂️</span>
-            <span class="text-[10px] text-zinc-400 mt-1 font-bold">41 💎</span>
-        </div>
-        <div class="gift-item">
-            <span class="text-xl">💎</span>
-            <span class="text-[10px] text-zinc-400 mt-1 font-bold">2.5 💎</span>
-        </div>
-        <div class="gift-item">
-            <span class="text-xl">🌹</span>
-            <span class="text-[10px] text-zinc-400 mt-1 font-bold">0.28 💎</span>
-        </div>
-        <div class="gift-item">
-            <span class="text-xl">💎</span>
-            <span class="text-[10px] text-zinc-400 mt-1 font-bold">3 💎</span>
-        </div>
-        <div class="gift-item">
-            <span class="text-xl">🏺</span>
-            <span class="text-[10px] text-zinc-400 mt-1 font-bold">133 💎</span>
-        </div>
-        <div class="gift-item">
-            <span class="text-xl">👑</span>
-            <span class="text-[10px] text-zinc-400 mt-1 font-bold">14 💎</span>
-        </div>
+        <div class="gift-item"><span class="text-2xl">🧞‍♂️</span><span class="text-[10px] text-zinc-400 mt-1 font-bold">41 💎</span></div>
+        <div class="gift-item"><span class="text-2xl">💎</span><span class="text-[10px] text-zinc-400 mt-1 font-bold">2.5 💎</span></div>
+        <div class="gift-item"><span class="text-2xl">🌹</span><span class="text-[10px] text-zinc-400 mt-1 font-bold">0.28 💎</span></div>
+        <div class="gift-item"><span class="text-2xl">💎</span><span class="text-[10px] text-zinc-400 mt-1 font-bold">3 💎</span></div>
+        <div class="gift-item"><span class="text-2xl">🏺</span><span class="text-[10px] text-zinc-400 mt-1 font-bold">133 💎</span></div>
+        <div class="gift-item"><span class="text-2xl">👑</span><span class="text-[10px] text-zinc-400 mt-1 font-bold">14 💎</span></div>
     </div>
 
     <!-- TAB 1: O'YINLAR (GAMES) -->
     <div id="tab-games" class="tab-content active space-y-3">
         
         <!-- SLOTS -->
-        <div class="card-bg p-4 neon-border cursor-pointer active:scale-[0.99] transition" onclick="playGame('Slots')">
+        <div class="card-bg p-4 neon-border cursor-pointer" onclick="playGame('Slots')">
             <div class="flex justify-between items-center mb-3">
                 <span class="bg-red-500/20 text-red-400 text-[10px] px-2.5 py-1 rounded-full font-bold">✨ Новинка</span>
                 <span class="text-xs text-zinc-400 font-bold">🎰 СЛОТЫ</span>
             </div>
-            <div class="flex justify-around items-center py-2.5 bg-black/50 rounded-xl border border-zinc-800/60">
+            <div class="flex justify-around items-center py-2.5 bg-black/60 rounded-xl border border-zinc-800/60">
                 <div class="text-2xl animate-bounce">🍑</div>
                 <div class="text-2xl animate-pulse">🐸</div>
                 <div class="text-2xl animate-bounce">🧢</div>
@@ -81,7 +63,7 @@
         </div>
 
         <!-- CRASH -->
-        <div class="card-bg p-4 flex justify-between items-center cursor-pointer active:scale-[0.99] transition" onclick="playGame('Crash')">
+        <div class="card-bg p-4 flex justify-between items-center cursor-pointer" onclick="playGame('Crash')">
             <div>
                 <span class="bg-blue-500/20 text-blue-400 text-[10px] px-2.5 py-1 rounded-full font-bold">📈 Хит</span>
                 <h2 class="text-lg font-extrabold tracking-wide mt-1">CRASH</h2>
@@ -91,7 +73,7 @@
         </div>
 
         <!-- KEYSI -->
-        <div class="card-bg p-4 flex justify-between items-center cursor-pointer active:scale-[0.99] transition" onclick="playGame('Кейсы')">
+        <div class="card-bg p-4 flex justify-between items-center cursor-pointer" onclick="playGame('Кейсы')">
             <div>
                 <span class="text-xs text-emerald-400 font-bold">💎 Классика</span>
                 <h3 class="text-base font-bold mt-1">КЕЙСЫ</h3>
@@ -100,7 +82,7 @@
         </div>
 
         <!-- MINES -->
-        <div class="card-bg p-4 flex justify-between items-center cursor-pointer active:scale-[0.99] transition" onclick="playGame('Mines')">
+        <div class="card-bg p-4 flex justify-between items-center cursor-pointer" onclick="playGame('Mines')">
             <div>
                 <span class="text-xs text-cyan-400 font-bold">💣 Стратегия</span>
                 <h3 class="text-base font-bold mt-1">MINES</h3>
@@ -109,7 +91,7 @@
         </div>
 
         <!-- APGRADE -->
-        <div class="card-bg p-4 flex justify-between items-center cursor-pointer active:scale-[0.99] transition" onclick="playGame('Апгрейд')">
+        <div class="card-bg p-4 flex justify-between items-center cursor-pointer" onclick="playGame('Апгрейд')">
             <div>
                 <span class="text-xs text-amber-400 font-bold">❤️ Популярное</span>
                 <h3 class="text-base font-bold mt-1">АПГРЕЙД</h3>
@@ -118,7 +100,7 @@
         </div>
 
         <!-- PVP -->
-        <div class="card-bg p-4 flex justify-between items-center cursor-pointer active:scale-[0.99] transition" onclick="playGame('PvP')">
+        <div class="card-bg p-4 flex justify-between items-center cursor-pointer" onclick="playGame('PvP')">
             <div>
                 <span class="text-xs text-purple-400 font-bold">⚔️ Битва</span>
                 <h3 class="text-base font-bold mt-1">PvP</h3>
@@ -127,7 +109,7 @@
         </div>
 
         <!-- BONUS KEYSI -->
-        <div class="card-bg p-4 flex justify-between items-center cursor-pointer active:scale-[0.99] transition" onclick="playGame('Бонус кейсы')">
+        <div class="card-bg p-4 flex justify-between items-center cursor-pointer" onclick="playGame('Бонус кейсы')">
             <div>
                 <span class="text-xs text-emerald-400 font-bold">✨ Бонус</span>
                 <h3 class="text-base font-bold mt-1">БОНУС КЕЙСЫ</h3>
@@ -154,7 +136,7 @@
                 <h3 class="font-bold text-sm">Do'st taklif qilish</h3>
                 <p class="text-xs text-zinc-400">Har bir do'st uchun +0.50 💎</p>
             </div>
-            <button onclick="alert('Havola nusxalandi!')" class="bg-blue-600 px-3.5 py-2 rounded-xl text-xs font-bold">Bajarish</button>
+            <button onclick="alert('Havola nusxalandi!')" class="bg-blue-600 px-3.5 py-2 rounded-xl text-xs font-bold shadow-md">Bajarish</button>
         </div>
     </div>
 
@@ -172,7 +154,7 @@
     </div>
 
     <!-- PASTKI NAVIGATSIYA MENYU -->
-    <nav class="fixed bottom-0 left-0 right-0 bg-zinc-950/95 backdrop-blur-xl border-t border-zinc-800/80 flex justify-around py-3 px-2 z-50">
+    <nav class="fixed bottom-0 left-0 right-0 bg-zinc-950/95 backdrop-blur-xl border-t border-zinc-800/80 flex justify-around py-3 px-2 z-50 shadow-2xl">
         <button onclick="switchTab('inventory')" id="nav-inventory" class="flex flex-col items-center text-zinc-400 hover:text-white transition text-[11px]">
             <span class="text-lg">📦</span>
             <span class="mt-0.5 font-medium">Инвентарь</span>
@@ -201,11 +183,11 @@
         }
 
         function topUpBalance() {
-            tg.showAlert("Balansni to'ldirish oynasi ochilmoqda...");
+            tg.showAlert("Balansni to'ldirish uchun hisobingizga mablag' o'tkazing.");
         }
 
         function openProfile() {
-            tg.showAlert("Profil: " + document.getElementById('username').innerText + "\nBalans: 0.03 💎\nStatus: IRON");
+            tg.showAlert("👤 Profil: " + document.getElementById('username').innerText + "\n💎 Balans: 0.03\n🛡️ Status: IRON");
         }
 
         function playGame(gameName) {
