@@ -17,7 +17,7 @@ button{font:inherit;color:inherit;cursor:pointer}
 button:focus-visible{outline:2px solid #fff;outline-offset:3px}
 .app{width:min(100%,760px);margin:auto;padding:17px 16px calc(var(--nav-h) + 30px + env(safe-area-inset-bottom))}
 .topbar{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:25px}
-.profile{display:flex;align-items:center;gap:10px;min-width:0}
+.profile{display:flex;align-items:center;gap:10px;min-width:0;cursor:pointer}
 .avatar{width:48px;height:48px;border-radius:50%;display:grid;place-items:center;background:linear-gradient(140deg,#ff668e,#d52f69);font-size:22px;font-weight:950;box-shadow:0 6px 25px #ed477744}
 .profile strong{font-size:17px}.profile small{display:block;color:var(--muted);font-size:12px;margin-top:3px}
 .balance-pair{display:flex;flex-direction:column;gap:7px;align-items:flex-end}
@@ -82,10 +82,10 @@ button:focus-visible{outline:2px solid #fff;outline-offset:3px}
 <body>
 <main class="app">
   <header class="topbar">
-    <button class="profile" id="profileOpen" style="border:0;background:transparent;color:inherit;text-align:left;padding:0">
+    <div class="profile" id="profileOpen">
       <div class="avatar" id="userAvatar">N</div>
       <div><strong id="userName">Foydalanuvchi</strong><small>PROFIL</small></div>
-    </button>
+    </div>
     <div class="balance-pair">
       <div class="balance">💎 <span id="tonBalance">0.00</span> TON</div>
       <div class="balance stars-balance">⭐ <span id="starsBalance">0</span> Stars</div>
@@ -159,7 +159,7 @@ button:focus-visible{outline:2px solid #fff;outline-offset:3px}
       <p style="margin-top:5px">Sizning shaxsiy profilingiz va to'lovlar tarixingiz.</p>
     </div>
     <div class="info-card">
-      <b>🧾 To'lovlar tarixi</b>
+      <b>🧾 To'lovlar tarixi (Admin tasdig'i kutilmoqda)</b>
       <div id="paymentHistory" style="margin-top:8px;font-size:12px"><p class="market-empty">Hozircha to'lovlar tarixi yo'q</p></div>
     </div>
     <div class="info-card">
@@ -189,7 +189,7 @@ button:focus-visible{outline:2px solid #fff;outline-offset:3px}
   const tg = window.Telegram.WebApp;
   tg.expand();
 
-  // Har bir foydalanuvchi uchun alohida profil (Telegram ID yoki User ID bo'yicha)
+  // Har bir foydalanuvchi uchun alohida profil
   let userId = 'user_default';
   let userName = 'Nursultan';
   
@@ -202,7 +202,6 @@ button:focus-visible{outline:2px solid #fff;outline-offset:3px}
   $('#profileUserName').textContent = 'Foydalanuvchi: ' + userName;
   $('#userAvatar').textContent = userName.charAt(0).toUpperCase();
 
-  // Foydalanuvchi ma'lumotlarini yuklash
   let db = JSON.parse(localStorage.getItem(userId)) || {
     ton: 0,
     stars: 0,
@@ -211,7 +210,6 @@ button:focus-visible{outline:2px solid #fff;outline-offset:3px}
     claimed: false
   };
 
-  // Umumiy liderlar bazasi (zinapoya usuli)
   let globalLeaders = JSON.parse(localStorage.getItem('giftland_leaders')) || [];
 
   function saveData() {
@@ -219,10 +217,9 @@ button:focus-visible{outline:2px solid #fff;outline-offset:3px}
     $('#tonBalance').textContent = db.ton.toFixed(2);
     $('#starsBalance').textContent = db.stars;
     
-    // To'lovlar tarixini chiqarish
     const histEl = $('#paymentHistory');
     if (db.history.length === 0) {
-      histEl.innerHTML = '<p class="market-empty">Hozircha to\'lovlar tarixi yo\'q</p>';
+      histEl.innerHTML = '<p class="market-empty">Hozircha to'lovlar tarixi yo'q</p>';
     } else {
       histEl.innerHTML = db.history.map(h => `<div style="padding:6px 0;border-bottom:1px solid rgba(255,255,255,0.05)">${h}</div>`).join('');
     }
@@ -230,7 +227,15 @@ button:focus-visible{outline:2px solid #fff;outline-offset:3px}
 
   saveData();
 
-  // TON to'ldirish (klaviatura orqali miqdor kiritish va adminga o'tkazish)
+  // Profilni ochish tugmasi
+  $('#profileOpen').addEventListener("click", () => {
+    document.querySelectorAll(".page").forEach(p => p.classList.remove("active"));
+    $("#page-profile").classList.add("active");
+    document.querySelectorAll("[data-tab]").forEach(b => b.classList.remove("active"));
+    window.scrollTo({top:0, behavior:"smooth"});
+  });
+
+  // TON to'ldirish (Adminga xabar va tasdiq kutilishi)
   window.topUpTon = function() {
     let amountStr = prompt("Qancha TON to'lamoqchisiz?", "1.0");
     if(!amountStr) return;
@@ -240,18 +245,29 @@ button:focus-visible{outline:2px solid #fff;outline-offset:3px}
       return;
     }
 
-    // Admin hamyoniga yo'naltirish simulyatsiyasi
     let wallet = "UQA4qQ6E8Kf0vHXXCti_PzO71qXi7KiEeN5d71UO7xWiTL-w";
-    db.ton += amount;
-    let record = `💎 +${amount} TON to'landi (Manzil: ${wallet.substring(0,6)}...)`;
+    let record = `💎 ${amount} TON to'lov yuborildi (Kutilmoqda...)`;
     db.history.push(record);
-    
-    updateLeaderboard(userName, amount * 10); // Liderlarga qo'shish
     saveData();
-    showToast(`Muvaffaqiyatli! +${amount} TON qo'shildi.`);
+
+    // Admingacha xabar yuborish
+    let msg = encodeURIComponent(`Salom admin, men ${userName} (${userId}) ${amount} TON to'ladim. Hamyon: ${wallet}`);
+    window.open(`https://t.me/sots12?text=${msg}`, '_blank');
+    showToast("To'lov so'rovi adminga yuborildi. Tasdiqlangach balansga qo'shiladi.");
+
+    // Demo maqsadida admin tasdiqlashi (real muhitda server orqali bo'ladi)
+    setTimeout(() => {
+      if(confirm("[DEMO] Admin sifatida bu TON to'lovini tasdiqlaysizmi?")) {
+        db.ton += amount;
+        db.history[db.history.length - 1] = `💎 +${amount} TON tasdiqlandi ✓`;
+        updateLeaderboard(userName, amount * 10);
+        saveData();
+        showToast(`Admin to'lovni tasdiqladi! +${amount} TON qo'shildi.`);
+      }
+    }, 2000);
   }
 
-  // Stars to'ldirish
+  // Stars to'ldirish (Admingacha xabar va tasdiq kutilishi)
   window.topUpStars = function() {
     let amountStr = prompt("Qancha Stars to'lamoqchisiz?", "50");
     if(!amountStr) return;
@@ -261,13 +277,23 @@ button:focus-visible{outline:2px solid #fff;outline-offset:3px}
       return;
     }
 
-    db.stars += amount;
-    let record = `⭐ +${amount} Stars to'landi (Admin: @sots12)`;
+    let record = `⭐ ${amount} Stars to'lov yuborildi (Kutilmoqda...)`;
     db.history.push(record);
-
-    updateLeaderboard(userName, amount); // Liderlarga qo'shish
     saveData();
-    showToast(`Muvaffaqiyatli! +${amount} Stars qo'shildi.`);
+
+    let msg = encodeURIComponent(`Salom admin, men ${userName} (${userId}) ${amount} Stars to'ladim (@sots12).`);
+    window.open(`https://t.me/sots12?text=${msg}`, '_blank');
+    showToast("Stars to'lov so'rovi adminga yuborildi.");
+
+    setTimeout(() => {
+      if(confirm("[DEMO] Admin sifatida bu Stars to'lovini tasdiqlaysizmi?")) {
+        db.stars += amount;
+        db.history[db.history.length - 1] = `⭐ +${amount} Stars tasdiqlandi ✓`;
+        updateLeaderboard(userName, amount);
+        saveData();
+        showToast(`Admin to'lovni tasdiqladi! +${amount} Stars qo'shildi.`);
+      }
+    }, 2000);
   }
 
   window.markSubscribed = function() {
@@ -349,7 +375,7 @@ button:focus-visible{outline:2px solid #fff;outline-offset:3px}
 
   // NFT sotib olish (Admin @sots12 ga xabar yuborish)
   window.buyNft = function(nftName) {
-    if(confirm(`Siz "${nftName}" NFT ni sotib olmoqchimisiz? Admin (@sots12) ga xabar yuboriladi.`)) {
+    if(confirm(`Siz "${nftName}" NFT ni sotib olmoqchimisiz? Admin (@sots12) lichkasiga o'tiladi.`)) {
       let msg = encodeURIComponent(`Salom admin, men ${userName} (${userId}) ushbu NFTni sotib olmoqchiman: ${nftName}`);
       window.open(`https://t.me/sots12?text=${msg}`, '_blank');
     }
