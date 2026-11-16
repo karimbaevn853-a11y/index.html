@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>GiftLand - Crash & Music</title>
+    <title>GiftLand - Crash Game</title>
     <script src="https://telegram.org/js/telegram-web-app.js"></script>
     <script src="https://cdn.tailwindcss.com"></script>
     <style>
@@ -16,9 +16,9 @@
 </head>
 <body class="p-4 pb-28">
 
-    <!-- FON MUSIQASI (Siz so'ragan trekka mos audio havola) -->
-    <audio id="bg-music" loop>
-        <source src="https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3" type="audio/mpeg">
+    <!-- Ovozli effekt (Raketa uchganda chaliladigan ovoz) -->
+    <audio id="game-sound" preload="auto">
+        <source src="https://www.myinstants.com/media/sounds/chto-za-biznes-suka.mp3" type="audio/mpeg">
     </audio>
 
     <!-- HEADER -->
@@ -30,13 +30,9 @@
                 <p class="text-[10px] text-zinc-400">DO IRON 👑</p>
             </div>
         </div>
-        <div class="flex items-center space-x-2">
-            <button onclick="toggleMusic()" id="music-btn" class="bg-zinc-900 border border-zinc-800 px-3 py-1.5 rounded-full text-xs text-zinc-300 hover:text-white transition shadow">
-                🎵 <span id="music-status">Musiqa: O'chiq</span>
-            </button>
-            <div class="flex items-center bg-zinc-900 border border-zinc-800 px-3 py-1.5 rounded-full space-x-1">
-                <span class="text-sm font-extrabold text-cyan-400" id="user-balance">10.00 💎</span>
-            </div>
+        <div class="flex items-center bg-zinc-900 border border-zinc-800 px-3 py-1.5 rounded-full space-x-2">
+            <span class="text-sm font-extrabold text-cyan-400" id="user-balance">10.00 💎</span>
+            <span class="text-xs text-zinc-500">Balans</span>
         </div>
     </header>
 
@@ -107,63 +103,50 @@
         let currentMultiplier = 1.00;
         let targetCrash = 1.00;
         let isPlaying = false;
-        let isMusicPlaying = false;
 
         if (tg.initDataUnsafe && tg.initDataUnsafe.user) {
             document.getElementById('username').innerText = tg.initDataUnsafe.user.first_name;
             document.getElementById('user-avatar').innerText = tg.initDataUnsafe.user.first_name[0].toUpperCase();
         }
 
-        // Musiqani yoqib-o'chirish
-        function toggleMusic() {
-            const music = document.getElementById('bg-music');
-            const statusText = document.getElementById('music-status');
-            
-            if (!isMusicPlaying) {
-                music.play().then(() => {
-                    isMusicPlaying = true;
-                    statusText.innerText = "Musiqa: Yoqilgan";
-                    document.getElementById('music-btn').style.borderColor = '#3b82f6';
-                }).catch(e => {
-                    alert("Musiqani ijro etishda xatolik yuz berdi.");
-                });
-            } else {
-                music.pause();
-                isMusicPlaying = false;
-                statusText.innerText = "Musiqa: O'chiq";
-                document.getElementById('music-btn').style.borderColor = '#27272a';
-            }
-            tg.HapticFeedback.selectionChanged();
-        }
-
         function updateBalance() {
             document.getElementById('user-balance').innerText = balance.toFixed(2) + ' 💎';
         }
 
+        // Siz talab qilgan ehtimollik bo'yicha portlash nuqtasini tanlash
         function getRandomCrashPoint() {
-            let rnd = Math.random() * 100;
-            if (rnd < 0.0001) return +(100 + Math.random() * 400).toFixed(2);
-            else if (rnd < 5) return +(10 + Math.random() * 20).toFixed(2);
-            else if (rnd < 25) return +(2.0 + Math.random() * 0.99).toFixed(2);
-            else return +(1.01 + Math.random() * 0.98).toFixed(2);
+            let rnd = Math.random() * 100; // 0 dan 100 gacha
+
+            if (rnd < 0.0001) {
+                // 100x dan narigi (0.0001% ehtimol)
+                return +(100 + Math.random() * 400).toFixed(2);
+            } else if (rnd < 5) {
+                // 10 dan 29.99 gacha (juda kam)
+                return +(10 + Math.random() * 20).toFixed(2);
+            } else if (rnd < 25) {
+                // 2 dan 2.99 gacha (kamroq)
+                return +(2.0 + Math.random() * 0.99).toFixed(2);
+            } else {
+                // 1.00 dan 1.99 gacha (ko'p qismi - asosiy ehtimol)
+                return +(1.01 + Math.random() * 0.98).toFixed(2);
+            }
         }
 
         function toggleGame() {
             const btn = document.getElementById('action-btn');
             
-            if (!isMusicPlaying) {
-                const music = document.getElementById('bg-music');
-                music.play().then(() => {
-                    isMusicPlaying = true;
-                    document.getElementById('music-status').innerText = "Musiqa: Yoqilgan";
-                }).catch(err => {});
-            }
-
             if (!isPlaying) {
+                // O'yinni boshlash va ovozni ijro etish
                 if (balance < 1) {
                     alert("Balansda mablag' yetarli emas!");
                     return;
                 }
+
+                // Ovozni yoqish
+                const sound = document.getElementById('game-sound');
+                sound.currentTime = 0;
+                sound.play().catch(e => console.log("Ovozni ijro etishda xatolik:", e));
+
                 balance -= 1.00;
                 updateBalance();
 
@@ -177,14 +160,19 @@
 
                 gameInterval = setInterval(() => {
                     currentMultiplier += 0.02;
+                    
                     if (currentMultiplier >= targetCrash) {
                         currentMultiplier = targetCrash;
-                        endGame(false);
+                        endGame(false); // Portladi (Yutqazdi)
                     }
+
                     document.getElementById('crash-multiplier').innerText = currentMultiplier.toFixed(2) + 'x';
                     document.getElementById('rocket-icon').style.transform = `scale(${1 + currentMultiplier * 0.05})`;
+
                 }, 100);
+
             } else {
+                // Vaqtida Cash Out qilish (Yutib olish)
                 endGame(true);
             }
         }
