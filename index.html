@@ -84,7 +84,7 @@ button:focus-visible{outline:2px solid #fff;outline-offset:3px}
   <header class="topbar">
     <div class="profile" id="profileOpen">
       <div class="avatar" id="userAvatar">N</div>
-      <div><strong id="userName">Foydalanuvchi</strong><small>PROFIL</small></div>
+      <div><strong id="userName">Nursultan</strong><small>PROFIL</small></div>
     </div>
     <div class="balance-pair">
       <div class="balance">💎 <span id="tonBalance">0.00</span> TON</div>
@@ -155,19 +155,12 @@ button:focus-visible{outline:2px solid #fff;outline-offset:3px}
   <section id="page-profile" class="page">
     <h1 class="page-title">👤 PROFIL</h1>
     <div class="info-card">
-      <strong id="profileUserName" style="font-size:16px">Foydalanuvchi</strong>
-      <p style="margin-top:5px">Sizning shaxsiy profilingiz va to'lovlar tarixingiz.</p>
+      <strong id="profileUserName" style="font-size:16px">Nursultan</strong>
+      <p style="margin-top:5px">Sizning shaxsiy profilingiz va yutuqlar tarixingiz.</p>
     </div>
     <div class="info-card">
-      <b>🧾 To'lovlar tarixi (Admin tasdig'i kutilmoqda)</b>
-      <div id="paymentHistory" style="margin-top:8px;font-size:12px"><p class="market-empty">Hozircha to'lovlar tarixi yo'q</p></div>
-    </div>
-    <div class="info-card">
-      <b>🎟️ Promo kod</b>
-      <p style="margin-top:5px">Promo kodni kiriting:</p>
-      <input class="market-search" id="promoInput" type="text" placeholder="Promo kodni kiriting" autocomplete="off" style="margin-top:8px">
-      <button class="action" id="promoOpen" style="background:#1888f8;border:0;border-radius:10px;padding:10px;color:#fff;font-weight:bold;width:100%">Tasdiqlash</button>
-      <p id="promoResult" aria-live="polite" style="margin-top:8px;font-size:12px"></p>
+      <b>🧾 To'lovlar va yutuqlar tarixi</b>
+      <div id="paymentHistory" style="margin-top:8px;font-size:12px"><p class="market-empty">Hozircha tarix yo‘q</p></div>
     </div>
   </section>
 </main>
@@ -189,13 +182,12 @@ button:focus-visible{outline:2px solid #fff;outline-offset:3px}
   const tg = window.Telegram.WebApp;
   tg.expand();
 
-  // Har bir foydalanuvchi uchun alohida profil
   let userId = 'user_default';
   let userName = 'Nursultan';
   
-  if (tg.initDataUnsafe && tg.initDataUnsafe.user) {
+  if (tg.initDataUnsafe && tg.initDataUnsafe.user && tg.initDataUnsafe.user.first_name) {
+    userName = tg.initDataUnsafe.user.first_name;
     userId = 'user_' + tg.initDataUnsafe.user.id;
-    userName = tg.initDataUnsafe.user.first_name || 'Nursultan';
   }
 
   $('#userName').textContent = userName;
@@ -206,6 +198,7 @@ button:focus-visible{outline:2px solid #fff;outline-offset:3px}
     ton: 0,
     stars: 0,
     history: [],
+    inventory: [],
     subscribed: false,
     claimed: false
   };
@@ -217,17 +210,30 @@ button:focus-visible{outline:2px solid #fff;outline-offset:3px}
     $('#tonBalance').textContent = db.ton.toFixed(2);
     $('#starsBalance').textContent = db.stars;
     
+    // To'lovlar va yutuqlar tarixi
     const histEl = $('#paymentHistory');
     if (db.history.length === 0) {
-      histEl.innerHTML = '<p class="market-empty">Hozircha to'lovlar tarixi yo'q</p>';
+      histEl.innerHTML = '<p class="market-empty">Hozircha tarix yo‘q</p>';
     } else {
       histEl.innerHTML = db.history.map(h => `<div style="padding:6px 0;border-bottom:1px solid rgba(255,255,255,0.05)">${h}</div>`).join('');
+    }
+
+    // Inventar yutuqlarini chiqarish
+    const invGrid = $('#inventoryGrid');
+    if(db.inventory.length === 0) {
+      invGrid.innerHTML = '<div class="market-empty">Hozircha yutuq sovg‘alar yo‘q</div>';
+    } else {
+      invGrid.innerHTML = db.inventory.map(item => `
+        <div class="inventory-item">
+          <span style="font-size:28px">${item.emoji}</span>
+          <div><b>${item.name}</b><small>Kolleksiya</small></div>
+        </div>
+      `).join('');
     }
   }
 
   saveData();
 
-  // Profilni ochish tugmasi
   $('#profileOpen').addEventListener("click", () => {
     document.querySelectorAll(".page").forEach(p => p.classList.remove("active"));
     $("#page-profile").classList.add("active");
@@ -235,7 +241,7 @@ button:focus-visible{outline:2px solid #fff;outline-offset:3px}
     window.scrollTo({top:0, behavior:"smooth"});
   });
 
-  // TON to'ldirish (Adminga xabar va tasdiq kutilishi)
+  // TON to'ldirish va admin tasdig'i
   window.topUpTon = function() {
     let amountStr = prompt("Qancha TON to'lamoqchisiz?", "1.0");
     if(!amountStr) return;
@@ -246,28 +252,26 @@ button:focus-visible{outline:2px solid #fff;outline-offset:3px}
     }
 
     let wallet = "UQA4qQ6E8Kf0vHXXCti_PzO71qXi7KiEeN5d71UO7xWiTL-w";
-    let record = `💎 ${amount} TON to'lov yuborildi (Kutilmoqda...)`;
-    db.history.push(record);
-    saveData();
-
-    // Admingacha xabar yuborish
     let msg = encodeURIComponent(`Salom admin, men ${userName} (${userId}) ${amount} TON to'ladim. Hamyon: ${wallet}`);
     window.open(`https://t.me/sots12?text=${msg}`, '_blank');
-    showToast("To'lov so'rovi adminga yuborildi. Tasdiqlangach balansga qo'shiladi.");
+    showToast("To'lov so'rovi adminga yuborildi.");
 
-    // Demo maqsadida admin tasdiqlashi (real muhitda server orqali bo'ladi)
     setTimeout(() => {
-      if(confirm("[DEMO] Admin sifatida bu TON to'lovini tasdiqlaysizmi?")) {
+      if(confirm(`[DEMO] Admin sifatida ${amount} TON to'lovini tasdiqlaysizmi?`)) {
         db.ton += amount;
-        db.history[db.history.length - 1] = `💎 +${amount} TON tasdiqlandi ✓`;
-        updateLeaderboard(userName, amount * 10);
+        let record = `💎 +${amount} TON to'landi va tasdiqlandi ✓`;
+        db.history.push(record);
+        
+        // Ballar: 0.1 ton = 1 ball
+        let points = (amount / 0.1);
+        updateLeaderboard(userName, points);
         saveData();
-        showToast(`Admin to'lovni tasdiqladi! +${amount} TON qo'shildi.`);
+        showToast(`Admin tasdiqladi! +${amount} TON qo'shildi.`);
       }
     }, 2000);
   }
 
-  // Stars to'ldirish (Admingacha xabar va tasdiq kutilishi)
+  // Stars to'ldirish va admin tasdig'i
   window.topUpStars = function() {
     let amountStr = prompt("Qancha Stars to'lamoqchisiz?", "50");
     if(!amountStr) return;
@@ -277,21 +281,21 @@ button:focus-visible{outline:2px solid #fff;outline-offset:3px}
       return;
     }
 
-    let record = `⭐ ${amount} Stars to'lov yuborildi (Kutilmoqda...)`;
-    db.history.push(record);
-    saveData();
-
     let msg = encodeURIComponent(`Salom admin, men ${userName} (${userId}) ${amount} Stars to'ladim (@sots12).`);
     window.open(`https://t.me/sots12?text=${msg}`, '_blank');
     showToast("Stars to'lov so'rovi adminga yuborildi.");
 
     setTimeout(() => {
-      if(confirm("[DEMO] Admin sifatida bu Stars to'lovini tasdiqlaysizmi?")) {
+      if(confirm(`[DEMO] Admin sifatida ${amount} Stars to'lovini tasdiqlaysizmi?`)) {
         db.stars += amount;
-        db.history[db.history.length - 1] = `⭐ +${amount} Stars tasdiqlandi ✓`;
-        updateLeaderboard(userName, amount);
+        let record = `⭐ +${amount} Stars to'landi va tasdiqlandi ✓`;
+        db.history.push(record);
+
+        // Ballar: 5 stars = 1 ball
+        let points = (amount / 5);
+        updateLeaderboard(userName, points);
         saveData();
-        showToast(`Admin to'lovni tasdiqladi! +${amount} Stars qo'shildi.`);
+        showToast(`Admin tasdiqladi! +${amount} Stars qo'shildi.`);
       }
     }, 2000);
   }
@@ -313,9 +317,11 @@ button:focus-visible{outline:2px solid #fff;outline-offset:3px}
 
     if(type === 'ton') {
       db.ton += 0.1;
+      db.history.push(`🎁 Vazifa mukofoti: +0.1 TON`);
       showToast("Tabriklaymiz! +0.1 TON qo'shildi.");
     } else {
       db.stars += 5;
+      db.history.push(`🎁 Vazifa mukofoti: +5 Stars`);
       showToast("Tabriklaymiz! +5 Stars qo'shildi.");
     }
     db.claimed = true;
@@ -373,7 +379,6 @@ button:focus-visible{outline:2px solid #fff;outline-offset:3px}
   renderMarket();
   marketSearch.addEventListener("input", () => renderMarket(marketSearch.value));
 
-  // NFT sotib olish (Admin @sots12 ga xabar yuborish)
   window.buyNft = function(nftName) {
     if(confirm(`Siz "${nftName}" NFT ni sotib olmoqchimisiz? Admin (@sots12) lichkasiga o'tiladi.`)) {
       let msg = encodeURIComponent(`Salom admin, men ${userName} (${userId}) ushbu NFTni sotib olmoqchiman: ${nftName}`);
@@ -397,17 +402,6 @@ button:focus-visible{outline:2px solid #fff;outline-offset:3px}
     document.querySelectorAll("[data-tab]").forEach(b => b.classList.toggle("active", b === btn));
     window.scrollTo({top:0, behavior:"smooth"});
   }));
-
-  $('#promoOpen').addEventListener("click", () => {
-    const code = $('#promoInput').value.trim();
-    if(code) {
-      $('#promoResult').textContent = "Promo kod qabul qilindi!";
-      $('#promoResult').style.color = "#22c55e";
-    } else {
-      $('#promoResult').textContent = "Iltimos promo kodni kiriting.";
-      $('#promoResult').style.color = "#ef4444";
-    }
-  });
 })();
 </script>
 </body>
