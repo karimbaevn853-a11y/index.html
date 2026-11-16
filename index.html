@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <meta name="theme-color" content="#07080d">
-<title>STONKS — NFT Arcade</title>
+<title>GIFTLAND — Gift Collection</title>
 <style>
 :root{
   --bg:#07080d;--panel:#14151c;--text:#f7f7fb;--muted:#9295a3;
@@ -32,7 +32,6 @@ button:focus-visible{outline:2px solid #fff;outline-offset:3px}
 .gift-art{width:105px;height:105px;display:grid;place-items:center;filter:drop-shadow(0 8px 9px #0008);animation:nftFloat 3.2s ease-in-out infinite;will-change:transform}
 .g0,.g1,.g2,.g3,.g4,.g5,.g6,.g7,.g8,.g9,.g10,.g11{background:none!important}
 .g0::before,.g1::before,.g2::before,.g3::before,.g4::before,.g5::before,.g6::before,.g7::before,.g8::before,.g9::before,.g10::before,.g11::before{content:attr(data-emoji);font-size:clamp(56px,15vw,82px);line-height:1}
-/* Named NFT gift illustrations: clear, original emoji-style artwork */
 .gift-art.custom-gift{background:none!important;display:grid;place-items:center;border-radius:22px;font-family:system-ui;position:relative;isolation:isolate}
 .gift-art.custom-gift::before{content:attr(data-emoji);display:grid;place-items:center;width:82%;height:82%;font-size:clamp(54px,15vw,82px);line-height:1;border-radius:25px;background:radial-gradient(circle at 35% 25%,#ffffff35,transparent 42%),linear-gradient(145deg,var(--gift-a),var(--gift-b));border:1px solid #ffffff35;box-shadow:inset 0 2px 12px #ffffff25,0 12px 24px #0008;text-shadow:0 5px 10px #0008}
 .gift-art.mission{--gift-a:#203e86;--gift-b:#6b43c5}
@@ -67,9 +66,7 @@ button:focus-visible{outline:2px solid #fff;outline-offset:3px}
 .game-card .gift-art{position:absolute;width:130px;height:130px;right:17px;bottom:12px;z-index:0;filter:drop-shadow(0 12px 14px #0009)}
 .game-card .copy{position:relative;z-index:1;pointer-events:none}
 .slots{--glow:190,48,151;--tone:#ed52bd}
-.crash{--glow:34,126,230;--tone:#48aaff}
-/* Stellar Rocket / Mission Uranus is an exterior visual ornament only */
-.crash{overflow:hidden}
+.crash{--glow:34,126,230;--tone:#48aaff;overflow:hidden}
 .crash .stellar-orbit{position:absolute;right:7px;top:16px;width:158px;height:132px;border:1.5px solid #9edaff75;border-radius:50%;transform:rotate(-27deg);z-index:0;pointer-events:none;box-shadow:0 0 17px #4baaff55,inset 0 0 15px #4baaff22}
 .crash .stellar-orbit:before,.crash .stellar-orbit:after{content:"";position:absolute;border-radius:50%;background:#c9f2ff;box-shadow:0 0 12px #69caff}
 .crash .stellar-orbit:before{width:7px;height:7px;left:17px;top:19px}
@@ -102,7 +99,6 @@ button:focus-visible{outline:2px solid #fff;outline-offset:3px}
 .bottom-nav{position:fixed;z-index:8;bottom:0;left:50%;transform:translateX(-50%);width:min(100%,760px);padding:9px 12px calc(9px + env(safe-area-inset-bottom));display:grid;grid-template-columns:repeat(5,1fr);gap:5px;background:rgba(9,12,18,.94);border:1px solid #ffffff18;border-bottom:0;border-radius:25px 25px 0 0;backdrop-filter:blur(20px)}
 .nav-btn{border:0;background:transparent;color:#858b9a;border-radius:15px;padding:6px 3px;display:grid;justify-items:center;gap:3px;font-size:11px;font-weight:800}
 .nav-btn span{font-size:23px;line-height:1.2}.nav-btn.active{color:#43aaff;background:#14283b}
-
 .market-note{margin:-6px 2px 14px;color:var(--muted);font-size:12px;line-height:1.45}
 .market-search{width:100%;padding:13px 15px;border-radius:15px;background:#151923;border:1px solid var(--line);color:var(--text);outline:none;margin-bottom:13px}
 .market-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}
@@ -111,11 +107,15 @@ button:focus-visible{outline:2px solid #fff;outline-offset:3px}
 .market-item b{font-size:11px;line-height:1.25;overflow-wrap:anywhere}
 .market-item small{display:block;color:var(--muted);font-size:9px;margin-top:4px}
 .market-empty{grid-column:1/-1;text-align:center;color:var(--muted);padding:25px}
+#profileHistory .history-row{padding:10px 0;border-bottom:1px solid var(--line);font-size:13px;color:#d9dce6}
+#profileHistory .history-row:last-child{border:0}
 @media(max-width:390px){.market-grid{gap:8px}.market-item{padding:9px;gap:8px}.market-emoji{width:39px;height:39px;flex-basis:39px;font-size:24px}.market-item b{font-size:10px}}
 .modal-backdrop{position:fixed;inset:0;z-index:20;background:#000c;display:none;place-items:center;padding:18px}
 .modal-backdrop.open{display:grid}
 .modal{width:min(100%,390px);background:linear-gradient(145deg,#1b2030,#10131c);border:1px solid #ffffff24;border-radius:27px;padding:23px;text-align:center;box-shadow:0 25px 90px #000b}
-.modal .big{width:112px;height:112px;margin:auto}.modal h2{margin:8px 0 5px;font-size:23px}.modal p{color:#b2b6c4;font-size:14px;line-height:1.5}
+.modal .big{width:112px;height:112px;margin:auto}
+.modal h2{margin:8px 0 5px;font-size:23px}
+.modal p{color:#b2b6c4;font-size:14px;line-height:1.5}
 .action{width:100%;border:0;border-radius:14px;padding:13px;margin-top:9px;background:linear-gradient(90deg,#1888f8,#5a55e9);font-weight:900}
 .secondary{background:#ffffff12;border:1px solid #ffffff20}
 .toast{position:fixed;z-index:30;left:50%;bottom:calc(var(--nav-h) + 18px);transform:translate(-50%,12px);opacity:0;pointer-events:none;background:#202637;border:1px solid #ffffff22;border-radius:14px;padding:11px 16px;font-size:13px;transition:.2s;max-width:90%;text-align:center}
@@ -133,36 +133,61 @@ button:focus-visible{outline:2px solid #fff;outline-offset:3px}
 <body>
 <main class="app">
   <header class="topbar">
-    <div class="profile"><div class="avatar">N</div><div><strong>N</strong><small>DO IRON 👑</small></div></div>
-    <div class="balance">0 💎</div>
+    <button class="profile" id="profileOpen" style="border:0;background:transparent;color:inherit;text-align:left;padding:0">
+      <div class="avatar">N</div>
+      <div><strong>N</strong><small>PROFILNI OCHISH 👤</small></div>
+    </button>
+    <div class="balance">⭐ <span id="pointsBalance">0</span></div>
   </header>
 
-  <section id="page-games" class="page active">
+  <section id="page-games" class="page">
     <div class="section-head"><h2>🎁 NFT GIFTS</h2><span>COLLECTION</span></div>
     <div class="gift-row" id="giftRow"></div>
-    <div class="section-head"><h2>🎮 O‘YINLAR</h2><span>STONKS ORIGINAL</span></div>
+    <div class="section-head"><h2>🎮 O‘YINLAR</h2><span>GIFTLAND ORIGINAL</span></div>
     <div class="game-list">
       <button class="game-card slots" data-game="slots">
-        <span class="fog-ring"></span><div class="copy"><span class="tag">✨ NOVINKA</span><h3>SLOTLAR</h3><p>Rangli NFT sovg‘alar bilan demo bo‘lim.</p></div><span class="gift-art custom-gift chimpool" data-emoji="🐵"></span>
+        <span class="fog-ring"></span>
+        <div class="copy"><span class="tag">✨ NOVINKA</span><h3>SLOTLAR</h3><p>Rangli NFT sovg‘alar bilan demo bo‘lim.</p></div>
+        <span class="gift-art custom-gift chimpool" data-emoji="🐵"></span>
       </button>
+
       <button class="game-card crash" data-game="crash">
-        <span class="fog-ring"></span><span class="stellar-orbit" aria-hidden="true"></span><span class="stellar-label">✦ STELLAR ROCKET</span><div class="copy"><span class="tag">📈 HIT</span><h3>CRASH</h3><p>Ko‘k tuman va raketa effektli demo bo‘lim.</p></div><span class="gift-art custom-gift mission" data-emoji="🪐"></span><span class="stellar-caption">MISSION URANUS NFT</span>
+        <span class="fog-ring"></span>
+        <span class="stellar-orbit" aria-hidden="true"></span>
+        <span class="stellar-label">✦ STELLAR ROCKET</span>
+        <div class="copy"><span class="tag">📈 HIT</span><h3>CRASH</h3><p>Ko‘k tuman va raketa effektli demo bo‘lim.</p></div>
+        <span class="gift-art custom-gift mission" data-emoji="🪐"></span>
+        <span class="stellar-caption">MISSION URANUS NFT</span>
       </button>
+
       <button class="game-card keys" data-game="keys">
-        <span class="fog-ring"></span><div class="copy"><span class="tag">💎 KLASSIKA</span><h3>KEYSLAR</h3><p>Sovg‘alar kolleksiyasini ko‘r va yig‘.</p></div><span class="gift-art custom-gift basic" data-emoji="🗝️"></span>
+        <span class="fog-ring"></span>
+        <div class="copy"><span class="tag">💎 KLASSIKA</span><h3>KEYSLAR</h3><p>Sovg‘alar kolleksiyasini ko‘r va yig‘.</p></div>
+        <span class="gift-art custom-gift basic" data-emoji="🗝️"></span>
       </button>
+
       <button class="game-card mines" data-game="mines">
-        <span class="fog-ring"></span><div class="copy"><span class="tag">🧩 STRATEGIYA</span><h3>MINES</h3><p>Binafsha rangdagi mantiqiy mini-jumboq.</p></div><span class="gift-art custom-gift kelly" data-emoji="🍀"></span>
+        <span class="fog-ring"></span>
+        <div class="copy"><span class="tag">🧩 STRATEGIYA</span><h3>MINES</h3><p>Binafsha rangdagi mantiqiy mini-jumboq.</p></div>
+        <span class="gift-art custom-gift kelly" data-emoji="🍀"></span>
       </button>
+
       <button class="game-card upgrade" data-game="upgrade">
-        <span class="fog-ring"></span><div class="copy"><span class="tag">⭐ LEVEL</span><h3>UPGRADE</h3><p>Profil bezaklari va kolleksiya darajasi.</p></div><span class="upgrade-duo"><span class="gift-art custom-gift basic" data-emoji="🎁"></span><span class="gift-art custom-gift pepe" data-emoji="🐸"></span></span>
+        <span class="fog-ring"></span>
+        <div class="copy"><span class="tag">⭐ LEVEL</span><h3>UPGRADE</h3><p>Profil bezaklari va kolleksiya darajasi.</p></div>
+        <span class="upgrade-duo">
+          <span class="gift-art custom-gift basic" data-emoji="🎁"></span>
+          <span class="gift-art custom-gift pepe" data-emoji="🐸"></span>
+        </span>
       </button>
+
       <button class="game-card pvp" data-game="pvp">
-        <span class="fog-ring"></span><div class="copy"><span class="tag">👑 SOCIAL</span><h3>PVP</h3><p>Do‘stlar bilan natijalarni solishtirish.</p></div><span class="gift-art custom-gift pepe" data-emoji="🤝"></span>
+        <span class="fog-ring"></span>
+        <div class="copy"><span class="tag">👑 SOCIAL</span><h3>PVP</h3><p>Do‘stlar bilan natijalarni solishtirish.</p></div>
+        <span class="gift-art custom-gift pepe" data-emoji="🤝"></span>
       </button>
     </div>
   </section>
-
 
   <section id="page-market" class="page">
     <h1 class="page-title">🛍️ NFT BOZOR</h1>
@@ -171,16 +196,17 @@ button:focus-visible{outline:2px solid #fff;outline-offset:3px}
     <div class="market-grid" id="marketGrid"></div>
   </section>
 
-  <section id="page-inventory" class="page">
+  <section id="page-inventory" class="page active">
     <h1 class="page-title">📦 INVENTAR</h1>
-    <div class="info-card"><b>NFT sovg‘alar kolleksiyasi</b><p>Bu yerda ko‘rgan sovg‘alaring saqlanadi. Hozircha demo kolleksiya.</p></div>
+    <div class="info-card"><b>Yutuqlar kolleksiyasi</b><p>O‘yindagi sovg‘alar shu yerda ko‘rinadi. Hozircha bu demo inventar.</p></div>
     <div class="inventory-grid" id="inventoryGrid"></div>
   </section>
 
   <section id="page-tasks" class="page">
     <h1 class="page-title">📋 VAZIFALAR</h1>
     <div class="info-card">
-      <b>Kunlik vazifalar</b><p>Vazifalarni belgilab, demo progressni kuzat.</p>
+      <b>Kunlik vazifalar</b><p>Vazifalar va kanal yangiliklarini shu yerdan kuzat.</p>
+      <div class="task"><span style="font-size:24px">📢</span><span style="flex:1"><b>GiftLand kanaliga obuna bo‘lish</b><small>Kanalni ochib, yangiliklarni kuzat</small></span><a href="https://t.me/GiftLanda" target="_blank" rel="noopener" class="action" style="width:auto;margin:0;text-decoration:none;padding:9px 12px">Ochish</a></div>
       <label class="task"><input type="checkbox" data-task="1"><span><b>O‘yinlar bo‘limini ko‘r</b><small>Bo‘limlar bilan tanishib chiq</small></span></label>
       <label class="task"><input type="checkbox" data-task="2"><span><b>NFT kolleksiyasini och</b><small>Sovg‘alar kartalarini ko‘r</small></span></label>
       <label class="task"><input type="checkbox" data-task="3"><span><b>Inventarni tekshir</b><small>Kolleksiya sahifasiga o‘t</small></span></label>
@@ -189,28 +215,50 @@ button:focus-visible{outline:2px solid #fff;outline-offset:3px}
 
   <section id="page-leaders" class="page">
     <h1 class="page-title">🏆 LIDERLAR</h1>
-    <div class="info-card"><b>Haftalik reyting</b><p class="empty-rating">Reyting hali yo‘q</p></div>
+    <div class="info-card"><b>Haftalik faollik reytingi</b><p>Reyting faqat bepul vazifalar va platformadagi faollik bo‘yicha shakllanadi.</p><p class="empty-rating" id="leaderEmpty">Reyting hali yo‘q</p></div>
+  </section>
+
+  <section id="page-profile" class="page">
+    <h1 class="page-title">👤 PROFIL</h1>
+    <div class="info-card">
+      <b>Foydalanuvchi: N</b>
+      <p>GIFTLAND profilingiz. Bu demo versiyada ma’lumotlar faqat shu qurilmada saqlanadi. Haqiqiy TON/Stars to‘lovlari va pul tikish funksiyasi mavjud emas.</p>
+      <div class="task"><span>⭐</span><span style="flex:1"><b>Faollik ballari</b><small id="profilePoints">0 ball</small></span></div>
+      <div class="task"><span>🎁</span><span style="flex:1"><b>Yutuqlar</b><small id="profileWins">0 ta sovg‘a</small></span></div>
+      <div class="task"><span>🧾</span><span style="flex:1"><b>To‘lovlar tarixi</b><small>Bu demo versiyada haqiqiy to‘lovlar yo‘q</small></span></div>
+    </div>
+
+    <div class="info-card">
+      <b>🎟️ Promo kod / Promo case</b>
+      <p>Admin bergan promo kodni kiriting. Demo kod: <b>GIFTLAND</b></p>
+      <input class="market-search" id="promoInput" type="text" placeholder="Promo kodni kiriting" autocomplete="off">
+      <button class="action" id="promoOpen">Promo caseni ochish</button>
+      <p id="promoResult" aria-live="polite"></p>
+    </div>
+
+    <div class="info-card"><b>📜 Oxirgi faoliyat</b><div id="profileHistory"><p class="empty-rating">Hozircha tarix yo‘q</p></div></div>
   </section>
 </main>
 
 <nav class="bottom-nav" aria-label="Asosiy navigatsiya">
-  <button class="nav-btn" data-tab="inventory"><span>📦</span>Inventar</button>
-  <button class="nav-btn active" data-tab="games"><span>🎮</span>O‘yinlar</button>
+  <button class="nav-btn active" data-tab="inventory"><span>📦</span>Inventar</button>
+  <button class="nav-btn" data-tab="games"><span>🎮</span>O‘yinlar</button>
   <button class="nav-btn" data-tab="tasks"><span>📋</span>Vazifalar</button>
   <button class="nav-btn" data-tab="leaders"><span>🏆</span>Liderlar</button>
   <button class="nav-btn" data-tab="market"><span>🛍️</span>NFT bozor</button>
 </nav>
 
 <div class="toast" id="toast" role="status" aria-live="polite"></div>
+
 <div class="modal-backdrop" id="modal">
   <section class="modal" role="dialog" aria-modal="true" aria-labelledby="modalTitle">
     <div class="big gift-art custom-gift basic" id="modalArt" data-emoji="🎁"></div>
-    <h2 id="modalTitle">Bo‘lim</h2><p id="modalText">Demo bo‘lim.</p>
+    <h2 id="modalTitle">Bo‘lim</h2>
+    <p id="modalText">Demo bo‘lim.</p>
     <button class="action" id="modalAction">Tushunarli</button>
     <button class="action secondary" id="closeModal">Yopish</button>
   </section>
 </div>
-
 <script>
 (() => {
   const gifts = [
@@ -220,32 +268,81 @@ button:focus-visible{outline:2px solid #fff;outline-offset:3px}
     ["Oddiy Gift","basic","🎁"],
     ["Pepe","pepe","🐸"]
   ];
+
   const $ = s => document.querySelector(s);
-  const marketCollections = [["Intelligence Cups", "🏆"], ["Algorithm Cups", "🧠"], ["Lucky Lockets", "🔐"], ["Durov’s Glasses", "🕶️"], ["Resistance Dogs", "🐕"], ["Heart Lockets", "💗"], ["Heroic Helmets", "🪖"], ["Mighty Arms", "💪"], ["Mirage Lamps", "🪔"], ["Nail Bracelets", "💅"], ["Precious Peaches", "🍑"], ["Perfume Bottles", "🧴"], ["Mini Oscars", "🏆"], ["Gem Signets", "💍"], ["Bling Binkies", "🍼"], ["Plush Pepes", "🐸"], ["Ion Gems", "💎"], ["Genie Lamps", "🧞"], ["Ionic Dryers", "💨"], ["Astral Shards", "✨"], ["Bonded Rings", "💍"], ["Artisan Bricks", "🧱"], ["Durov’s Caps", "🧢"], ["Magic Potions", "🧪"], ["Love Candles", "🕯️"], ["Surge Boards", "🛹"], ["Khabib’s Papakhas", "🧢"], ["Rare Birds", "🦜"], ["Fine Pens", "🖊️"], ["Sharp Tongues", "👅"], ["Valentine Boxes", "💝"], ["Neko Helmets", "🐱"], ["Joyful Bundles", "🎁"], ["Electric Skulls", "💀"], ["Sleigh Bells", "🔔"], ["Snow Mittens", "🧤"], ["Westside Signs", "🪧"], ["Record Players", "📀"], ["Eternal Roses", "🌹"], ["Cupid Charms", "💘"], ["Pretty Posies", "💐"], ["Sky Stilettos", "👠"], ["Loot Bags", "🛍️"], ["Holiday Drinks", "🥤"], ["Snow Globes", "❄️"], ["Mad Pumpkins", "🎃"], ["Flying Brooms", "🧹"], ["Low Riders", "🚗"], ["Love Potions", "💗"], ["Lush Bouquets", "💐"], ["Bunny Muffins", "🐰"], ["UFC Strikes", "🥊"], ["Skull Flowers", "💀"], ["Hanging Stars", "⭐"], ["Signet Rings", "💍"], ["Kissed Frogs", "🐸"], ["Mousse Cakes", "🍰"], ["Crystal Balls", "🔮"], ["Diamond Rings", "💎"], ["Bow Ties", "🎀"], ["Vintage Cigars", "🚬"], ["Jingle Bells", "🛎️"], ["Berry Boxes", "🫐"], ["Top Hats", "🎩"], ["Hypno Lollipops", "🍭"], ["Star Notepads", "📝"], ["Timeless Books", "📚"], ["Trapped Hearts", "❤️"], ["Money Pots", "💰"], ["Restless Jars", "🫙"], ["Winter Wreaths", "🎄"], ["Snake Boxes", "🐍"], ["Swiss Watches", "⌚"], ["Voodoo Dolls", "🪆"], ["Tama Gadgets", "🎮"], ["Happy Brownies", "🍫"], ["Pet Snakes", "🐍"], ["Faith Amulets", "📿"], ["Spiced Wines", "🍷"], ["Eternal Candles", "🕯️"], ["Fresh Socks", "🧦"], ["Santa Hats", "🎅"], ["Big Years", "🎉"], ["Moon Pendants", "🌙"], ["Jester Hats", "🤡"], ["Spring Baskets", "🧺"], ["Cookie Hearts", "🍪"], ["Jelly Bunnies", "🐇"], ["Scared Cats", "🐈"], ["Sakura Flowers", "🌸"], ["Hex Pots", "⚗️"], ["Input Keys", "⌨️"], ["Jolly Chimps", "🐵"], ["Whip Cupcakes", "🧁"], ["Victory Medals", "🏅"], ["Mood Packs", "🎭"], ["Jacks-in-the-Box", "🤹"], ["Xmas Stockings", "🧦"], ["Pool Floats", "🛟"], ["Stellar Rockets", "🚀"], ["Candy Canes", "🍬"], ["Light Swords", "⚔️"], ["Evil Eyes", "🧿"], ["Ginger Cookies", "🍪"], ["Snoop Cigars", "🚬"], ["Clover Pins", "🍀"], ["Lunar Snakes", "🐍"], ["Swag Bags", "🎒"], ["Party Sparklers", "🎇"], ["B-Day Candles", "🎂"], ["Liberty Figures", "🗽"], ["Instant Ramens", "🍜"], ["Easter Eggs", "🥚"], ["Spy Agarics", "🍄"], ["Toy Bears", "🧸"], ["Witch Hats", "🧙"], ["Homemade Cakes", "🎂"], ["Desk Calendars", "📅"], ["Ice Creams", "🍦"], ["Chill Flames", "🔥"], ["Vice Creams", "🍨"], ["Snoop Doggs", "🐶"], ["Lol Pops", "🍭"]];
+
+  const marketCollections = [
+    ["Intelligence Cups","🏆"],["Algorithm Cups","🧠"],["Lucky Lockets","🔐"],["Durov’s Glasses","🕶️"],
+    ["Resistance Dogs","🐕"],["Heart Lockets","💗"],["Heroic Helmets","🪖"],["Mighty Arms","💪"],
+    ["Mirage Lamps","🪔"],["Nail Bracelets","💅"],["Precious Peaches","🍑"],["Perfume Bottles","🧴"],
+    ["Mini Oscars","🏆"],["Gem Signets","💍"],["Bling Binkies","🍼"],["Plush Pepes","🐸"],
+    ["Ion Gems","💎"],["Genie Lamps","🧞"],["Ionic Dryers","💨"],["Astral Shards","✨"],
+    ["Bonded Rings","💍"],["Artisan Bricks","🧱"],["Durov’s Caps","🧢"],["Magic Potions","🧪"],
+    ["Love Candles","🕯️"],["Surge Boards","🛹"],["Khabib’s Papakhas","🧢"],["Rare Birds","🦜"],
+    ["Fine Pens","🖊️"],["Sharp Tongues","👅"],["Valentine Boxes","💝"],["Neko Helmets","🐱"],
+    ["Joyful Bundles","🎁"],["Electric Skulls","💀"],["Sleigh Bells","🔔"],["Snow Mittens","🧤"],
+    ["Westside Signs","🪧"],["Record Players","📀"],["Eternal Roses","🌹"],["Cupid Charms","💘"],
+    ["Pretty Posies","💐"],["Sky Stilettos","👠"],["Loot Bags","🛍️"],["Holiday Drinks","🥤"],
+    ["Snow Globes","❄️"],["Mad Pumpkins","🎃"],["Flying Brooms","🧹"],["Low Riders","🚗"],
+    ["Love Potions","💗"],["Lush Bouquets","💐"],["Bunny Muffins","🐰"],["UFC Strikes","🥊"],
+    ["Skull Flowers","💀"],["Hanging Stars","⭐"],["Signet Rings","💍"],["Kissed Frogs","🐸"],
+    ["Mousse Cakes","🍰"],["Crystal Balls","🔮"],["Diamond Rings","💎"],["Bow Ties","🎀"],
+    ["Vintage Cigars","🚬"],["Jingle Bells","🛎️"],["Berry Boxes","🫐"],["Top Hats","🎩"],
+    ["Hypno Lollipops","🍭"],["Star Notepads","📝"],["Timeless Books","📚"],["Trapped Hearts","❤️"],
+    ["Money Pots","💰"],["Restless Jars","🫙"],["Winter Wreaths","🎄"],["Snake Boxes","🐍"],
+    ["Swiss Watches","⌚"],["Voodoo Dolls","🪆"],["Tama Gadgets","🎮"],["Happy Brownies","🍫"],
+    ["Pet Snakes","🐍"],["Faith Amulets","📿"],["Spiced Wines","🍷"],["Eternal Candles","🕯️"],
+    ["Fresh Socks","🧦"],["Santa Hats","🎅"],["Big Years","🎉"],["Moon Pendants","🌙"],
+    ["Jester Hats","🤡"],["Spring Baskets","🧺"],["Cookie Hearts","🍪"],["Jelly Bunnies","🐇"],
+    ["Scared Cats","🐈"],["Sakura Flowers","🌸"],["Hex Pots","⚗️"],["Input Keys","⌨️"],
+    ["Jolly Chimps","🐵"],["Whip Cupcakes","🧁"],["Victory Medals","🏅"],["Mood Packs","🎭"],
+    ["Jacks-in-the-Box","🤹"],["Xmas Stockings","🧦"],["Pool Floats","🛟"],["Stellar Rockets","🚀"],
+    ["Candy Canes","🍬"],["Light Swords","⚔️"],["Evil Eyes","🧿"],["Ginger Cookies","🍪"],
+    ["Snoop Cigars","🚬"],["Clover Pins","🍀"],["Lunar Snakes","🐍"],["Swag Bags","🎒"],
+    ["Party Sparklers","🎇"],["B-Day Candles","🎂"],["Liberty Figures","🗽"],["Instant Ramens","🍜"],
+    ["Easter Eggs","🥚"],["Spy Agarics","🍄"],["Toy Bears","🧸"],["Witch Hats","🧙"],
+    ["Homemade Cakes","🎂"],["Desk Calendars","📅"],["Ice Creams","🍦"],["Chill Flames","🔥"],
+    ["Vice Creams","🍨"],["Snoop Doggs","🐶"],["Lol Pops","🍭"]
+  ];
+
   const marketGrid = $("#marketGrid");
   const marketSearch = $("#marketSearch");
+
   function renderMarket(query="") {
     const q=query.trim().toLocaleLowerCase();
     const filtered=marketCollections.filter(([name])=>name.toLocaleLowerCase().includes(q));
-    marketGrid.innerHTML=filtered.length ? filtered.map(([name,emoji])=>`<article class="market-item"><span class="market-emoji">${emoji}</span><span><b>${name}</b><small>Telegram collectible</small></span></article>`).join("") : `<div class="market-empty">Hech narsa topilmadi</div>`;
+    marketGrid.innerHTML=filtered.length
+      ? filtered.map(([name,emoji])=>`<article class="market-item"><span class="market-emoji">${emoji}</span><span><b>${name}</b><small>Telegram collectible</small></span></article>`).join("")
+      : `<div class="market-empty">Hech narsa topilmadi</div>`;
   }
+
   renderMarket();
   marketSearch.addEventListener("input",()=>renderMarket(marketSearch.value));
 
-  const giftRow = $("#giftRow"), inventoryGrid = $("#inventoryGrid");
+  const giftRow = $("#giftRow");
+  const inventoryGrid = $("#inventoryGrid");
   let toastTimer;
+
   const showToast = message => {
-    const el=$("#toast"); el.textContent=message; el.classList.add("show");
-    clearTimeout(toastTimer); toastTimer=setTimeout(()=>el.classList.remove("show"),2200);
+    const el=$("#toast");
+    el.textContent=message;
+    el.classList.add("show");
+    clearTimeout(toastTimer);
+    toastTimer=setTimeout(()=>el.classList.remove("show"),2200);
   };
+
   giftRow.innerHTML = gifts.map(([name,cls,emoji],i)=>`
     <button class="gift-card" data-gift="${i}" aria-label="${name}">
-      <span class="gift-art custom-gift ${cls}" data-emoji="${emoji}"></span><b>${name}</b>
+      <span class="gift-art custom-gift ${cls}" data-emoji="${emoji}"></span>
+      <b>${name}</b>
     </button>`).join("");
-  inventoryGrid.innerHTML = gifts.map(([name,cls,emoji])=>`
-    <div class="inventory-item"><span class="gift-art custom-gift ${cls}" data-emoji="${emoji}"></span><b>${name}</b></div>`).join("");
 
-  // Tabs genuinely switch between separate screens.
+  inventoryGrid.innerHTML = gifts.map(([name,cls,emoji])=>`
+    <div class="inventory-item">
+      <span class="gift-art custom-gift ${cls}" data-emoji="${emoji}"></span>
+      <b>${name}</b>
+    </div>`).join("");
+
   document.querySelectorAll("[data-tab]").forEach(btn => btn.addEventListener("click",()=>{
     const tab=btn.dataset.tab;
     document.querySelectorAll(".page").forEach(p=>p.classList.remove("active"));
@@ -254,22 +351,27 @@ button:focus-visible{outline:2px solid #fff;outline-offset:3px}
     window.scrollTo({top:0,behavior:"smooth"});
   }));
 
-  // NFT gift cards open a detail view; no external asset path is required.
   giftRow.addEventListener("click",e=>{
-    const card=e.target.closest("[data-gift]"); if(!card)return;
+    const card=e.target.closest("[data-gift]");
+    if(!card)return;
     const [name,cls,emoji]=gifts[Number(card.dataset.gift)];
-    openModal("custom-gift "+cls,name,"STONKS kolleksiyasidagi NFT sovg‘a dizayni.","Tushunarli",closeModal);
+    openModal("custom-gift "+cls,name,"GIFTLAND kolleksiyasidagi sovg‘a dizayni.","Tushunarli",closeModal);
     $("#modalArt").dataset.emoji=emoji;
   });
 
   const modal=$("#modal");
+
   function openModal(cls,title,description,buttonText,callback){
     $("#modalArt").className="big gift-art "+cls;
-    $("#modalTitle").textContent=title; $("#modalText").textContent=description;
-    $("#modalAction").textContent=buttonText; $("#modalAction").onclick=callback;
+    $("#modalTitle").textContent=title;
+    $("#modalText").textContent=description;
+    $("#modalAction").textContent=buttonText;
+    $("#modalAction").onclick=callback;
     modal.classList.add("open");
   }
+
   function closeModal(){modal.classList.remove("open")}
+
   $("#closeModal").addEventListener("click",closeModal);
   modal.addEventListener("click",e=>{if(e.target===modal)closeModal()});
   document.addEventListener("keydown",e=>{if(e.key==="Escape")closeModal()});
@@ -282,6 +384,7 @@ button:focus-visible{outline:2px solid #fff;outline-offset:3px}
     upgrade:["custom-gift pepe","UPGRADE","Upgrade ko‘rinishida ikkita sovg‘a bor: Oddiy Gift va Pepe."],
     pvp:["custom-gift pepe","PVP","Do‘stlar reytingi uchun interfeys namunasi; hozircha demo ma’lumotlar ko‘rsatiladi."]
   };
+
   document.querySelectorAll("[data-game]").forEach(card=>card.addEventListener("click",()=>{
     const [cls,title,description]=gameInfo[card.dataset.game];
     openModal(cls,title,description,"Tushunarli",closeModal);
@@ -289,15 +392,65 @@ button:focus-visible{outline:2px solid #fff;outline-offset:3px}
     if(icon) $("#modalArt").dataset.emoji=icon;
   }));
 
-  // Task check states are kept on this device.
   document.querySelectorAll("[data-task]").forEach(box=>{
-    const key="stonks-task-"+box.dataset.task;
+    const key="giftland-task-"+box.dataset.task;
     box.checked=localStorage.getItem(key)==="1";
     box.addEventListener("change",()=>{
       localStorage.setItem(key,box.checked?"1":"0");
       showToast(box.checked?"Vazifa bajarildi ✓":"Vazifa qayta ochildi");
     });
   });
+
+  const historyKey="giftland-profile-history";
+  const history=()=>JSON.parse(localStorage.getItem(historyKey)||"[]");
+
+  function renderProfile(){
+    const items=history();
+    $("#profileWins").textContent=items.filter(x=>x.type==="gift").length+" ta sovg‘a";
+    $("#profilePoints").textContent="0 ball";
+    $("#pointsBalance").textContent="0";
+    $("#profileHistory").innerHTML=items.length
+      ? items.slice().reverse().slice(0,8).map(x=>`<div class="history-row">${x.text}</div>`).join("")
+      : '<p class="empty-rating">Hozircha tarix yo‘q</p>';
+  }
+
+  $("#profileOpen").addEventListener("click",()=>{
+    document.querySelectorAll(".page").forEach(p=>p.classList.remove("active"));
+    $("#page-profile").classList.add("active");
+    document.querySelectorAll("[data-tab]").forEach(b=>b.classList.remove("active"));
+    window.scrollTo({top:0,behavior:"smooth"});
+    renderProfile();
+  });
+
+  $("#promoOpen").addEventListener("click",()=>{
+    const code=$("#promoInput").value.trim().toUpperCase();
+    const result=$("#promoResult");
+
+    if(!code){
+      result.textContent="Avval promo kodni kiriting.";
+      return;
+    }
+
+    if(code!=="GIFTLAND"){
+      result.textContent="Promo kod noto‘g‘ri yoki muddati tugagan.";
+      return;
+    }
+
+    if(localStorage.getItem("giftland-promo-used")){
+      result.textContent="Bu promo kod avval ishlatilgan.";
+      return;
+    }
+
+    localStorage.setItem("giftland-promo-used","1");
+    result.textContent="Sizga hech narsa tushmadi. Keyingi safar urinib ko‘ring!";
+
+    const items=history();
+    items.push({type:"promo",text:"🎟️ GIFTLAND promo case ochildi — sovg‘a chiqmadi."});
+    localStorage.setItem(historyKey,JSON.stringify(items));
+    renderProfile();
+  });
+
+  renderProfile();
 })();
 </script>
 </body>
