@@ -1,213 +1,183 @@
 <!DOCTYPE html>
 <html lang="uz">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>GiftLand - TONKS Style</title>
-    <script src="https://telegram.org/js/telegram-web-app.js"></script>
-    <script src="https://cdn.tailwindcss.com"></script>
-    <style>
-        body { background-color: #000; color: #fff; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; overflow-x: hidden; }
-        .card-bg { background: linear-gradient(135deg, #131316 0%, #1c1c22 100%); border: 1px solid rgba(255, 255, 255, 0.08); border-radius: 20px; transition: transform 0.1s ease; }
-        .card-bg:active { transform: scale(0.98); }
-        .neon-border { border: 1px solid rgba(239, 68, 68, 0.4); box-shadow: 0 0 20px rgba(239, 68, 68, 0.12); }
-        .gift-item { background: linear-gradient(135deg, #18181c 100%, #222228 0%); border: 1px solid rgba(255, 255, 255, 0.07); border-radius: 16px; min-width: 78px; height: 78px; flex-shrink: 0; display: flex; flex-direction: column; align-items: center; justify-content: center; }
-        .tab-content { display: none; }
-        .tab-content.active { display: block; }
-        ::-webkit-scrollbar { display: none; }
-    </style>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="theme-color" content="#080d13">
+  <title>STONKS — Mini App</title>
+  <style>
+    :root{
+      --bg:#070b10;--panel:#101923;--panel2:#14212b;--line:rgba(255,255,255,.09);
+      --text:#f6f8fb;--muted:#9aa8b8;--blue:#268cff;--cyan:#50e3d0;--green:#59e58b;
+      --purple:#a78bfa;--radius:25px;
+    }
+    *{box-sizing:border-box}
+    body{margin:0;background:radial-gradient(ellipse at 50% -15%,#1b2c3c 0%,#080d13 48%,#05080c 100%);color:var(--text);font-family:Inter,system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif;min-height:100vh}
+    button{font:inherit;color:inherit;cursor:pointer}
+    .app{width:min(100%,760px);margin:0 auto;padding:18px 16px 112px}
+    .topbar{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:18px}
+    .brand{display:flex;align-items:center;gap:10px;font-size:25px;font-weight:1000;letter-spacing:1px}
+    .brand-mark{width:40px;height:40px;border-radius:14px;background:linear-gradient(145deg,#2c9bff,#1653b9);display:grid;place-items:center;box-shadow:0 8px 24px #1474d455}
+    .brand-mark span{font-size:22px}
+    .profile{display:flex;align-items:center;gap:9px;min-width:0}
+    .avatar{width:42px;height:42px;border-radius:50%;display:grid;place-items:center;background:linear-gradient(135deg,#ff7b7b,#d94366);font-weight:900;border:2px solid #ffffff33}
+    .profile small{display:block;color:var(--muted);font-size:11px;margin-top:2px}
+    .balance{display:flex;align-items:center;gap:8px;background:#151d27;border:1px solid var(--line);border-radius:999px;padding:8px 9px 8px 14px;font-weight:850}
+    .balance b{color:#58dfff}.plus{border:0;border-radius:50%;width:36px;height:36px;background:#087ce8;font-size:24px;line-height:1}
+    .hero{position:relative;overflow:hidden;border-radius:29px;padding:23px 22px;min-height:178px;background:linear-gradient(112deg,#101d2b,#122d45 55%,#0c1725);border:1px solid #4ba9ff35;margin-bottom:16px}
+    .hero:before{content:"";position:absolute;width:240px;height:240px;border-radius:50%;right:-45px;top:-110px;background:#278cff24;filter:blur(5px)}
+    .hero-tag,.tag{display:inline-flex;align-items:center;gap:7px;padding:6px 11px;border-radius:9px;background:#ffffff13;border:1px solid #ffffff18;color:#d8e8fa;font-size:12px;font-weight:800}
+    .hero h1{font-size:30px;margin:18px 0 5px;letter-spacing:-1px}
+    .hero p{margin:0;color:#b3c3d4;font-size:14px}
+    .rocket{position:absolute;right:36px;bottom:12px;font-size:91px;transform:rotate(-24deg);filter:drop-shadow(0 10px 18px #0008);animation:float 3s ease-in-out infinite}
+    .multis{position:absolute;right:18px;top:22px;display:grid;gap:7px}
+    .multis span{background:#137ee6;border:1px solid #8bc9ff;border-radius:8px;padding:5px 10px;font-size:13px;font-weight:900;transform:rotate(-7deg)}
+    .section-head{display:flex;align-items:center;justify-content:space-between;margin:23px 3px 12px}
+    .section-head h2{font-size:18px;margin:0}
+    .section-head span{font-size:12px;color:var(--muted)}
+    .grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:13px}
+    .card{position:relative;overflow:hidden;text-align:left;border:1px solid var(--line);border-radius:var(--radius);padding:17px;background:linear-gradient(145deg,#141d27,#0e151e);min-height:153px;transition:transform .18s,border-color .18s}
+    .card:active{transform:scale(.98)}
+    .card:hover{border-color:#ffffff2c}
+    .card .tag{font-size:11px;padding:5px 8px}
+    .card h3{font-size:21px;margin:17px 0 5px;font-weight:950;letter-spacing:-.4px}
+    .card p{font-size:12px;color:var(--muted);margin:0;max-width:75%;line-height:1.45}
+    .art{position:absolute;right:12px;bottom:12px;font-size:55px;filter:drop-shadow(0 8px 12px #0008)}
+    .crash{background:linear-gradient(125deg,#111e31,#102b43)}
+    .cases{background:linear-gradient(125deg,#112b28,#123e36)}
+    .mines{background:linear-gradient(125deg,#111d31,#102e47)}
+    .upgrade{background:linear-gradient(125deg,#142d22,#15462b)}
+    .pvp{background:linear-gradient(125deg,#171b32,#35201f)}
+    .bonus{background:linear-gradient(125deg,#112a23,#174332)}
+    .wide{grid-column:1/-1;min-height:132px}
+    .wide h3{font-size:23px}
+    .wide .art{font-size:67px;right:24px}
+    .progress{height:7px;background:#ffffff20;border-radius:20px;overflow:hidden;margin-top:12px;width:57%}
+    .progress i{display:block;height:100%;width:38%;background:linear-gradient(90deg,#38d88b,#a4f47a);border-radius:20px}
+    .bottom-nav{position:fixed;z-index:5;bottom:0;left:50%;transform:translateX(-50%);width:min(100%,760px);padding:10px 12px calc(10px + env(safe-area-inset-bottom));display:grid;grid-template-columns:repeat(4,1fr);gap:5px;background:#080c12ed;border-top:1px solid #ffffff18;backdrop-filter:blur(18px)}
+    .nav-btn{border:0;background:transparent;color:#84909d;border-radius:16px;padding:7px 3px;display:grid;justify-items:center;gap:3px;font-size:11px;font-weight:750}
+    .nav-btn span{font-size:22px}.nav-btn.active{color:#36a0ff;background:#14283b}
+    .toast{position:fixed;z-index:10;left:50%;bottom:95px;transform:translate(-50%,15px);opacity:0;pointer-events:none;background:#1c2936;border:1px solid #ffffff22;border-radius:14px;padding:12px 17px;font-size:13px;box-shadow:0 12px 35px #0008;transition:.25s;max-width:90%;text-align:center}
+    .toast.show{opacity:1;transform:translate(-50%,0)}
+    .modal-backdrop{position:fixed;inset:0;background:#000b;display:none;place-items:center;padding:18px;z-index:9}
+    .modal-backdrop.open{display:grid}
+    .modal{width:min(100%,390px);border:1px solid #ffffff20;border-radius:25px;padding:23px;background:linear-gradient(145deg,#182432,#0e151e);text-align:center;box-shadow:0 25px 80px #000a}
+    .modal .big{font-size:62px}.modal h2{margin:8px 0}.modal p{color:var(--muted);font-size:14px;line-height:1.5}
+    .action{border:0;background:linear-gradient(90deg,#1686f7,#2466df);padding:12px 22px;border-radius:13px;font-weight:850;width:100%;margin-top:9px}
+    .secondary{background:#ffffff12;border:1px solid #ffffff1b}
+    .mini-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin:18px 0}
+    .tile{aspect-ratio:1;border:1px solid #ffffff18;border-radius:12px;background:#1c2a39;font-size:24px}
+    .tile.revealed{background:#173d34;border-color:#42d99a}
+    .rocket-run{animation:launch 1.5s ease-in-out}
+    @keyframes float{0%,100%{transform:translateY(0) rotate(-24deg)}50%{transform:translateY(-10px) rotate(-18deg)}}
+    @keyframes launch{0%{transform:translate(0,0) rotate(-24deg)}100%{transform:translate(30px,-130px) rotate(-24deg);opacity:.1}}
+    @media(max-width:390px){.app{padding:13px 12px 105px}.hero{min-height:165px;padding:19px}.hero h1{font-size:26px}.rocket{right:20px;font-size:75px}.card{padding:14px;min-height:145px}.card h3{font-size:18px}.art{font-size:46px}.wide .art{font-size:58px}}
+    @media(prefers-reduced-motion:reduce){*,*::before,*::after{animation:none!important;transition:none!important;scroll-behavior:auto!important}}
+  </style>
 </head>
-<body class="p-3 pb-28">
-
-    <!-- HEADER ($TONKS$ Uslubi va Balans) -->
-    <header class="flex justify-between items-center mb-3.5">
-        <div class="flex items-center space-x-2.5 cursor-pointer" onclick="openProfile()">
-            <div class="w-9 h-9 rounded-full bg-gradient-to-tr from-red-500 to-pink-500 flex items-center justify-center font-bold text-base shadow-lg" id="user-avatar">N</div>
-            <div>
-                <h1 class="font-bold text-xs flex items-center space-x-1">
-                    <span id="username">Nursultan</span>
-                    <span class="text-[10px] text-zinc-400">до IRON ⚔️</span>
-                </h1>
-            </div>
-        </div>
-        <div class="flex items-center bg-zinc-900/90 border border-zinc-800 px-3.5 py-1.5 rounded-full space-x-2 shadow-inner">
-            <span class="text-sm font-extrabold text-cyan-400" id="user-balance">0.03 💎</span>
-            <button onclick="topUpBalance()" class="w-6 h-6 bg-blue-600 rounded-full flex items-center justify-center text-white font-bold text-xs hover:bg-blue-500 transition shadow-md">+</button>
-        </div>
+<body>
+  <main class="app">
+    <header class="topbar">
+      <div class="profile"><div class="avatar">N</div><div><strong>N</strong><small>O‘yinchi · Demo profil</small></div></div>
+      <div class="balance"><b id="points">120</b> 💎 <button class="plus" id="addPoints" aria-label="Demo ball qo‘shish">+</button></div>
     </header>
 
-    <!-- YUQORIGI SOVG'ALAR QATORI (Horizontal Scroll) -->
-    <div class="flex space-x-2 overflow-x-auto mb-4 py-1">
-        <div class="gift-item"><span class="text-2xl">🧞‍♂️</span><span class="text-[10px] text-zinc-400 mt-1 font-bold">41 💎</span></div>
-        <div class="gift-item"><span class="text-2xl">💎</span><span class="text-[10px] text-zinc-400 mt-1 font-bold">2.5 💎</span></div>
-        <div class="gift-item"><span class="text-2xl">🌹</span><span class="text-[10px] text-zinc-400 mt-1 font-bold">0.28 💎</span></div>
-        <div class="gift-item"><span class="text-2xl">💎</span><span class="text-[10px] text-zinc-400 mt-1 font-bold">3 💎</span></div>
-        <div class="gift-item"><span class="text-2xl">🏺</span><span class="text-[10px] text-zinc-400 mt-1 font-bold">133 💎</span></div>
-        <div class="gift-item"><span class="text-2xl">👑</span><span class="text-[10px] text-zinc-400 mt-1 font-bold">14 💎</span></div>
-    </div>
+    <section class="hero">
+      <span class="hero-tag">⚡ MINI ARCADE</span>
+      <div class="multis"><span>LEVEL 05</span><span>⭐ DAILY</span></div>
+      <h1>O‘YINLAR OLAMI</h1>
+      <p>O‘yna, mashq qil va demo ball to‘pla.</p>
+      <div class="rocket" id="heroRocket">🚀</div>
+    </section>
 
-    <!-- TAB 1: O'YINLAR (GAMES) -->
-    <div id="tab-games" class="tab-content active space-y-3">
-        
-        <!-- SLOTS -->
-        <div class="card-bg p-4 neon-border cursor-pointer" onclick="playGame('Slots')">
-            <div class="flex justify-between items-center mb-3">
-                <span class="bg-red-500/20 text-red-400 text-[10px] px-2.5 py-1 rounded-full font-bold">✨ Новинка</span>
-                <span class="text-xs text-zinc-400 font-bold">🎰 СЛОТЫ</span>
-            </div>
-            <div class="flex justify-around items-center py-2.5 bg-black/60 rounded-xl border border-zinc-800/60">
-                <div class="text-2xl animate-bounce">🍑</div>
-                <div class="text-2xl animate-pulse">🐸</div>
-                <div class="text-2xl animate-bounce">🧢</div>
-            </div>
-        </div>
+    <div class="section-head"><h2>🎮 O‘yinlar</h2><span>Demo rejim · haqiqiy pul yo‘q</span></div>
+    <section class="grid">
+      <button class="card crash" data-game="crash"><span class="tag">📈 Mashhur</span><h3>CRASH</h3><p>Raketa animatsiyasi va tezkor raund.</p><span class="art">🚀</span></button>
+      <button class="card cases" data-game="cases"><span class="tag">💎 Klassika</span><h3>KEYSLAR</h3><p>Kunlik sovg‘ani qabul qil.</p><span class="art">🎁</span></button>
+      <button class="card mines" data-game="mines"><span class="tag">🧩 Strategiya</span><h3>MINES</h3><p>Yashirin kataklarni topish jumboqchasi.</p><span class="art">💎</span></button>
+      <button class="card upgrade" data-game="upgrade"><span class="tag">💚 O‘sish</span><h3>UPGRADE</h3><p>Profil darajasini oshir.</p><span class="art">🧸</span><div class="progress"><i></i></div></button>
+      <button class="card pvp" data-game="pvp"><span class="tag">⚔️ Do‘stlar bilan</span><h3>PvP</h3><p>Do‘stlar bilan natijalarni solishtir.</p><span class="art">⚔️</span></button>
+      <button class="card bonus wide" data-game="bonus"><span class="tag">✨ Bonus</span><h3>BONUS</h3><p>Har kuni kirib demo mukofotni ol.</p><span class="art">🍀</span></button>
+    </section>
+    <div class="section-head"><h2>🏆 Faollik</h2><span>Faqat sinov statistikasi</span></div>
+    <section class="card wide" style="min-height:105px">
+      <span class="tag">📊 Sening natijang</span><h3 style="margin-top:12px">3 ta o‘yin sinab ko‘rildi</h3><p>Ballar faqat shu sahifadagi demo ko‘rsatkichdir.</p>
+    </section>
+  </main>
 
-        <!-- CRASH -->
-        <div class="card-bg p-4 flex justify-between items-center cursor-pointer" onclick="playGame('Crash')">
-            <div>
-                <span class="bg-blue-500/20 text-blue-400 text-[10px] px-2.5 py-1 rounded-full font-bold">📈 Хит</span>
-                <h2 class="text-lg font-extrabold tracking-wide mt-1">CRASH</h2>
-                <p class="text-[11px] text-zinc-400">Tezkor raundlar va koeffitsiyentlar</p>
-            </div>
-            <div class="text-3xl bg-blue-500/10 p-2.5 rounded-2xl border border-blue-500/20">🚀</div>
-        </div>
+  <nav class="bottom-nav" aria-label="Asosiy navigatsiya">
+    <button class="nav-btn" data-tab="inventory"><span>📦</span>Inventar</button>
+    <button class="nav-btn active" data-tab="games"><span>🎮</span>O‘yinlar</button>
+    <button class="nav-btn" data-tab="tasks"><span>📋</span>Vazifalar</button>
+    <button class="nav-btn" data-tab="leaders"><span>🏆</span>Liderlar</button>
+  </nav>
 
-        <!-- KEYSI -->
-        <div class="card-bg p-4 flex justify-between items-center cursor-pointer" onclick="playGame('Кейсы')">
-            <div>
-                <span class="text-xs text-emerald-400 font-bold">💎 Классика</span>
-                <h3 class="text-base font-bold mt-1">КЕЙСЫ</h3>
-            </div>
-            <div class="text-3xl">🎁</div>
-        </div>
+  <div class="toast" id="toast" role="status" aria-live="polite"></div>
+  <div class="modal-backdrop" id="modal">
+    <section class="modal" role="dialog" aria-modal="true" aria-labelledby="modalTitle">
+      <div class="big" id="modalIcon">🎮</div><h2 id="modalTitle">O‘yin</h2><p id="modalText">Demo rejim.</p>
+      <div id="modalExtra"></div>
+      <button class="action" id="modalAction">Boshlash</button>
+      <button class="action secondary" id="closeModal">Yopish</button>
+    </section>
+  </div>
 
-        <!-- MINES -->
-        <div class="card-bg p-4 flex justify-between items-center cursor-pointer" onclick="playGame('Mines')">
-            <div>
-                <span class="text-xs text-cyan-400 font-bold">💣 Стратегия</span>
-                <h3 class="text-base font-bold mt-1">MINES</h3>
-            </div>
-            <div class="text-3xl">💎</div>
-        </div>
+  <script>
+    (() => {
+      const $ = (s) => document.querySelector(s);
+      const pointsEl = $("#points"), modal = $("#modal"), extra = $("#modalExtra");
+      let points = 120, toastTimer;
+      const showToast = (msg) => {
+        const el = $("#toast"); el.textContent = msg; el.classList.add("show");
+        clearTimeout(toastTimer); toastTimer = setTimeout(() => el.classList.remove("show"), 2300);
+      };
+      const setPoints = (n) => { points = Math.max(0, n); pointsEl.textContent = points; };
+      const openModal = (icon, title, description, actionText, action) => {
+        $("#modalIcon").textContent = icon; $("#modalTitle").textContent = title;
+        $("#modalText").textContent = description; $("#modalAction").textContent = actionText;
+        extra.innerHTML = ""; $("#modalAction").onclick = action; modal.classList.add("open");
+      };
+      const closeModal = () => modal.classList.remove("open");
+      $("#closeModal").addEventListener("click", closeModal);
+      modal.addEventListener("click", e => { if(e.target === modal) closeModal(); });
+      $("#addPoints").addEventListener("click", () => { setPoints(points + 10); showToast("+10 demo ball qo‘shildi"); });
 
-        <!-- APGRADE -->
-        <div class="card-bg p-4 flex justify-between items-center cursor-pointer" onclick="playGame('Апгрейд')">
-            <div>
-                <span class="text-xs text-amber-400 font-bold">❤️ Популярное</span>
-                <h3 class="text-base font-bold mt-1">АПГРЕЙД</h3>
-            </div>
-            <div class="text-3xl">🧸</div>
-        </div>
-
-        <!-- PVP -->
-        <div class="card-bg p-4 flex justify-between items-center cursor-pointer" onclick="playGame('PvP')">
-            <div>
-                <span class="text-xs text-purple-400 font-bold">⚔️ Битва</span>
-                <h3 class="text-base font-bold mt-1">PvP</h3>
-            </div>
-            <div class="text-3xl">⚔️</div>
-        </div>
-
-        <!-- BONUS KEYSI -->
-        <div class="card-bg p-4 flex justify-between items-center cursor-pointer" onclick="playGame('Бонус кейсы')">
-            <div>
-                <span class="text-xs text-emerald-400 font-bold">✨ Бонус</span>
-                <h3 class="text-base font-bold mt-1">БОНУС КЕЙСЫ</h3>
-            </div>
-            <div class="text-3xl">💰</div>
-        </div>
-    </div>
-
-    <!-- TAB 2: INVENTAR -->
-    <div id="tab-inventory" class="tab-content space-y-3">
-        <h2 class="text-lg font-bold mb-2">📦 Inventar pust</h2>
-        <div class="card-bg p-6 text-center">
-            <div class="text-4xl mb-2">👾</div>
-            <p class="text-sm font-bold text-zinc-300">Esti podarki na akkunte?</p>
-            <p class="text-xs text-zinc-500 mt-1">Dobav' ikh cherez bota i poluchi GRAM!</p>
-        </div>
-    </div>
-
-    <!-- TAB 3: ZADANIYA -->
-    <div id="tab-tasks" class="tab-content space-y-3">
-        <h2 class="text-lg font-bold mb-2">💎 Zadaniya</h2>
-        <div class="card-bg p-4 flex justify-between items-center">
-            <div>
-                <h3 class="font-bold text-sm">Do'st taklif qilish</h3>
-                <p class="text-xs text-zinc-400">Har bir do'st uchun +0.50 💎</p>
-            </div>
-            <button onclick="alert('Havola nusxalandi!')" class="bg-blue-600 px-3.5 py-2 rounded-xl text-xs font-bold shadow-md">Bajarish</button>
-        </div>
-    </div>
-
-    <!-- TAB 4: LIDERLAR -->
-    <div id="tab-leaders" class="tab-content space-y-3">
-        <h2 class="text-lg font-bold mb-2">🏆 Top O'yinchilar</h2>
-        <div class="card-bg p-3.5 flex justify-between items-center">
-            <span class="text-sm font-bold">🥇 1. Glebasol</span>
-            <span class="text-sm font-extrabold text-cyan-400">2,575 💎</span>
-        </div>
-        <div class="card-bg p-3.5 flex justify-between items-center">
-            <span class="text-sm font-bold">🥈 2. Nursultan</span>
-            <span class="text-sm font-extrabold text-cyan-400">1,654 💎</span>
-        </div>
-    </div>
-
-    <!-- PASTKI NAVIGATSIYA MENYU -->
-    <nav class="fixed bottom-0 left-0 right-0 bg-zinc-950/95 backdrop-blur-xl border-t border-zinc-800/80 flex justify-around py-3 px-2 z-50 shadow-2xl">
-        <button onclick="switchTab('inventory')" id="nav-inventory" class="flex flex-col items-center text-zinc-400 hover:text-white transition text-[11px]">
-            <span class="text-lg">📦</span>
-            <span class="mt-0.5 font-medium">Инвентарь</span>
-        </button>
-        <button onclick="switchTab('games')" id="nav-games" class="flex flex-col items-center text-blue-500 transition text-[11px]">
-            <span class="text-lg">🎮</span>
-            <span class="mt-0.5 font-medium">Игры</span>
-        </button>
-        <button onclick="switchTab('tasks')" id="nav-tasks" class="flex flex-col items-center text-zinc-400 hover:text-white transition text-[11px]">
-            <span class="text-lg">💎</span>
-            <span class="mt-0.5 font-medium">Задания</span>
-        </button>
-        <button onclick="switchTab('leaders')" id="nav-leaders" class="flex flex-col items-center text-zinc-400 hover:text-white transition text-[11px]">
-            <span class="text-lg">🏆</span>
-            <span class="mt-0.5 font-medium">Лидеры</span>
-        </button>
-    </nav>
-
-    <script>
-        const tg = window.Telegram.WebApp;
-        tg.expand();
-
-        if (tg.initDataUnsafe && tg.initDataUnsafe.user) {
-            document.getElementById('username').innerText = tg.initDataUnsafe.user.first_name;
-            document.getElementById('user-avatar').innerText = tg.initDataUnsafe.user.first_name[0].toUpperCase();
+      document.querySelectorAll("[data-game]").forEach(card => card.addEventListener("click", () => {
+        const game = card.dataset.game;
+        if(game === "crash") {
+          openModal("🚀","CRASH — demo raund","Raketani uchirish animatsiyasini ko‘r. Bu yerda pul tikish yoki pul yutish yo‘q.","Raketani uchirish",() => {
+            const rocket = $("#heroRocket"); rocket.classList.remove("rocket-run"); void rocket.offsetWidth; rocket.classList.add("rocket-run");
+            showToast("🚀 Demo animatsiya ishga tushdi!"); closeModal();
+            setTimeout(() => rocket.classList.remove("rocket-run"),1600);
+          });
+        } else if(game === "mines") {
+          openModal("💎","MINES — jumboq","Yashil kataklarni top. Bu oddiy mantiqiy mini-o‘yin, ball sarflanmaydi.","Yangi kataklar",() => {
+            extra.innerHTML = '<div class="mini-grid" id="puzzle">'+Array.from({length:12},(_,i)=>`<button class="tile" aria-label="Katak ${i+1}" data-tile="${i}">?</button>`).join("")+'</div>';
+            $("#modalText").textContent = "Istalgan katakni bosing. Bu sinov jumboqchasi.";
+            $("#modalAction").textContent = "Yopish"; $("#modalAction").onclick = closeModal;
+            document.querySelectorAll("[data-tile]").forEach((b,i)=>b.addEventListener("click",()=>{
+              if(b.classList.contains("revealed")) return;
+              b.classList.add("revealed"); b.textContent = ["💎","⭐","🍀","🔷"][i%4];
+            }));
+          });
+        } else if(game === "cases") {
+          openModal("🎁","Kunlik sovg‘a","Sovg‘a oldindan belgilangan: +5 demo ball. Tasodifiy pul mukofoti yo‘q.","Sovg‘ani olish",() => { setPoints(points+5); closeModal(); showToast("🎁 +5 demo ball olindi!"); });
+        } else if(game === "upgrade") {
+          openModal("🧸","Profil darajasi","Profilingni demo ball bilan bezak darajasiga ko‘tar. Bu faqat ko‘rgazmali funksiya.","Darajani ko‘rish",() => { closeModal(); showToast("⭐ Profil darajasi: 05"); });
+        } else if(game === "pvp") {
+          openModal("⚔️","Do‘stlar bilan","Bu bo‘lim hozircha interfeys namunasi. Keyin Telegram bot orqali do‘stlar reytingini ulash mumkin.","Tushunarli",closeModal);
+        } else {
+          openModal("🍀","Kunlik bonus","Bugungi demo bonusing: +10 ball.","Bonusni olish",() => { setPoints(points+10); closeModal(); showToast("🍀 +10 demo ball olindi!"); });
         }
+      }));
 
-        function topUpBalance() {
-            tg.showAlert("Balansni to'ldirish uchun hisobingizga mablag' o'tkazing.");
-        }
-
-        function openProfile() {
-            tg.showAlert("👤 Profil: " + document.getElementById('username').innerText + "\n💎 Balans: 0.03\n🛡️ Status: IRON");
-        }
-
-        function playGame(gameName) {
-            tg.HapticFeedback.impactOccurred('medium');
-            tg.showAlert(gameName + " o'yini yuklanmoqda...");
-        }
-
-        function switchTab(tab) {
-            document.querySelectorAll('.tab-content').forEach(el => el.classList.remove('active'));
-            document.querySelectorAll('nav button').forEach(el => {
-                el.classList.remove('text-blue-500', 'font-bold');
-                el.classList.add('text-zinc-400');
-            });
-
-            document.getElementById('tab-' + tab).classList.add('active');
-            let activeNav = document.getElementById('nav-' + tab);
-            activeNav.classList.remove('text-zinc-400');
-            activeNav.classList.add('text-blue-500', 'font-bold');
-            tg.HapticFeedback.selectionChanged();
-        }
-    </script>
+      document.querySelectorAll("[data-tab]").forEach(btn => btn.addEventListener("click",()=>{
+        document.querySelectorAll("[data-tab]").forEach(b=>b.classList.remove("active"));
+        btn.classList.add("active");
+        const labels = {inventory:"Inventar bo‘limi keyingi bosqichda ulanadi.",games:"O‘yinlar bo‘limi ochiq.",tasks:"Vazifalar bo‘limi keyingi bosqichda ulanadi.",leaders:"Liderlar reytingi keyingi bosqichda ulanadi."};
+        showToast(labels[btn.dataset.tab]);
+      }));
+    })();
+  </script>
 </body>
 </html>
