@@ -16,7 +16,7 @@
 </head>
 <body class="p-4 pb-28">
 
-    <!-- Siz so'ragan audio trek ("Что за бизнес, сука?") -->
+    <!-- Audio element (Ovozli trek) -->
     <audio id="game-sound" preload="auto">
         <source src="https://www.myinstants.com/media/sounds/chto-za-biznes-suka.mp3" type="audio/mpeg">
     </audio>
@@ -31,8 +31,8 @@
             </div>
         </div>
         <div class="flex items-center space-x-2">
-            <button onclick="toggleMusic()" id="music-btn" class="bg-zinc-900 border border-zinc-800 px-3 py-1.5 rounded-full text-xs text-zinc-300 hover:text-white transition shadow">
-                🔊 <span id="music-status">Ovoz: Yoqish</span>
+            <button onclick="testSound()" class="bg-zinc-900 border border-zinc-800 px-3 py-1.5 rounded-full text-xs text-cyan-400 font-bold shadow">
+                🔊 Ovozni tekshirish
             </button>
             <div class="flex items-center bg-zinc-900 border border-zinc-800 px-3 py-1.5 rounded-full space-x-1">
                 <span class="text-sm font-extrabold text-cyan-400" id="user-balance">10.00 💎</span>
@@ -113,22 +113,22 @@
             document.getElementById('user-avatar').innerText = tg.initDataUnsafe.user.first_name[0].toUpperCase();
         }
 
-        function toggleMusic() {
-            const music = document.getElementById('game-sound');
-            music.currentTime = 0;
-            music.play().then(() => {
-                document.getElementById('music-status').innerText = "Ovoz ishlayapti";
+        // Ovozni qo'lda tekshirib ko'rish uchun funksiya
+        function testSound() {
+            const sound = document.getElementById('game-sound');
+            sound.currentTime = 0;
+            sound.play().then(() => {
+                tg.HapticFeedback.notificationOccurred('success');
             }).catch(e => {
-                alert("Ovozni ochish uchun ekranni bosing.");
+                alert("Ovozni ochish uchun ekranga teging.");
             });
-            tg.HapticFeedback.selectionChanged();
         }
 
         function updateBalance() {
             document.getElementById('user-balance').innerText = balance.toFixed(2) + ' 💎';
         }
 
-        // Siz so'ragan ehtimollik qonuniyati
+        // Ehtimollik qonuniyati (1-1.99x ko'p, 2-2.99x kam, 10-29.99x juda kam, 100x+ 0.0001%)
         function getRandomCrashPoint() {
             let rnd = Math.random() * 100;
             if (rnd < 0.0001) return +(100 + Math.random() * 400).toFixed(2);
@@ -140,10 +140,11 @@
         function toggleGame() {
             const btn = document.getElementById('action-btn');
             
-            // O'yin boshlanganda o'sha ovozni chiqarish
-            const music = document.getElementById('game-sound');
-            music.currentTime = 0;
-            music.play().catch(err => {});
+            // O'yin boshlanganda ovozni chiqarish
+            const sound = document.getElementById('game-sound');
+            sound.currentTime = 0;
+            sound.play().catch(err => {});
+            tg.HapticFeedback.impactOccurred('medium');
 
             if (!isPlaying) {
                 if (balance < 1) {
@@ -185,9 +186,11 @@
                 balance += winAmount;
                 document.getElementById('game-status-text').innerText = `Tabriklaymiz! Siz ${winAmount.toFixed(2)} 💎 yutib oldingiz!`;
                 document.getElementById('crash-multiplier').style.color = '#10b981';
+                tg.HapticFeedback.notificationOccurred('success');
             } else {
                 document.getElementById('game-status-text').innerText = `Raketa portladi! (${targetCrash}x)`;
                 document.getElementById('crash-multiplier').style.color = '#ef4444';
+                tg.HapticFeedback.notificationOccurred('error');
             }
 
             updateBalance();
@@ -203,6 +206,7 @@
             balance += 1.00;
             updateBalance();
             alert("Kunlik bonus qo'shildi!");
+            tg.HapticFeedback.notificationOccurred('success');
         }
 
         function switchTab(tab) {
