@@ -3,454 +3,699 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<meta name="theme-color" content="#050609">
-<title>STONKS</title>
-<script src="https://telegram.org/js/telegram-web-app.js"></script>
+<title>STONKS ORIGINAL</title>
 
 <style>
-*{box-sizing:border-box;margin:0;padding:0}
-
-body{
- background:#050609;
- color:white;
- font-family:Arial,sans-serif;
- overflow-x:hidden;
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
 }
 
-.app{
- max-width:700px;
- margin:auto;
- padding:15px 14px 110px;
+body {
+  background: #050609;
+  color: white;
+  font-family: Arial, sans-serif;
+  padding-bottom: 100px;
 }
 
-header{
- display:flex;
- justify-content:space-between;
- align-items:center;
- margin-bottom:24px;
+header {
+  padding: 25px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
 }
 
-.profile{display:flex;align-items:center;gap:10px}
-
-.avatar{
- width:46px;height:46px;
- display:grid;place-items:center;
- border-radius:50%;
- background:linear-gradient(140deg,#ff7777,#e52e64);
- font-size:22px;font-weight:900;
+.profile {
+  display: flex;
+  align-items: center;
+  gap: 12px;
 }
 
-.name{font-weight:900}
-.rank{font-size:11px;color:#888;margin-top:4px}
-
-.balance{
- background:#171b25;
- padding:10px 14px;
- border-radius:30px;
- border:1px solid #ffffff18;
- color:#40d7ff;font-weight:900;
+.avatar {
+  width: 65px;
+  height: 65px;
+  border-radius: 50%;
+  background: linear-gradient(135deg,#ff4778,#a52bff);
+  display: grid;
+  place-items: center;
+  font-size: 28px;
+  font-weight: bold;
 }
 
-.heading{
- display:flex;
- justify-content:space-between;
- align-items:center;
- margin:22px 3px 14px;
+.balance {
+  background: #151925;
+  border: 1px solid #343b50;
+  padding: 15px 20px;
+  border-radius: 30px;
+  color: #38c6ff;
+  font-weight: bold;
 }
 
-.heading h2{font-size:19px}
-.heading span{font-size:11px;color:#777}
-
-.gifts{
- display:flex;
- gap:10px;
- overflow-x:auto;
- scrollbar-width:none;
- padding-bottom:8px;
+.app-page {
+  display: none;
+  padding: 15px 20px 110px;
+  animation: appear .35s ease;
 }
 
-.gifts::-webkit-scrollbar{display:none}
-
-.gift{
- flex:0 0 105px;
- height:110px;
- background:#15171c;
- border:1px solid #ffffff13;
- border-radius:17px;
- display:flex;
- flex-direction:column;
- align-items:center;
- justify-content:center;
- gap:7px;
+.app-page.active {
+  display: block;
 }
 
-.gift-image{
- width:75px;
- height:75px;
- background-image:url("nft_sprite.webp");
- background-repeat:no-repeat;
- background-size:400% 300%;
- animation:giftFloat 3s ease-in-out infinite;
- filter:drop-shadow(0 5px 9px #000);
+@keyframes appear {
+  from {
+    opacity: 0;
+    transform: translateY(12px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }
 
-.gift small{
- font-size:10px;
- color:#c4cbd6;
- font-weight:bold;
+/* NFT GIFTS */
+
+.section-title {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin: 20px 0;
 }
 
-@keyframes giftFloat{
- 0%,100%{transform:translateY(0)}
- 50%{transform:translateY(-7px)}
+.section-title h2 {
+  font-size: 25px;
 }
 
-/* NFT SPRITE POSITIONS */
-
-.g0{background-position:0% 0%}
-.g1{background-position:33.333% 0%}
-.g2{background-position:66.666% 0%}
-.g3{background-position:100% 0%}
-.g4{background-position:0% 50%}
-.g5{background-position:33.333% 50%}
-.g6{background-position:66.666% 50%}
-.g7{background-position:100% 50%}
-.g8{background-position:0% 100%}
-.g9{background-position:33.333% 100%}
-.g10{background-position:66.666% 100%}
-.g11{background-position:100% 100%}
-
-/* PANELS */
-
-.games{
- display:flex;
- flex-direction:column;
- gap:15px;
+.section-title small {
+  color: #777d8c;
 }
 
-.panel{
- --smoke:#168bff;
- --bg1:#101b2c;
- --bg2:#102b48;
- position:relative;
- isolation:isolate;
- overflow:hidden;
- min-height:158px;
- border-radius:25px;
- padding:21px;
- border:1px solid color-mix(in srgb,var(--smoke),transparent 75%);
- background:linear-gradient(115deg,var(--bg1),var(--bg2));
- cursor:pointer;
- transition:transform .2s;
+.gift-list {
+  display: flex;
+  gap: 15px;
+  overflow-x: auto;
+  padding-bottom: 15px;
+  scrollbar-width: none;
 }
 
-.panel:active{transform:scale(.975)}
-
-.panel:before,
-.panel:after{
- content:"";
- position:absolute;
- z-index:-1;
- border-radius:50%;
- width:190px;
- height:190px;
- right:-30px;
- top:-35px;
- background:var(--smoke);
- filter:blur(55px);
- opacity:.35;
- animation:smoke 5s ease-in-out infinite alternate;
+.gift-list::-webkit-scrollbar {
+  display: none;
 }
 
-.panel:after{
- width:140px;
- height:140px;
- top:auto;
- bottom:-90px;
- right:100px;
- opacity:.25;
- animation-delay:1s;
+.gift-card {
+  min-width: 155px;
+  height: 190px;
+  background: #17181e;
+  border: 1px solid #292b35;
+  border-radius: 25px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: space-around;
 }
 
-@keyframes smoke{
- from{transform:translate(15px,20px) scale(.8);opacity:.15}
- to{transform:translate(-40px,-20px) scale(1.5);opacity:.55}
+.gift-art {
+  width: 110px;
+  height: 110px;
+  background-image: url("nft_sprite.webp");
+  background-size: 400% 300%;
+  background-repeat: no-repeat;
+  animation: float 3s ease-in-out infinite;
 }
 
-/* INDIVIDUAL COLORS */
-
-.slots{
- --smoke:#ed3caa;
- --bg1:#1b1020;
- --bg2:#35112d;
+@keyframes float {
+  0%,100% { transform: translateY(0); }
+  50% { transform: translateY(-8px); }
 }
 
-.crash{
- --smoke:#168bff;
- --bg1:#101a2c;
- --bg2:#102d4d;
+.gift-card b {
+  font-size: 14px;
+  color: #d7d9e2;
 }
 
-.cases{
- --smoke:#20e5a0;
- --bg1:#10251f;
- --bg2:#104638;
+/* SPRITE */
+
+.g0 {background-position: 0 0;}
+.g1 {background-position: 33.33% 0;}
+.g2 {background-position: 66.66% 0;}
+.g3 {background-position: 100% 0;}
+
+.g4 {background-position: 0 50%;}
+.g5 {background-position: 33.33% 50%;}
+.g6 {background-position: 66.66% 50%;}
+.g7 {background-position: 100% 50%;}
+
+.g8 {background-position: 0 100%;}
+.g9 {background-position: 33.33% 100%;}
+.g10 {background-position: 66.66% 100%;}
+.g11 {background-position: 100% 100%;}
+
+/* GAMES */
+
+.game-panel {
+  position: relative;
+  overflow: hidden;
+  min-height: 245px;
+  border-radius: 35px;
+  margin-bottom: 25px;
+  padding: 35px;
+  border: 1px solid rgba(255,255,255,.1);
+  isolation: isolate;
 }
 
-.mines{
- --smoke:#08d5ff;
- --bg1:#101d2d;
- --bg2:#103b54;
+.game-panel::before,
+.game-panel::after {
+  content: "";
+  position: absolute;
+  z-index: -1;
+  width: 230px;
+  height: 230px;
+  border-radius: 50%;
+  filter: blur(55px);
+  opacity: .65;
+  animation: smoke 6s ease-in-out infinite alternate;
 }
 
-.upgrade{
- --smoke:#63ed81;
- --bg1:#102419;
- --bg2:#17442b;
+.game-panel::before {
+  right: -60px;
+  top: -80px;
 }
 
-.pvp{
- --smoke:#ff633f;
- --bg1:#20151b;
- --bg2:#3c1d20;
+.game-panel::after {
+  left: -80px;
+  bottom: -130px;
+  animation-delay: -3s;
 }
 
-.badge{
- display:inline-block;
- padding:8px 12px;
- background:#ffffff12;
- border:1px solid #ffffff19;
- border-radius:11px;
- font-size:12px;
- font-weight:bold;
+@keyframes smoke {
+  from {
+    transform: translate(0,0) scale(.8);
+    opacity: .35;
+  }
+  to {
+    transform: translate(-35px,30px) scale(1.5);
+    opacity: .8;
+  }
 }
 
-.panel h3{
- font-size:25px;
- margin-top:18px;
- font-weight:1000;
+.slots {
+  background: linear-gradient(120deg,#211020,#4e1550,#94165d);
+}
+.slots::before,
+.slots::after {
+  background: #ff168c;
 }
 
-.panel p{
- color:#a3adbc;
- margin-top:8px;
- font-size:13px;
+.crash {
+  background: linear-gradient(120deg,#101e37,#103d70,#1267b7);
+}
+.crash::before,
+.crash::after {
+  background: #168cff;
 }
 
-.panel-art{
- position:absolute;
- right:19px;
- top:50%;
- transform:translateY(-50%);
- width:105px;
- height:105px;
- filter:drop-shadow(0 8px 13px #0009);
- animation:giftFloat 3s ease-in-out infinite;
+.keys {
+  background: linear-gradient(120deg,#102c27,#075d49,#087d59);
+}
+.keys::before,
+.keys::after {
+  background: #00ffae;
 }
 
-.panel-art .gift-image{
- width:100%;
- height:100%;
+.mines {
+  background: linear-gradient(120deg,#101d34,#123d64,#087da5);
+}
+.mines::before,
+.mines::after {
+  background: #00d9ff;
 }
 
-/* NAVIGATION */
-
-.nav{
- position:fixed;
- z-index:10;
- bottom:0;
- left:50%;
- transform:translateX(-50%);
- width:min(100%,700px);
- display:grid;
- grid-template-columns:repeat(4,1fr);
- background:#090b10ed;
- border:1px solid #ffffff16;
- border-bottom:0;
- border-radius:25px 25px 0 0;
- padding:12px 7px calc(12px + env(safe-area-inset-bottom));
- backdrop-filter:blur(20px);
+.game-badge {
+  display: inline-block;
+  padding: 12px 18px;
+  background: rgba(255,255,255,.1);
+  border: 1px solid rgba(255,255,255,.12);
+  border-radius: 16px;
+  font-weight: bold;
 }
 
-.nav button{
- border:0;
- background:none;
- color:#858b99;
- font-size:11px;
- font-weight:bold;
- display:flex;
- flex-direction:column;
- align-items:center;
- gap:5px;
+.game-panel h1 {
+  font-size: 38px;
+  margin-top: 30px;
 }
 
-.nav button span:first-child{font-size:24px}
-.nav button.active{color:#168cff}
-
-.toast{
- position:fixed;
- z-index:20;
- bottom:95px;
- left:50%;
- transform:translateX(-50%);
- background:#202938;
- padding:12px 18px;
- border-radius:13px;
- opacity:0;
- transition:.3s;
- pointer-events:none;
- font-size:13px;
+.game-panel p {
+  color: #c4c8d4;
+  margin-top: 12px;
+  font-size: 17px;
 }
 
-.toast.show{opacity:1}
-
-@media(max-width:380px){
- .panel{min-height:145px;padding:17px}
- .panel-art{width:88px;height:88px;right:12px}
- .panel h3{font-size:22px}
+.game-gift {
+  position: absolute;
+  right: 20px;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 145px;
+  height: 145px;
+  background-image: url("nft_sprite.webp");
+  background-size: 400% 300%;
+  background-repeat: no-repeat;
+  animation: float 3s infinite ease-in-out;
 }
+
+/* INVENTAR */
+
+.inventory-balance,
+.inventory-card,
+.task-card,
+.leader-list {
+  background: #151820;
+  border: 1px solid #292e3b;
+  border-radius: 20px;
+  padding: 18px;
+  margin-bottom: 15px;
+}
+
+.inventory-balance {
+  display: flex;
+  justify-content: space-between;
+  color: #36baff;
+}
+
+.inventory-grid {
+  display: grid;
+  grid-template-columns: repeat(2,1fr);
+  gap: 12px;
+  margin-top: 20px;
+}
+
+.inventory-card {
+  text-align: center;
+}
+
+.inventory-card .gift-art {
+  margin: auto;
+}
+
+.inventory-card b,
+.inventory-card small {
+  display: block;
+  margin-top: 8px;
+}
+
+.inventory-card small {
+  color: #858b9b;
+}
+
+/* TASKS */
+
+.task-card {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 10px;
+}
+
+.task-card p {
+  color: #858b9b;
+  font-size: 13px;
+  margin: 8px 0;
+}
+
+.task-card button {
+  background: #168cff;
+  color: white;
+  border: none;
+  padding: 12px;
+  border-radius: 12px;
+}
+
+/* LEADERS */
+
+.top-three {
+  display: flex;
+  align-items: end;
+  justify-content: center;
+  gap: 10px;
+  margin: 45px 0;
+}
+
+.leader {
+  background: #171b26;
+  border: 1px solid #333b50;
+  border-radius: 17px;
+  padding: 18px 8px;
+  text-align: center;
+  flex: 1;
+  font-size: 23px;
+}
+
+.leader h3 {
+  font-size: 13px;
+  margin: 10px 0;
+}
+
+.leader b {
+  font-size: 12px;
+  color: #39baff;
+}
+
+.first {
+  transform: translateY(-20px);
+  border-color: #ffc94d;
+}
+
+.second {border-color: #aeb8c8;}
+.third {border-color: #cd8a56;}
+
+.leader-list div {
+  padding: 17px 5px;
+  border-bottom: 1px solid #292e3b;
+  display: flex;
+  justify-content: space-between;
+}
+
+.leader-list span {
+  color: #39baff;
+}
+
+/* BOTTOM NAV */
+
+.bottom-nav {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  height: 90px;
+  background: rgba(9,12,18,.96);
+  backdrop-filter: blur(20px);
+  border: 1px solid #242630;
+  border-radius: 25px 25px 0 0;
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+  z-index: 9999;
+}
+
+.nav-item {
+  background: none;
+  border: none;
+  color: #777d8c;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 6px;
+  font-size: 25px;
+}
+
+.nav-item small {
+  font-size: 12px;
+  font-weight: bold;
+}
+
+.nav-item.active {
+  color: #32aaff;
+  transform: translateY(-4px);
+  filter: drop-shadow(0 0 10px #168cff);
+}
+
 </style>
 </head>
 
 <body>
-<main class="app">
 
 <header>
- <div class="profile">
-  <div class="avatar">N</div>
-  <div>
-   <div class="name">N</div>
-   <div class="rank">DO IRON 👑</div>
+  <div class="profile">
+    <div class="avatar">N</div>
+    <div>
+      <b>N</b>
+      <p style="color:#888;margin-top:5px">DO IRON 👑</p>
+    </div>
   </div>
- </div>
- <div class="balance">0.03 💎</div>
+
+  <div class="balance">0.03 💎</div>
 </header>
 
-<div class="heading">
- <h2>🎁 NFT GIFTS</h2>
- <span>COLLECTION</span>
+
+<!-- O'YINLAR -->
+
+<div id="gamesPage" class="app-page active">
+
+  <div class="section-title">
+    <h2>🎁 NFT GIFTS</h2>
+    <small>COLLECTION</small>
+  </div>
+
+  <div class="gift-list">
+
+    <div class="gift-card">
+      <div class="gift-art g0"></div>
+      <b>Clown Box</b>
+    </div>
+
+    <div class="gift-card">
+      <div class="gift-art g1"></div>
+      <b>Santa Hat</b>
+    </div>
+
+    <div class="gift-card">
+      <div class="gift-art g2"></div>
+      <b>Wreath</b>
+    </div>
+
+    <div class="gift-card">
+      <div class="gift-art g3"></div>
+      <b>Bow</b>
+    </div>
+
+  </div>
+
+  <div class="section-title">
+    <h2>🎮 O‘YINLAR</h2>
+    <small>STONKS ORIGINAL</small>
+  </div>
+
+  <div class="game-panel slots">
+    <span class="game-badge">✨ NOVINKA</span>
+    <h1>SLOTLAR</h1>
+    <p>Yangi bo‘lim tez orada</p>
+    <div class="game-gift g4"></div>
+  </div>
+
+  <div class="game-panel crash">
+    <span class="game-badge">📈 HIT</span>
+    <h1>CRASH</h1>
+    <p>Yangi bo‘lim tez orada</p>
+    <div class="game-gift g5"></div>
+  </div>
+
+  <div class="game-panel keys">
+    <span class="game-badge">💎 KLASSIKA</span>
+    <h1>KEYSLAR</h1>
+    <p>Yangi bo‘lim tez orada</p>
+    <div class="game-gift g6"></div>
+  </div>
+
+  <div class="game-panel mines">
+    <span class="game-badge">💎 KLASSIKA</span>
+    <h1>MINES</h1>
+    <p>Yangi bo‘lim tez orada</p>
+    <div class="game-gift g7"></div>
+  </div>
+
 </div>
 
-<section class="gifts" id="gifts"></section>
 
-<div class="heading">
- <h2>🎮 O‘YINLAR</h2>
- <span>STONKS ORIGINAL</span>
+<!-- INVENTAR -->
+
+<div id="inventoryPage" class="app-page">
+
+  <h2>📦 INVENTAR</h2>
+  <p style="color:#858b9b;margin:10px 0 20px">
+    Sening NFT kolleksiyang
+  </p>
+
+  <div class="inventory-balance">
+    💎 NFT COLLECTION
+    <span>0 ta sovg‘a</span>
+  </div>
+
+  <div class="inventory-grid">
+
+    <div class="inventory-card">
+      <div class="gift-art g0"></div>
+      <b>Clown Box</b>
+      <small>Telegram Gift</small>
+    </div>
+
+    <div class="inventory-card">
+      <div class="gift-art g1"></div>
+      <b>Santa Hat</b>
+      <small>Telegram Gift</small>
+    </div>
+
+    <div class="inventory-card">
+      <div class="gift-art g2"></div>
+      <b>Wreath</b>
+      <small>Telegram Gift</small>
+    </div>
+
+    <div class="inventory-card">
+      <div class="gift-art g3"></div>
+      <b>Bow</b>
+      <small>Telegram Gift</small>
+    </div>
+
+    <div class="inventory-card">
+      <div class="gift-art g4"></div>
+      <b>Chocolate Box</b>
+      <small>Telegram Gift</small>
+    </div>
+
+    <div class="inventory-card">
+      <div class="gift-art g5"></div>
+      <b>Cupcake</b>
+      <small>Telegram Gift</small>
+    </div>
+
+  </div>
 </div>
 
-<section class="games">
 
- <article class="panel slots" data-name="SLOTLAR">
-  <span class="badge">✨ NOVINKA</span>
-  <h3>SLOTLAR</h3>
-  <p>Yangi bo‘lim tez orada</p>
-  <div class="panel-art"><div class="gift-image g0"></div></div>
- </article>
+<!-- VAZIFALAR -->
 
- <article class="panel crash" data-name="CRASH">
-  <span class="badge">📈 HIT</span>
-  <h3>CRASH</h3>
-  <p>Yangi bo‘lim tez orada</p>
-  <div class="panel-art"><div class="gift-image g1"></div></div>
- </article>
+<div id="tasksPage" class="app-page">
 
- <article class="panel cases" data-name="KEYSLAR">
-  <span class="badge">💎 KLASSIKA</span>
-  <h3>KEYSLAR</h3>
-  <p>Yangi bo‘lim tez orada</p>
-  <div class="panel-art"><div class="gift-image g2"></div></div>
- </article>
+  <h2>📋 VAZIFALAR</h2>
+  <p style="color:#858b9b;margin:10px 0 20px">
+    Vazifalarni bajarib bonus ol!
+  </p>
 
- <article class="panel mines" data-name="MINES">
-  <span class="badge">💎 KLASSIKA</span>
-  <h3>MINES</h3>
-  <p>Yangi bo‘lim tez orada</p>
-  <div class="panel-art"><div class="gift-image g8"></div></div>
- </article>
+  <div class="task-card">
+    <div>
+      <h3>📢 Telegram kanal</h3>
+      <p>Kanalga obuna bo‘l</p>
+      <b>+0.01 💎</b>
+    </div>
+    <button onclick="completeTask(this)">Bajarish</button>
+  </div>
 
- <article class="panel upgrade" data-name="UPGRADE">
-  <span class="badge">💚 POPULAR</span>
-  <h3>UPGRADE</h3>
-  <p>Yangi bo‘lim tez orada</p>
-  <div class="panel-art"><div class="gift-image g5"></div></div>
- </article>
+  <div class="task-card">
+    <div>
+      <h3>👥 Do‘st taklif qilish</h3>
+      <p>Do‘stlaringni taklif qil</p>
+      <b>+0.02 💎</b>
+    </div>
+    <button onclick="completeTask(this)">Bajarish</button>
+  </div>
 
- <article class="panel pvp" data-name="PvP">
-  <span class="badge">⚔️ BATTLE</span>
-  <h3>PvP</h3>
-  <p>Yangi bo‘lim tez orada</p>
-  <div class="panel-art"><div class="gift-image g3"></div></div>
- </article>
+  <div class="task-card">
+    <div>
+      <h3>🎁 NFT kolleksiya</h3>
+      <p>Inventaringni tekshir</p>
+      <b>+0.01 💎</b>
+    </div>
+    <button onclick="completeTask(this)">Bajarish</button>
+  </div>
 
-</section>
-</main>
+</div>
 
-<nav class="nav">
- <button data-page="Inventar"><span>📦</span>Inventar</button>
- <button class="active" data-page="O‘yinlar"><span>🎮</span>O‘yinlar</button>
- <button data-page="Vazifalar"><span>📋</span>Vazifalar</button>
- <button data-page="Liderlar"><span>🏆</span>Liderlar</button>
+
+<!-- LIDERLAR -->
+
+<div id="leadersPage" class="app-page">
+
+  <h2>🏆 LIDERLAR</h2>
+  <p style="color:#858b9b;margin:10px 0">
+    Eng yaxshi o‘yinchilar
+  </p>
+
+  <div class="top-three">
+
+    <div class="leader second">
+      🥈
+      <h3>Player 2</h3>
+      <b>120 💎</b>
+    </div>
+
+    <div class="leader first">
+      🥇
+      <h3>Player 1</h3>
+      <b>250 💎</b>
+    </div>
+
+    <div class="leader third">
+      🥉
+      <h3>Player 3</h3>
+      <b>90 💎</b>
+    </div>
+
+  </div>
+
+  <div class="leader-list">
+    <div>4. Player 4 <span>80 💎</span></div>
+    <div>5. Player 5 <span>65 💎</span></div>
+    <div>6. Player 6 <span>50 💎</span></div>
+  </div>
+
+</div>
+
+
+<!-- BOTTOM MENU -->
+
+<nav class="bottom-nav">
+
+  <button class="nav-item" onclick="showPage('inventory',this)">
+    <span>📦</span>
+    <small>Inventar</small>
+  </button>
+
+  <button class="nav-item active" onclick="showPage('games',this)">
+    <span>🎮</span>
+    <small>O‘yinlar</small>
+  </button>
+
+  <button class="nav-item" onclick="showPage('tasks',this)">
+    <span>📋</span>
+    <small>Vazifalar</small>
+  </button>
+
+  <button class="nav-item" onclick="showPage('leaders',this)">
+    <span>🏆</span>
+    <small>Liderlar</small>
+  </button>
+
 </nav>
 
-<div class="toast" id="toast"></div>
 
 <script>
-const tg=window.Telegram?.WebApp;
-if(tg){
- tg.ready();
- tg.expand();
+
+function showPage(page, button) {
+
+  document.querySelectorAll('.app-page').forEach(p => {
+    p.classList.remove('active');
+  });
+
+  document.querySelectorAll('.nav-item').forEach(b => {
+    b.classList.remove('active');
+  });
+
+  document.getElementById(page + 'Page').classList.add('active');
+
+  button.classList.add('active');
+
+  window.scrollTo({
+    top: 0,
+    behavior: 'smooth'
+  });
+
 }
 
-const gifts=[
- ["Clown Box",0],
- ["Santa Hat",1],
- ["Wreath",2],
- ["Bow",3],
- ["Sweet Box",4],
- ["Bunny Cake",5],
- ["Color Gift",6],
- ["Witch Hat",7],
- ["Snow Globe",8],
- ["Heart Gift",9],
- ["Candle",10],
- ["Top Hat",11]
-];
-
-const giftArea=document.getElementById("gifts");
-
-gifts.forEach(([name,index])=>{
- const card=document.createElement("div");
- card.className="gift";
- card.innerHTML=`
-  <div class="gift-image g${index}"></div>
-  <small>${name}</small>
- `;
- giftArea.appendChild(card);
-});
-
-const toast=document.getElementById("toast");
-
-function message(text){
- toast.textContent=text;
- toast.classList.add("show");
- setTimeout(()=>toast.classList.remove("show"),2000);
+function completeTask(button) {
+  button.innerText = "Tekshirilmoqda...";
+  button.disabled = true;
 }
 
-document.querySelectorAll(".panel").forEach(panel=>{
- panel.addEventListener("click",()=>{
-  message(panel.dataset.name+" — tez orada!");
- });
-});
-
-document.querySelectorAll(".nav button").forEach(button=>{
- button.addEventListener("click",()=>{
-  document.querySelectorAll(".nav button")
-   .forEach(b=>b.classList.remove("active"));
-
-  button.classList.add("active");
-  message(button.dataset.page);
- });
-});
 </script>
 
 </body>
