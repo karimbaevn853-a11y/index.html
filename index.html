@@ -78,7 +78,6 @@ button:focus-visible{outline:2px solid #fff;outline-offset:3px}
 
 @keyframes pageIn{from{opacity:0;transform:translateY(5px)}to{opacity:1;transform:none}}
 </style>
-<!-- Telegram WebApp CDN xavfsiz ulanishi -->
 <script src="https://telegram.org/js/telegram-web-app.js"></script>
 </head>
 <body>
@@ -86,7 +85,7 @@ button:focus-visible{outline:2px solid #fff;outline-offset:3px}
   <header class="topbar">
     <div class="profile" id="profileOpen">
       <div class="avatar" id="userAvatar">N</div>
-      <div><strong id="userName">Nursultan</strong><small>PROFIL</small></div>
+      <div><strong id="userName">Foydalanuvchi</strong><small>PROFIL</small></div>
     </div>
     <div class="balance-pair">
       <div class="balance">💎 <span id="tonBalance">0.00</span> TON</div>
@@ -157,8 +156,8 @@ button:focus-visible{outline:2px solid #fff;outline-offset:3px}
   <section id="page-profile" class="page">
     <h1 class="page-title">👤 PROFIL</h1>
     <div class="info-card">
-      <strong id="profileUserName" style="font-size:16px">Nursultan</strong>
-      <p style="margin-top:5px">Sizning shaxsiy profilingiz va yutuqlar tarixingiz.</p>
+      <strong id="profileUserName" style="font-size:16px">Foydalanuvchi</strong>
+      <p style="margin-top:5px">Sizning shaxsiy profilingiz va to'lovlar tarixingiz.</p>
     </div>
     <div class="info-card">
       <b>🧾 To'lovlar va yutuqlar tarixi</b>
@@ -181,8 +180,7 @@ button:focus-visible{outline:2px solid #fff;outline-offset:3px}
 (() => {
   const $ = s => document.querySelector(s);
   
-  // Telegram WebApp xavfsiz ishga tushirish
-  let userName = 'Nursultan';
+  let userName = 'Foydalanuvchi';
   let userId = 'user_default';
 
   try {
@@ -199,7 +197,7 @@ button:focus-visible{outline:2px solid #fff;outline-offset:3px}
       }
     }
   } catch (e) {
-    console.log("Telegram WebApp muhiti aniqlanmadi, standart qiymatlar ishlatiladi.");
+    console.log("WebApp xatosi:", e);
   }
 
   $('#userName').textContent = userName;
