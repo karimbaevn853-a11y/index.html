@@ -76,7 +76,7 @@ button:focus-visible{outline:2px solid #fff;outline-offset:3px}
 .toast{position:fixed;z-index:30;left:50%;bottom:calc(var(--nav-h) + 18px);transform:translate(-50%,12px);opacity:0;pointer-events:none;background:#202637;border:1px solid #ffffff22;border-radius:14px;padding:11px 16px;font-size:13px;transition:.2s;max-width:90%;text-align:center}
 .toast.show{opacity:1;transform:translate(-50%,0)}
 
-/* DEPOZIT MODAL OYNASI (Faqat Stars va GRAM) */
+/* DEPOZIT MODAL OYNASI */
 .modal-overlay{position:fixed;inset:0;background:rgba(0,0,0,0.85);z-index:50;display:none;align-items:flex-end;justify-content:center;backdrop-filter:blur(6px)}
 .modal-overlay.active{display:flex}
 .modal-sheet{width:100%;max-width:760px;background:#12131c;border-radius:28px 28px 0 0;border:1px solid rgba(255,255,255,0.1);padding:20px 16px calc(20px + env(safe-area-inset-bottom));animation:slideUp .25s ease}
@@ -189,7 +189,7 @@ button:focus-visible{outline:2px solid #fff;outline-offset:3px}
   </section>
 </main>
 
-<!-- DEPOZIT MODAL OYNASI (Faqat Stars va GRAM) -->
+<!-- DEPOZIT MODAL OYNASI -->
 <div class="modal-overlay" id="depositModal">
   <div class="modal-sheet">
     <div class="modal-header">
@@ -197,7 +197,6 @@ button:focus-visible{outline:2px solid #fff;outline-offset:3px}
       <button class="modal-close" onclick="closeDepositModal()">✕</button>
     </div>
 
-    <!-- Faqat Stars va GRAM -->
     <div class="dep-methods">
       <div class="dep-method active" data-type="stars" onclick="selectMethod('stars', this)">
         <span>⭐</span><small>Stars</small>
@@ -207,7 +206,6 @@ button:focus-visible{outline:2px solid #fff;outline-offset:3px}
       </div>
     </div>
 
-    <!-- Input va Min summa -->
     <div class="dep-input-box">
       <div style="display:flex;align-items:center;gap:8px">
         <span id="depCurrencyIcon" style="font-size:24px">⭐</span>
@@ -216,7 +214,6 @@ button:focus-visible{outline:2px solid #fff;outline-offset:3px}
       <span class="dep-min" id="depMinText">МИН. СУММА: 1 STARS</span>
     </div>
 
-    <!-- Klaviatura -->
     <div class="keypad">
       <button class="key-btn" onclick="appendKey('1')">1</button>
       <button class="key-btn" onclick="appendKey('2')">2</button>
@@ -232,7 +229,6 @@ button:focus-visible{outline:2px solid #fff;outline-offset:3px}
       <button class="key-btn" onclick="deleteKey()">⌫</button>
     </div>
 
-    <!-- Tugmalar -->
     <div class="dep-actions">
       <button class="btn-cancel" onclick="closeDepositModal()">Отмена</button>
       <button class="btn-submit" onclick="submitDeposit()">Пополнить</button>
@@ -276,7 +272,6 @@ button:focus-visible{outline:2px solid #fff;outline-offset:3px}
   $('#profileUserName').textContent = 'Foydalanuvchi: ' + userName;
   $('#userAvatar').textContent = userName.charAt(0).toUpperCase();
 
-  // Balanslar majburiy 0 qilindi
   let db = JSON.parse(localStorage.getItem(userId)) || {
     ton: 0,
     stars: 0,
@@ -365,7 +360,7 @@ button:focus-visible{outline:2px solid #fff;outline-offset:3px}
     }
   }
 
-  // Telegram Stars tasdiqlash oynasi rasmdagidek chiqishi va faqat to'lansa qo'shilishi
+  // To'lovni amalga oshirish va @sots12 botiga yoki invoice'ga yo'naltirish
   window.submitDeposit = function() {
     const val = parseFloat($('#depAmountInput').value);
     if(isNaN(val) || val <= 0) {
@@ -373,26 +368,47 @@ button:focus-visible{outline:2px solid #fff;outline-offset:3px}
       return;
     }
 
-    let confirmMsg = `Подтверждение покупки\n\nВы точно хотите приобрести ${val} ${currentMethod === 'stars' ? 'stars' : 'GRAM'} в GiftLand за ${val} ${currentMethod === 'stars' ? 'звёзд' : 'TON'}?`;
+    if (currentMethod === 'stars') {
+      let confirmMsg = `GiftLand\n\nПодтверждение покупки\n\nВы точно хотите приобрести ${val} stars в GiftLand за ${val} звёзд?`;
+      if (confirm(confirmMsg)) {
+        // Stars to'lovi to'g'ridan-to'g'ri @sots12 ga yoki bot orqali amalga oshirilishi uchun botga o'tkazish
+        let botUsername = "sots12"; // @sots12 ga yuborish
+        let payUrl = `https://t.me/${botUsername}?text=${encodeURIComponent(`To'lov: ${val} Stars (${userName} - ${userId})`)}`;
+        
+        if (tg && tg.openTelegramLink) {
+          tg.openTelegramLink(payUrl);
+        } else {
+          window.open(payUrl, '_blank');
+        }
 
-    if(confirm(confirmMsg)) {
-      if(currentMethod === 'stars') {
         db.stars += val;
-        db.history.push(`⭐ +${val} Stars to'landi va qo'shildi ✓`);
+        db.history.push(`⭐ +${val} Stars to'landi ✓`);
         let points = (val / 5);
         updateLeaderboard(userName, points);
-      } else if(currentMethod === 'gram') {
+        saveData();
+        closeDepositModal();
+        showToast(`Muvaffaqiyatli! +${val} Stars qo'shildi.`);
+      }
+    } else {
+      let confirmMsg = `GiftLand\n\nПодтверждение покупки\n\nВы точно хотите приобрести ${val} GRAM в GiftLand?`;
+      if (confirm(confirmMsg)) {
+        let wallet = "UQA4qQ6E8Kf0vHXXCti_PzO71qXi7KiEeN5d71UO7xWiTL-w";
+        let payUrl = `https://t.me/sots12?text=${encodeURIComponent(`TON To'lov: ${val} TON\nHamyon: ${wallet} (${userName})`)}`;
+        
+        if (tg && tg.openTelegramLink) {
+          tg.openTelegramLink(payUrl);
+        } else {
+          window.open(payUrl, '_blank');
+        }
+
         db.ton += val;
-        db.history.push(`💎 +${val} GRAM to'landi va qo'shildi ✓`);
+        db.history.push(`💎 +${val} GRAM to'landi ✓`);
         let points = (val / 0.1);
         updateLeaderboard(userName, points);
+        saveData();
+        closeDepositModal();
+        showToast(`Muvaffaqiyatli! +${val} GRAM qo'shildi.`);
       }
-
-      saveData();
-      closeDepositModal();
-      showToast(`Muvaffaqiyatli! +${val} qo'shildi.`);
-    } else {
-      showToast("To'lov bekor qilindi.");
     }
   }
 
