@@ -76,7 +76,7 @@ button:focus-visible{outline:2px solid #fff;outline-offset:3px}
 .toast{position:fixed;z-index:30;left:50%;bottom:calc(var(--nav-h) + 18px);transform:translate(-50%,12px);opacity:0;pointer-events:none;background:#202637;border:1px solid #ffffff22;border-radius:14px;padding:11px 16px;font-size:13px;transition:.2s;max-width:90%;text-align:center}
 .toast.show{opacity:1;transform:translate(-50%,0)}
 
-/* DEPOZIT VA HAMYON ULANISHI */
+/* GETGEMS USLUBIDAGI HAMYON ULANISHI MODALI */
 .modal-overlay{position:fixed;inset:0;background:rgba(0,0,0,0.85);z-index:50;display:none;align-items:flex-end;justify-content:center;backdrop-filter:blur(6px)}
 .modal-overlay.active{display:flex}
 .modal-sheet{width:100%;max-width:760px;background:#12131c;border-radius:28px 28px 0 0;border:1px solid rgba(255,255,255,0.1);padding:20px 16px calc(20px + env(safe-area-inset-bottom));animation:slideUp .25s ease}
@@ -84,24 +84,11 @@ button:focus-visible{outline:2px solid #fff;outline-offset:3px}
 .modal-header h3{font-size:18px;font-weight:900;margin:0;letter-spacing:1px}
 .modal-close{background:#1f2232;border:0;width:32px;height:32px;border-radius:50%;font-size:16px;color:#fff;display:grid;place-items:center;cursor:pointer}
 
-.dep-methods{display:flex;gap:10px;margin-bottom:16px}
-.dep-method{flex:1;background:#181a26;border:1px solid var(--line);border-radius:16px;padding:12px;display:flex;flex-direction:column;align-items:center;gap:6px;cursor:pointer;transition:0.2s}
-.dep-method.active{background:#1d283b;border-color:#3b82f6}
-.dep-method span{font-size:24px}
-.dep-method small{font-size:12px;font-weight:700;color:var(--muted)}
-.dep-method.active small{color:#60a5fa}
-
-.dep-input-box{background:#181a26;border:1px solid var(--line);border-radius:16px;padding:14px;margin-bottom:12px}
-.dep-input-box input{width:100%;background:transparent;border:0;color:#fff;font-size:24px;font-weight:bold;outline:none}
-.dep-min{font-size:11px;color:var(--muted);text-transform:uppercase;margin-top:6px;display:block}
-
-.keypad{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-bottom:16px}
-.key-btn{background:#1c2030;border:1px solid var(--line);border-radius:12px;padding:12px;font-size:18px;font-weight:bold;color:#fff;cursor:pointer;text-align:center}
-.key-btn:active{background:#283046}
-
-.dep-actions{display:grid;grid-template-columns:1fr 2fr;gap:10px}
-.btn-cancel{background:#1f2232;border:0;border-radius:14px;padding:14px;font-weight:bold;color:#fff;cursor:pointer}
-.btn-submit{background:#2563eb;border:0;border-radius:14px;padding:14px;font-weight:bold;color:#fff;cursor:pointer}
+.wallet-option{display:flex;align-items:center;gap:12px;background:#181a26;border:1px solid var(--line);border-radius:16px;padding:14px;margin-bottom:10px;cursor:pointer;transition:0.2s}
+.wallet-option:hover{background:#1d283b;border-color:#3b82f6}
+.wallet-icon{font-size:24px;width:40px;height:40px;display:grid;place-items:center;background:#232738;border-radius:12px}
+.wallet-option b{font-size:14px;display:block}
+.wallet-option small{color:var(--muted);font-size:11px}
 
 .wallet-badge{background:#1e293b;border:1px solid #3b82f6;color:#60a5fa;padding:6px 12px;border-radius:999px;font-size:11px;font-weight:bold;cursor:pointer;display:inline-flex;align-items:center;gap:6px;margin-top:8px}
 
@@ -116,11 +103,11 @@ button:focus-visible{outline:2px solid #fff;outline-offset:3px}
       <div class="avatar" id="userAvatar">N</div>
       <div>
         <strong id="userName">Foydalanuvchi</strong>
-        <div id="walletStatus"><span class="wallet-badge" onclick="connectWallet()">🔗 Hamyonni ulash</span></div>
+        <div id="walletStatus"><span class="wallet-badge" onclick="openWalletModal()">🔗 Подключить кошелек</span></div>
       </div>
     </div>
     <div class="balance-pair">
-      <div class="balance">💎 <span id="tonBalance">0.00</span> TON</div>
+      <div class="balance">💎 <span id="tonBalance">0.00</span> GRAM</div>
       <div class="balance stars-balance">⭐ <span id="starsBalance">0</span> Stars</div>
     </div>
   </header>
@@ -129,16 +116,16 @@ button:focus-visible{outline:2px solid #fff;outline-offset:3px}
     <div class="section-head"><h2>🎮 O‘YINLAR</h2><span>GIFTLAND ORIGINAL</span></div>
     <div class="game-list">
       <button class="game-card slots" onclick="playGame('Slotlar', 0.5)">
-        <div class="copy"><span class="tag">✨ O‘YIN</span><h3>SLOTLAR</h3><p>Stavka: 0.5 TON (Yutqazsangiz admin hamyoniga o'tadi).</p></div>
+        <div class="copy"><span class="tag">✨ O‘YIN</span><h3>SLOTLAR</h3><p>Stavka: 0.5 GRAM (Yutqazsangiz admin hamyoniga o'tadi).</p></div>
       </button>
       <button class="game-card crash" onclick="playGame('Crash', 1.0)">
-        <div class="copy"><span class="tag">📈 O‘YIN</span><h3>CRASH</h3><p>Stavka: 1.0 TON (Yutqazsangiz admin hamyoniga o'tadi).</p></div>
+        <div class="copy"><span class="tag">📈 O‘YIN</span><h3>CRASH</h3><p>Stavka: 1.0 GRAM (Yutqazsangiz admin hamyoniga o'tadi).</p></div>
       </button>
       <button class="game-card keys" onclick="playGame('Keyslar', 0.2)">
-        <div class="copy"><span class="tag">💎 O‘YIN</span><h3>KEYSLAR</h3><p>Stavka: 0.2 TON (Yutqazsangiz admin hamyoniga o'tadi).</p></div>
+        <div class="copy"><span class="tag">💎 O‘YIN</span><h3>KEYSLAR</h3><p>Stavka: 0.2 GRAM (Yutqazsangiz admin hamyoniga o'tadi).</p></div>
       </button>
       <button class="game-card mines" onclick="playGame('Mines', 0.5)">
-        <div class="copy"><span class="tag">🧩 O‘YIN</span><h3>MINES</h3><p>Stavka: 0.5 TON (Yutqazsangiz admin hamyoniga o'tadi).</p></div>
+        <div class="copy"><span class="tag">🧩 O‘YIN</span><h3>MINES</h3><p>Stavka: 0.5 GRAM (Yutqazsangiz admin hamyoniga o'tadi).</p></div>
       </button>
     </div>
   </section>
@@ -153,9 +140,9 @@ button:focus-visible{outline:2px solid #fff;outline-offset:3px}
   <section id="page-inventory" class="page">
     <h1 class="page-title">📦 INVENTAR</h1>
     <div class="info-card">
-      <b>💳 Balansni to'ldirish (Hamyon orqali)</b>
-      <p style="font-size:12px; margin-top:5px; color:var(--muted)">Stars yoki GRAM (TON) yordamida hisobingizni to'ldiring.</p>
-      <button onclick="openDepositModal()" style="width:100%;background:#2563eb;border:0;padding:14px;border-radius:14px;color:#fff;font-weight:bold;margin-top:12px;cursor:pointer">Balansni to'ldirish (Depozit)</button>
+      <b>💳 Balansni to'ldirish</b>
+      <p style="font-size:12px; margin-top:5px; color:var(--muted)">Hamyon ulagandan so'ng balansni to'ldirishingiz mumkin.</p>
+      <button onclick="openWalletModal()" style="width:100%;background:#2563eb;border:0;padding:14px;border-radius:14px;color:#fff;font-weight:bold;margin-top:12px;cursor:pointer">Hamyonni ulash (TON Connect)</button>
     </div>
     <div class="info-card"><b>🎁 Yutuqlar kolleksiyasi</b><div class="inventory-grid" id="inventoryGrid"><div class="market-empty">Hozircha yutuq sovg‘alar yo‘q</div></div></div>
   </section>
@@ -167,7 +154,7 @@ button:focus-visible{outline:2px solid #fff;outline-offset:3px}
       <div class="task"><span style="font-size:24px">📢</span><span style="flex:1"><b>GiftLand kanaliga obuna bo‘lish</b><small>Kanalga o'tib obuna bo'ling</small></span></div>
       <div style="display:flex;gap:8px;margin-top:12px">
         <a href="https://t.me/GiftLanda" target="_blank" rel="noopener" onclick="markSubscribed()" style="background:#1888f8;padding:10px;border-radius:10px;color:#fff;text-decoration:none;font-weight:bold;text-align:center;flex:1;font-size:12px">Kanalga o'tish</a>
-        <button onclick="claimReward('ton')" style="background:#22c55e;border:0;padding:10px;border-radius:10px;color:#fff;font-weight:bold;cursor:pointer;flex:1;font-size:12px">+0.1 TON olish</button>
+        <button onclick="claimReward('ton')" style="background:#22c55e;border:0;padding:10px;border-radius:10px;color:#fff;font-weight:bold;cursor:pointer;flex:1;font-size:12px">+0.1 GRAM olish</button>
         <button onclick="claimReward('stars')" style="background:#eab308;border:0;padding:10px;border-radius:10px;color:#fff;font-weight:bold;cursor:pointer;flex:1;font-size:12px">+5 Stars olish</button>
       </div>
     </div>
@@ -194,49 +181,26 @@ button:focus-visible{outline:2px solid #fff;outline-offset:3px}
   </section>
 </main>
 
-<!-- DEPOZIT MODAL OYNASI -->
-<div class="modal-overlay" id="depositModal">
+<!-- GETGEMS USLUBIDAGI HAMYON TANLASH MODALI -->
+<div class="modal-overlay" id="walletModal">
   <div class="modal-sheet">
     <div class="modal-header">
-      <h3>ДЕПОЗИТ</h3>
-      <button class="modal-close" onclick="closeDepositModal()">✕</button>
+      <h3>TON Connect</h3>
+      <button class="modal-close" onclick="closeWalletModal()">✕</button>
     </div>
-
-    <div class="dep-methods">
-      <div class="dep-method active" data-type="stars" onclick="selectMethod('stars', this)">
-        <span>⭐</span><small>Stars</small>
-      </div>
-      <div class="dep-method" data-type="gram" onclick="selectMethod('gram', this)">
-        <span>💎</span><small>GRAM</small>
-      </div>
+    <p style="color:var(--muted);font-size:13px;margin-bottom:16px">Используйте свой Telegram-кошелёк или другое приложение:</p>
+    
+    <div class="wallet-option" onclick="connectSpecificWallet('Telegram Wallet')">
+      <div class="wallet-icon">💎</div>
+      <div><b>Подключить Telegram</b><small>Быстрый доступ через Telegram</small></div>
     </div>
-
-    <div class="dep-input-box">
-      <div style="display:flex;align-items:center;gap:8px">
-        <span id="depCurrencyIcon" style="font-size:24px">⭐</span>
-        <input type="text" id="depAmountInput" value="1" readonly>
-      </div>
-      <span class="dep-min" id="depMinText">МИН. СУММА: 1 STARS</span>
+    <div class="wallet-option" onclick="connectSpecificWallet('Tonkeeper')">
+      <div class="wallet-icon">🔵</div>
+      <div><b>Tonkeeper / Keeper</b><small>Популярный мобильный кошелек</small></div>
     </div>
-
-    <div class="keypad">
-      <button class="key-btn" onclick="appendKey('1')">1</button>
-      <button class="key-btn" onclick="appendKey('2')">2</button>
-      <button class="key-btn" onclick="appendKey('3')">3</button>
-      <button class="key-btn" onclick="appendKey('4')">4</button>
-      <button class="key-btn" onclick="appendKey('5')">5</button>
-      <button class="key-btn" onclick="appendKey('6')">6</button>
-      <button class="key-btn" onclick="appendKey('7')">7</button>
-      <button class="key-btn" onclick="appendKey('8')">8</button>
-      <button class="key-btn" onclick="appendKey('9')">9</button>
-      <button class="key-btn" onclick="appendKey('.')">.</button>
-      <button class="key-btn" onclick="appendKey('0')">0</button>
-      <button class="key-btn" onclick="deleteKey()">⌫</button>
-    </div>
-
-    <div class="dep-actions">
-      <button class="btn-cancel" onclick="closeDepositModal()">Отмена</button>
-      <button class="btn-submit" onclick="submitDeposit()">Пополнить</button>
+    <div class="wallet-option" onclick="connectSpecificWallet('MyWallet')">
+      <div class="wallet-icon">⚡</div>
+      <div><b>My Wallet</b><small>Децентрализованное приложение</small></div>
     </div>
   </div>
 </div>
@@ -281,6 +245,7 @@ button:focus-visible{outline:2px solid #fff;outline-offset:3px}
     ton: 0,
     stars: 0,
     walletConnected: false,
+    walletName: '',
     walletAddress: '',
     history: [],
     inventory: [],
@@ -296,8 +261,8 @@ button:focus-visible{outline:2px solid #fff;outline-offset:3px}
     $('#starsBalance').textContent = db.stars;
     
     if (db.walletConnected) {
-      const shortAddr = db.walletAddress.slice(0, 4) + '...' + db.walletAddress.slice(-4);
-      $('#walletStatus').innerHTML = `<span class="wallet-badge" style="background:#065f46;color:#34d399">✅ ${shortAddr}</span>`;
+      const shortAddr = db.walletAddress.slice(0, 4.5) + '...' + db.walletAddress.slice(-4);
+      $('#walletStatus').innerHTML = `<span class="wallet-badge" style="background:#065f46;color:#34d399" onclick="openWalletModal()">✅ ${shortAddr}</span>`;
     }
 
     const histEl = $('#paymentHistory');
@@ -322,146 +287,61 @@ button:focus-visible{outline:2px solid #fff;outline-offset:3px}
 
   saveData();
 
-  // Hamyonni ulash (TON Connect simulyatsiyasi va real tranzaksiya uchun bog'lanish)
-  window.connectWallet = function() {
-    if (confirm("TON hamyoningizni (Tonkeeper) ulashni tasdiqlaysizmi?")) {
-      db.walletConnected = true;
-      db.walletAddress = "EQD" + Math.random().toString(36).substring(2, 15) + "Wallet";
-      saveData();
-      showToast("Hamyon muvaffaqiyatli ulandi!");
-    }
+  // Hamyon oynasini ochish/yopish
+  window.openWalletModal = function() {
+    $('#walletModal').classList.add('active');
+  }
+  window.closeWalletModal = function() {
+    $('#walletModal').classList.remove('active');
   }
 
-  // O'yin oynash va stavka yechilishi / yutqazganda admin hamyoniga o'tishi
+  // Tanlangan hamyonni ulash
+  window.connectSpecificWallet = function(walletName) {
+    db.walletConnected = true;
+    db.walletName = walletName;
+    db.walletAddress = "UQ" + Math.random().toString(36).substring(2, 10).toUpperCase() + "EQD" + Math.random().toString(36).substring(2, 8).toUpperCase();
+    
+    // Test uchun boshlang'ich balans berish yoki 0 qilish
+    db.ton = 2.0; 
+    
+    saveData();
+    closeWalletModal();
+    showToast(`${walletName} muvaffaqiyatli ulandi!`);
+  }
+
+  // O'yin o'ynash va yutqazganda admin hamyoniga o'tkazish
   window.playGame = function(gameName, stake) {
     if (!db.walletConnected) {
-      alert("Avval o'zingizning TON hamyoningizni ulang!");
-      connectWallet();
+      alert("Avval hamyoningizni ulang!");
+      openWalletModal();
       return;
     }
 
     if (db.ton < stake) {
-      alert(`Balansingizda mablag' yetarli emas! Kerak: ${stake} TON. Depozit qiling.`);
-      openDepositModal();
+      alert(`Balansingizda mablag' yetarli emas! Kerak: ${stake} GRAM.`);
       return;
     }
 
-    if (confirm(`${gameName} o'yinini o'ynash uchun ${stake} TON stavka tikasizmi?`)) {
-      // Stavka foydalanuvchi hamyonidan yechiladi
+    if (confirm(`${gameName} o'yinini boshlash uchun ${stake} GRAM stavka tikasizmi?`)) {
       db.ton -= stake;
-      
-      // O'yin natijasi (50% yutish, 50% yutqazish)
       let isWin = Math.random() > 0.5;
 
       if (isWin) {
-        let winAmount = stake * 1.8;
-        db.ton += winAmount;
-        db.history.push(`🎮 ${gameName}: Yutdingiz! +${winAmount.toFixed(2)} TON ✓`);
-        showToast(`Tabriklaymiz! +${winAmount.toFixed(2)} TON yutib oldingiz!`);
+        let win = stake * 1.8;
+        db.ton += win;
+        db.history.push(`🎮 ${gameName}: Yutdingiz! +${win.toFixed(2)} GRAM ✓`);
+        showToast(`Tabriklaymiz! +${win.toFixed(2)} GRAM yutib oldingiz!`);
       } else {
-        // Yutqazgan stavka admin hamyoniga o'tadi
-        db.history.push(`🎮 ${gameName}: Yutqazdingiz (-${stake} TON admin hamyoniga o'tdi: ${ADMIN_WALLT_SHORT = ADMIN_WALLET.slice(0,6)}...) ❌`);
+        // Yutqazgan stavka admin hamyoniga yuboriladi
+        let payUrl = `https://t.me/sots12?text=${encodeURIComponent(`O'yin yutqazildi: ${stake} GRAM\nO'yin: ${gameName}\nAdmin Hamyon: ${ADMIN_WALLET}`)}`;
+        if (tg && tg.openTelegramLink) {
+          tg.openTelegramLink(payUrl);
+        }
+        db.history.push(`🎮 ${gameName}: Yutqazdingiz (-${stake} GRAM admin hamyoniga o'tdi) ❌`);
         showToast(`Afsuski, yutqazdingiz. Stavka admin hamyoniga yo'naltirildi.`);
       }
 
       saveData();
-    }
-  }
-
-  let currentMethod = 'stars';
-  window.openDepositModal = function() {
-    $('#depositModal').classList.add('active');
-    $('#depAmountInput').value = '1';
-  }
-  window.closeDepositModal = function() {
-    $('#depositModal').classList.remove('active');
-  }
-
-  window.selectMethod = function(type, el) {
-    document.querySelectorAll('.dep-method').forEach(m => m.classList.remove('active'));
-    el.classList.add('active');
-    currentMethod = type;
-
-    const icon = $('#depCurrencyIcon');
-    const minText = $('#depMinText');
-    const input = $('#depAmountInput');
-
-    if(type === 'stars') {
-      icon.textContent = '⭐';
-      minText.textContent = 'МИН. СУММА: 1 STARS';
-      input.value = '1';
-    } else if(type === 'gram') {
-      icon.textContent = '💎';
-      minText.textContent = 'МИН. СУММА: 0.1 GRAM';
-      input.value = '0.1';
-    }
-  }
-
-  window.appendKey = function(val) {
-    const input = $('#depAmountInput');
-    if(input.value === '1' && val !== '.') {
-      input.value = val;
-    } else {
-      input.value += val;
-    }
-  }
-
-  window.deleteKey = function() {
-    const input = $('#depAmountInput');
-    if(input.value.length > 1) {
-      input.value = input.value.slice(0, -1);
-    } else {
-      input.value = '0';
-    }
-  }
-
-  // To'lov tizimi (@sots12 botiga va admin hamyoniga yuborish)
-  window.submitDeposit = function() {
-    const val = parseFloat($('#depAmountInput').value);
-    if(isNaN(val) || val <= 0) {
-      alert("Noto'g'ri miqdor kiritildi!");
-      return;
-    }
-
-    if (currentMethod === 'stars') {
-      let confirmMsg = `GiftLand\n\nПодтверждение покупки\n\nВы точно хотите приобрести ${val} stars в GiftLand за ${val} звёзд?`;
-      if (confirm(confirmMsg)) {
-        let botUsername = "sots12";
-        let payUrl = `https://t.me/${botUsername}?text=${encodeURIComponent(`To'lov: ${val} Stars (${userName} - ${userId})`)}`;
-        
-        if (tg && tg.openTelegramLink) {
-          tg.openTelegramLink(payUrl);
-        } else {
-          window.open(payUrl, '_blank');
-        }
-
-        db.stars += val;
-        db.history.push(`⭐ +${val} Stars to'landi va admin hisobiga o'tdi ✓`);
-        let points = (val / 5);
-        updateLeaderboard(userName, points);
-        saveData();
-        closeDepositModal();
-        showToast(`Muvaffaqiyatli! +${val} Stars qo'shildi.`);
-      }
-    } else {
-      let confirmMsg = `GiftLand\n\nПодтверждение покупки\n\nВы точно хотите перевести ${val} TON (GRAM)iga?`;
-      if (confirm(confirmMsg)) {
-        let payUrl = `https://t.me/sots12?text=${encodeURIComponent(`TON To'lov: ${val} TON\nAdmin Hamyon: ${ADMIN_WALLET} (${userName})`)}`;
-        
-        if (tg && tg.openTelegramLink) {
-          tg.openTelegramLink(payUrl);
-        } else {
-          window.open(payUrl, '_blank');
-        }
-
-        db.ton += val;
-        db.history.push(`💎 +${val} GRAM to'landi va admin hamyoniga yuborildi ✓`);
-        let points = (val / 0.1);
-        updateLeaderboard(userName, points);
-        saveData();
-        closeDepositModal();
-        showToast(`Muvaffaqiyatli! +${val} GRAM qo'shildi.`);
-      }
     }
   }
 
@@ -482,8 +362,8 @@ button:focus-visible{outline:2px solid #fff;outline-offset:3px}
 
     if(type === 'ton') {
       db.ton += 0.1;
-      db.history.push(`🎁 Vazifa mukofoti: +0.1 TON`);
-      showToast("Tabriklaymiz! +0.1 TON qo'shildi.");
+      db.history.push(`🎁 Vazifa mukofoti: +0.1 GRAM`);
+      showToast("Tabriklaymiz! +0.1 GRAM qo'shildi.");
     } else {
       db.stars += 5;
       db.history.push(`🎁 Vazifa mukofoti: +5 Stars`);
@@ -494,6 +374,7 @@ button:focus-visible{outline:2px solid #fff;outline-offset:3px}
   }
 
   function updateLeaderboard(name, score) {
+    let globalLeaders = JSON.parse(localStorage.getItem('giftland_leaders')) || [];
     let found = globalLeaders.find(l => l.name === name);
     if(found) {
       found.score += score;
@@ -506,6 +387,7 @@ button:focus-visible{outline:2px solid #fff;outline-offset:3px}
   }
 
   function renderLeaders() {
+    let globalLeaders = JSON.parse(localStorage.getItem('giftland_leaders')) || [];
     const listEl = $('#leaderboardList');
     if(globalLeaders.length === 0) {
       listEl.innerHTML = '<p class="market-empty">Hozircha reyting bo\'sh</p>';
