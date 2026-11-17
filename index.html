@@ -249,6 +249,7 @@ button:focus-visible{outline:2px solid #fff;outline-offset:3px}
     window.scrollTo({top:0, behavior:"smooth"});
   });
 
+  // TON to'ldirish (foydalanuvchi to'lovni o'zi tasdiqlaydi va balansga srazi tushadi)
   window.topUpTon = function() {
     let amountStr = prompt("Qancha TON to'lamoqchisiz?", "1.0");
     if(!amountStr) return;
@@ -258,25 +259,20 @@ button:focus-visible{outline:2px solid #fff;outline-offset:3px}
       return;
     }
 
-    let wallet = "UQA4qQ6E8Kf0vHXXCti_PzO71qXi7KiEeN5d71UO7xWiTL-w";
-    let msg = encodeURIComponent(`Salom admin, men ${userName} (${userId}) ${amount} TON to'ladim. Hamyon: ${wallet}`);
-    window.open(`https://t.me/sots12?text=${msg}`, '_blank');
-    showToast("To'lov so'rovi adminga yuborildi.");
-
-    setTimeout(() => {
-      if(confirm(`[DEMO] Admin sifatida ${amount} TON to'lovini tasdiqlaysizmi?`)) {
-        db.ton += amount;
-        let record = `💎 +${amount} TON to'landi va tasdiqlandi ✓`;
-        db.history.push(record);
-        
-        let points = (amount / 0.1);
-        updateLeaderboard(userName, points);
-        saveData();
-        showToast(`Admin tasdiqladi! +${amount} TON qo'shildi.`);
-      }
-    }, 2000);
+    if(confirm(`Siz ${amount} TON to'lashni tasdiqlaysizmi? Hamyondan yechilib balansga qo'shiladi.`)) {
+      db.ton += amount;
+      let record = `💎 +${amount} TON to'landi va balansga qo'shildi ✓`;
+      db.history.push(record);
+      
+      // Liderlar reytingi: 0.1 ton = 1 ball
+      let points = (amount / 0.1);
+      updateLeaderboard(userName, points);
+      saveData();
+      showToast(`Muvaffaqiyatli! +${amount} TON qo'shildi.`);
+    }
   }
 
+  // Stars to'ldirish (foydalanuvchi to'lovni o'zi tasdiqlaydi va balansga srazi tushadi)
   window.topUpStars = function() {
     let amountStr = prompt("Qancha Stars to'lamoqchisiz?", "50");
     if(!amountStr) return;
@@ -286,22 +282,17 @@ button:focus-visible{outline:2px solid #fff;outline-offset:3px}
       return;
     }
 
-    let msg = encodeURIComponent(`Salom admin, men ${userName} (${userId}) ${amount} Stars to'ladim (@sots12).`);
-    window.open(`https://t.me/sots12?text=${msg}`, '_blank');
-    showToast("Stars to'lov so'rovi adminga yuborildi.");
+    if(confirm(`Siz ${amount} Stars to'lashni tasdiqlaysizmi? Balansdan yechilib qo'shiladi.`)) {
+      db.stars += amount;
+      let record = `⭐ +${amount} Stars to'landi va balansga qo'shildi ✓`;
+      db.history.push(record);
 
-    setTimeout(() => {
-      if(confirm(`[DEMO] Admin sifatida ${amount} Stars to'lovini tasdiqlaysizmi?`)) {
-        db.stars += amount;
-        let record = `⭐ +${amount} Stars to'landi va tasdiqlandi ✓`;
-        db.history.push(record);
-
-        let points = (amount / 5);
-        updateLeaderboard(userName, points);
-        saveData();
-        showToast(`Admin tasdiqladi! +${amount} Stars qo'shildi.`);
-      }
-    }, 2000);
+      // Liderlar reytingi: 5 stars = 1 ball
+      let points = (amount / 5);
+      updateLeaderboard(userName, points);
+      saveData();
+      showToast(`Muvaffaqiyatli! +${amount} Stars qo'shildi.`);
+    }
   }
 
   window.markSubscribed = function() {
