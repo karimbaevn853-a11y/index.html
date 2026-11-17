@@ -1,402 +1,352 @@
 <!DOCTYPE html>
 <html lang="uz">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<meta name="theme-color" content="#07080d">
-<title>GIFTLAND — Gift Collection</title>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#070b18">
+<meta name="description" content="NEON CASE — neon uslubdagi mini-app demo">
+<title>NEON CASE</title>
 <style>
 :root{
-  --bg:#07080d;--panel:#14151c;--text:#f7f7fb;--muted:#9295a3;
-  --line:rgba(255,255,255,.09);--nav-h:78px;
+  --bg:#070b18; --bg2:#0d1430;
+  --neon:#00e5ff; --neon2:#b14bff; --neon3:#ff3d81; --gold:#ffcf4d; --green:#39ff88;
+  --txt:#e9edff; --muted:#8b93c0;
+  --line:rgba(120,200,255,.18);
+  --glass:rgba(255,255,255,.05);
+  --common:#8b93c0; --rare:#00e5ff; --epic:#b14bff; --legendary:#ffcf4d;
+  --safe-b: env(safe-area-inset-bottom,0px);
 }
-*{box-sizing:border-box}
-html{scroll-behavior:smooth}
-body{margin:0;background:radial-gradient(ellipse at 50% -15%,#1a2030 0%,#090a10 48%,#05060a 100%);color:var(--text);font-family:Inter,system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif;min-height:100vh}
-button{font:inherit;color:inherit;cursor:pointer}
-button:focus-visible{outline:2px solid #fff;outline-offset:3px}
-.app{width:min(100%,760px);margin:auto;padding:17px 16px calc(var(--nav-h) + 30px + env(safe-area-inset-bottom))}
-.topbar{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:25px}
-.profile{display:flex;align-items:center;gap:10px;min-width:0;cursor:pointer}
-.avatar{width:48px;height:48px;border-radius:50%;display:grid;place-items:center;background:linear-gradient(140deg,#ff668e,#d52f69);font-size:22px;font-weight:950;box-shadow:0 6px 25px #ed477744}
-.profile strong{font-size:17px}.profile small{display:block;color:var(--muted);font-size:12px;margin-top:3px}
-.balance-pair{display:flex;flex-direction:column;gap:7px;align-items:flex-end}
-.balance{background:#151923;border:1px solid var(--line);border-radius:999px;padding:8px 12px;color:#59d9ff;font-weight:900;font-size:12px;white-space:nowrap}
-.stars-balance{color:#ffd36b}
-.section-head{display:flex;align-items:center;justify-content:space-between;gap:10px;margin:25px 2px 13px}
-.section-head h2{font-size:20px;margin:0;font-weight:950;letter-spacing:-.5px}
-.section-head span{font-size:11px;color:var(--muted);text-transform:uppercase;letter-spacing:.5px}
-
-.game-list{display:grid;grid-template-columns:1fr;gap:17px}
-.game-card{
-  --glow:90,55,180;--tone:#9d5cff;
-  min-height:190px;position:relative;isolation:isolate;overflow:hidden;
-  border:1px solid rgba(var(--glow),.45);border-radius:31px;padding:24px 22px;
-  text-align:left;background:
-    radial-gradient(ellipse at 78% 48%,rgba(var(--glow),.43),transparent 52%),
-    linear-gradient(120deg,rgba(var(--glow),.24),#15151d 78%);
-  box-shadow:inset 0 0 38px rgba(var(--glow),.12),0 10px 28px #0005;
-  transition:transform .18s,border-color .18s;
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+html,body{margin:0;padding:0}
+body{
+  background:var(--bg); color:var(--txt); min-height:100vh; overflow-x:hidden;
+  font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,"Helvetica Neue",Arial,sans-serif;
+  background-image:
+    radial-gradient(900px 500px at 15% -5%, rgba(0,229,255,.20), transparent 60%),
+    radial-gradient(800px 500px at 90% 10%, rgba(177,75,255,.20), transparent 60%),
+    radial-gradient(700px 500px at 50% 110%, rgba(255,61,129,.14), transparent 60%),
+    linear-gradient(180deg,var(--bg),var(--bg2));
+  background-attachment:fixed;
 }
-.game-card:active{transform:scale(.985)}
-.game-card .tag{display:inline-flex;padding:7px 12px;border:1px solid #ffffff20;border-radius:13px;background:#ffffff14;font-size:12px;font-weight:850;backdrop-filter:blur(8px)}
-.game-card h3{font-size:29px;letter-spacing:-.8px;margin:19px 0 5px;font-weight:1000}
-.game-card p{margin:0;color:#d0d1dc;font-size:14px;max-width:67%;line-height:1.45}
+body::before{
+  content:"";position:fixed;inset:0;pointer-events:none;opacity:.35;
+  background-image:linear-gradient(rgba(120,200,255,.06) 1px,transparent 1px),
+                   linear-gradient(90deg,rgba(120,200,255,.06) 1px,transparent 1px);
+  background-size:44px 44px;mask-image:radial-gradient(circle at 50% 30%,#000,transparent 78%);
+}
+.wrap{max-width:520px;margin:0 auto;padding:0 16px calc(96px + var(--safe-b))}
 
-.slots{--glow:190,48,151;--tone:#ed52bd}
-.crash{--glow:34,126,230;--tone:#48aaff}
-.keys{--glow:21,164,116;--tone:#36e1a6}
-.mines{--glow:133,83,220;--tone:#b18aff}
+/* ---------- header ---------- */
+header{position:sticky;top:0;z-index:20;padding:14px 0 10px;
+  background:linear-gradient(180deg,rgba(7,11,24,.95),rgba(7,11,24,.55) 70%,transparent);
+  backdrop-filter:blur(14px)}
+.bar{display:flex;align-items:center;gap:10px}
+.logo{display:flex;align-items:center;gap:9px;font-weight:800;letter-spacing:.5px;font-size:15px}
+.logo b{color:var(--neon);text-shadow:0 0 12px rgba(0,229,255,.7)}
+.badge{display:inline-flex;align-items:center;gap:6px;padding:7px 12px;border-radius:999px;
+  background:var(--glass);border:1px solid var(--line);font-size:13px;font-weight:700}
+.badge.coins{color:var(--gold);text-shadow:0 0 10px rgba(255,207,77,.5)}
+.spacer{flex:1}
+.lvl{display:flex;flex-direction:column;gap:5px;min-width:96px}
+.lvl small{color:var(--muted);font-size:10px;letter-spacing:.6px}
+.track{height:5px;border-radius:99px;background:rgba(255,255,255,.08);overflow:hidden}
+.track i{display:block;height:100%;border-radius:99px;background:linear-gradient(90deg,var(--neon),var(--neon2));
+  box-shadow:0 0 10px rgba(0,229,255,.7)}
 
-.page{display:none;animation:pageIn .22s ease}
-.page.active{display:block}
-.page-title{font-size:26px;font-weight:950;margin:7px 2px 18px}
-.info-card{background:linear-gradient(145deg,#171923,#101119);border:1px solid var(--line);border-radius:23px;padding:17px;margin:12px 0}
-.info-card p{color:var(--muted);line-height:1.5;font-size:13px}
-.inventory-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:11px}
-.inventory-item{display:flex;align-items:center;gap:10px;background:#151720;border:1px solid var(--line);border-radius:17px;padding:10px;min-width:0}
-.inventory-item b{font-size:12px}
+/* ---------- screens ---------- */
+.screen{display:none}
+.screen.active{display:block;animation:fade .28s ease}
+@keyframes fade{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}
+h2.t{margin:16px 0 12px;font-size:15px;letter-spacing:1.4px;text-transform:uppercase;color:var(--muted);font-weight:700}
 
-.task{display:flex;align-items:center;gap:12px;padding:13px 0;border-bottom:1px solid var(--line)}
-.task:last-child{border:0}
-.task small{display:block;color:var(--muted);margin-top:3px}
+/* ---------- hero ---------- */
+.hero{margin-top:14px;padding:22px 18px;border-radius:22px;text-align:center;position:relative;overflow:hidden;
+  border:1px solid var(--line);background:linear-gradient(160deg,rgba(0,229,255,.10),rgba(177,75,255,.08) 60%,rgba(255,61,129,.08))}
+.hero:before{content:"";position:absolute;inset:-40% -10% auto;height:220px;
+  background:radial-gradient(circle,rgba(0,229,255,.30),transparent 62%);filter:blur(24px)}
+.hero h1{margin:0 0 6px;font-size:26px;font-weight:900;letter-spacing:.5px}
+.hero h1 span{background:linear-gradient(90deg,var(--neon),var(--neon2),var(--neon3));
+  -webkit-background-clip:text;background-clip:text;color:transparent}
+.hero p{margin:0 0 16px;color:var(--muted);font-size:13px}
+.orb{width:96px;height:96px;margin:0 auto 14px;border-radius:50%;position:relative;
+  background:radial-gradient(circle at 35% 30%,#fff,var(--neon) 30%,var(--neon2) 65%,#2a0f4d);
+  box-shadow:0 0 40px rgba(0,229,255,.6),0 0 90px rgba(177,75,255,.4);
+  animation:pulse 2.6s ease-in-out infinite}
+.orb:after{content:"";position:absolute;inset:-14px;border-radius:50%;border:1px solid rgba(0,229,255,.45);
+  border-top-color:transparent;border-right-color:transparent;animation:spin 6s linear infinite}
+@keyframes pulse{50%{transform:scale(1.06)}}
+@keyframes spin{to{transform:rotate(360deg)}}
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;width:100%;padding:15px;border:0;
+  border-radius:16px;font-size:15px;font-weight:800;letter-spacing:.4px;color:#04121a;cursor:pointer;
+  background:linear-gradient(90deg,var(--neon),#6ef0ff);
+  box-shadow:0 10px 30px rgba(0,229,255,.28),inset 0 1px 0 rgba(255,255,255,.5);
+  transition:transform .12s ease,filter .2s}
+.btn:active{transform:scale(.97)}
+.btn.ghost{background:var(--glass);border:1px solid var(--line);color:var(--txt);box-shadow:none}
+.btn.violet{background:linear-gradient(90deg,var(--neon2),#e07bff);color:#fff}
+.btn.gold{background:linear-gradient(90deg,var(--gold),#ffb03a);color:#2a1a00}
+.btn[disabled]{opacity:.45;pointer-events:none}
 
-.bottom-nav{position:fixed;z-index:8;bottom:0;left:50%;transform:translateX(-50%);width:min(100%,760px);padding:9px 12px calc(9px + env(safe-area-inset-bottom));display:grid;grid-template-columns:repeat(5,1fr);gap:5px;background:rgba(9,12,18,.94);border:1px solid #ffffff18;border-bottom:0;border-radius:25px 25px 0 0;backdrop-filter:blur(20px)}
-.nav-btn{border:0;background:transparent;color:#858b9a;border-radius:15px;padding:6px 3px;display:grid;justify-items:center;gap:3px;font-size:11px;font-weight:800}
-.nav-btn span{font-size:23px;line-height:1.2}.nav-btn.active{color:#43aaff;background:#14283b}
+/* ---------- case cards ---------- */
+.cases{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.case{position:relative;border-radius:18px;padding:16px 14px;text-align:center;overflow:hidden;cursor:pointer;
+  border:1px solid var(--line);background:var(--glass);transition:transform .16s ease,border-color .2s}
+.case:active{transform:scale(.97)}
+.case:before{content:"";position:absolute;inset:auto -30% -60% -30%;height:120px;filter:blur(28px);opacity:.55}
+.case.c1:before{background:var(--neon)} .case.c2:before{background:var(--neon2)}
+.case.c3:before{background:var(--neon3)} .case.c4:before{background:var(--gold)}
+.case .ch{font-size:46px;filter:drop-shadow(0 0 14px rgba(255,255,255,.35))}
+.case h4{margin:8px 0 4px;font-size:14px}
+.case .price{font-size:12px;color:var(--gold);font-weight:700}
+.case .tag{position:absolute;top:10px;right:10px;font-size:10px;padding:4px 8px;border-radius:99px;
+  background:rgba(0,0,0,.35);border:1px solid var(--line);color:var(--muted)}
+.case .rare-tag{color:var(--legendary);border-color:rgba(255,207,77,.5)}
 
-.market-search{width:100%;padding:13px 15px;border-radius:15px;background:#151923;border:1px solid var(--line);color:var(--text);outline:none;margin-bottom:13px}
-.market-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}
-.market-item{min-width:0;display:flex;align-items:center;gap:10px;padding:11px;border:1px solid var(--line);border-radius:17px;background:linear-gradient(145deg,#171923,#101119);cursor:pointer}
-.market-emoji{width:45px;height:45px;flex:0 0 45px;border-radius:14px;display:grid;place-items:center;font-size:27px;background:linear-gradient(145deg,#ffffff18,#ffffff05)}
-.market-item b{font-size:11px;line-height:1.25;overflow-wrap:anywhere}
-.market-item small{display:block;color:var(--muted);font-size:9px;margin-top:4px}
-.market-empty{grid-column:1/-1;text-align:center;color:var(--muted);padding:25px}
+/* ---------- roll ---------- */
+.rollwrap{margin-top:20px;text-align:center}
+.reelbox{position:relative;height:264px;border-radius:22px;overflow:hidden;margin:14px 0;
+  border:1px solid var(--line);background:linear-gradient(180deg,rgba(0,229,255,.08),rgba(177,75,255,.10));
+  box-shadow:inset 0 0 40px rgba(0,0,0,.55)}
+.reelbox:before,.reelbox:after{content:"";position:absolute;left:0;right:0;height:64px;z-index:3;pointer-events:none}
+.reelbox:before{top:0;background:linear-gradient(180deg,rgba(7,11,24,.95),transparent)}
+.reelbox:after{bottom:0;background:linear-gradient(0deg,rgba(7,11,24,.95),transparent)}
+.reelbox .marker{position:absolute;left:0;right:0;top:50%;height:2px;transform:translateY(-1px);z-index:4;
+  background:linear-gradient(90deg,transparent,var(--neon),transparent);box-shadow:0 0 18px var(--neon)}
+.reel{position:absolute;left:0;right:0;top:0;transition:transform 4.2s cubic-bezier(.12,.75,.05,1)}
+.chip{height:88px;margin:0 12px;display:flex;align-items:center;gap:12px;padding:0 16px;border-radius:16px;
+  margin-bottom:10px;border:1px solid var(--line);background:rgba(255,255,255,.04)}
+.chip .ico{font-size:32px;filter:drop-shadow(0 0 10px rgba(255,255,255,.3))}
+.chip .nm{font-size:14px;font-weight:700}
+.chip .rr{font-size:11px;font-weight:800;letter-spacing:1px;text-transform:uppercase}
+.r-common{border-color:rgba(139,147,192,.45)} .r-common .rr{color:var(--common)}
+.r-rare{border-color:rgba(0,229,255,.5);box-shadow:0 0 22px rgba(0,229,255,.18)} .r-rare .rr{color:var(--rare)}
+.r-epic{border-color:rgba(177,75,255,.55);box-shadow:0 0 22px rgba(177,75,255,.22)} .r-epic .rr{color:var(--neon2)}
+.r-legendary{border-color:rgba(255,207,77,.7);box-shadow:0 0 30px rgba(255,207,77,.32)} .r-legendary .rr{color:var(--legendary)}
 
-.toast{position:fixed;z-index:30;left:50%;bottom:calc(var(--nav-h) + 18px);transform:translate(-50%,12px);opacity:0;pointer-events:none;background:#202637;border:1px solid #ffffff22;border-radius:14px;padding:11px 16px;font-size:13px;transition:.2s;max-width:90%;text-align:center}
+.result{margin-top:6px;padding:18px;border-radius:20px;text-align:center;border:1px solid var(--line);
+  background:var(--glass);opacity:0;transform:scale(.9);transition:.4s}
+.result.show{opacity:1;transform:none}
+.result .big{font-size:56px;filter:drop-shadow(0 0 18px rgba(255,255,255,.4))}
+.result h3{margin:6px 0 4px;font-size:19px}
+.celebrate{position:fixed;inset:0;pointer-events:none;z-index:60}
+.conf{position:absolute;width:9px;height:14px;border-radius:2px;animation:fall linear forwards}
+@keyframes fall{to{transform:translateY(105vh) rotate(720deg);opacity:.1}}
+
+/* ---------- inventory / rows ---------- */
+.grid2{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}
+.inv{border-radius:16px;padding:12px 8px;text-align:center;border:1px solid var(--line);background:var(--glass)}
+.inv .ico{font-size:30px} .inv .nm{font-size:11px;margin-top:6px;font-weight:600}
+.inv .qty{font-size:10px;color:var(--muted);margin-top:2px}
+.row{display:flex;align-items:center;gap:12px;padding:13px;border-radius:16px;border:1px solid var(--line);
+  background:var(--glass);margin-bottom:10px}
+.row .ico{font-size:26px} .row .tx{flex:1}
+.row .tx b{display:block;font-size:14px} .row .tx small{color:var(--muted);font-size:11px}
+
+/* ---------- nav ---------- */
+nav{position:fixed;left:0;right:0;bottom:0;z-index:30;display:flex;justify-content:center;padding:0 12px calc(10px + var(--safe-b));
+  background:linear-gradient(0deg,rgba(7,11,24,.98),rgba(7,11,24,.6) 70%,transparent);backdrop-filter:blur(16px)}
+.nav{max-width:520px;width:100%;display:flex;background:var(--glass);border:1px solid var(--line);
+  border-radius:20px;padding:8px;gap:4px}
+.nav button{flex:1;border:0;background:transparent;color:var(--muted);font-size:10px;font-weight:700;
+  padding:8px 2px;border-radius:14px;cursor:pointer;display:flex;flex-direction:column;align-items:center;gap:3px}
+.nav button span{font-size:18px;line-height:1}
+.nav button.on{color:var(--neon);background:rgba(0,229,255,.10);box-shadow:inset 0 0 0 1px rgba(0,229,255,.25)}
+
+.toast{position:fixed;left:50%;bottom:calc(100px + var(--safe-b));transform:translate(-50%,20px);z-index:70;
+  padding:12px 18px;border-radius:14px;font-size:13px;font-weight:600;opacity:0;pointer-events:none;
+  background:rgba(13,20,48,.95);border:1px solid var(--line);box-shadow:0 10px 30px rgba(0,0,0,.5);transition:.28s}
 .toast.show{opacity:1;transform:translate(-50%,0)}
-
-@keyframes pageIn{from{opacity:0;transform:translateY(5px)}to{opacity:1;transform:none}}
 </style>
-<script src="https://telegram.org/js/telegram-web-app.js"></script>
 </head>
 <body>
-<main class="app">
-  <header class="topbar">
-    <div class="profile" id="profileOpen">
-      <div class="avatar" id="userAvatar">N</div>
-      <div><strong id="userName">Foydalanuvchi</strong><small>PROFIL</small></div>
-    </div>
-    <div class="balance-pair">
-      <div class="balance">💎 <span id="tonBalance">0.00</span> TON</div>
-      <div class="balance stars-balance">⭐ <span id="starsBalance">0</span> Stars</div>
-    </div>
-  </header>
 
-  <section id="page-games" class="page active">
-    <div class="section-head"><h2>🎮 O‘YINLAR</h2><span>GIFTLAND ORIGINAL</span></div>
-    <div class="game-list">
-      <button class="game-card slots" onclick="alert('O\'yinlar balans to\'ldirilgach ishlaydi!')">
-        <div class="copy"><span class="tag">✨ NOVINKA</span><h3>SLOTLAR</h3><p>Balans kiritilgach faollashadi.</p></div>
-      </button>
-      <button class="game-card crash" onclick="alert('O\'yinlar balans to\'ldirilgach ishlaydi!')">
-        <div class="copy"><span class="tag">📈 HIT</span><h3>CRASH</h3><p>Balans kiritilgach faollashadi.</p></div>
-      </button>
-      <button class="game-card keys" onclick="alert('O\'yinlar balans to\'ldirilgach ishlaydi!')">
-        <div class="copy"><span class="tag">💎 KLASSIKA</span><h3>KEYSLAR</h3><p>Balans kiritilgach faollashadi.</p></div>
-      </button>
-      <button class="game-card mines" onclick="alert('O\'yinlar balans to\'ldirilgach ishlaydi!')">
-        <div class="copy"><span class="tag">🧩 STRATEGIYA</span><h3>MINES</h3><p>Balans kiritilgach faollashadi.</p></div>
-      </button>
-    </div>
-  </section>
-
-  <section id="page-market" class="page">
-    <h1 class="page-title">🛍️ NFT BOZOR</h1>
-    <p class="market-note">Sotib olish uchun NFT ustiga bosing (Admin: @sots12)</p>
-    <input class="market-search" id="marketSearch" type="search" placeholder="NFT nomini qidirish..." aria-label="NFT nomini qidirish">
-    <div class="market-grid" id="marketGrid"></div>
-  </section>
-
-  <section id="page-inventory" class="page">
-    <h1 class="page-title">📦 INVENTAR</h1>
-    <div class="info-card">
-      <b>💳 Balansni to'ldirish</b>
-      <p style="font-size:12px; margin-top:5px;">TON hamyon: <code style="color:#59d9ff;word-break:break-all">UQA4qQ6E8Kf0vHXXCti_PzO71qXi7KiEeN5d71UO7xWiTL-w</code></p>
-      <p style="font-size:12px; margin-top:5px;">Stars uchun: <b style="color:#ffd36b">@sots12</b></p>
-      <div style="display:flex;gap:10px;margin-top:12px">
-        <button onclick="topUpTon()" style="flex:1;background:#1888f8;border:0;padding:10px;border-radius:10px;color:#fff;font-weight:bold">TON To'ldirish</button>
-        <button onclick="topUpStars()" style="flex:1;background:#ffd36b;border:0;padding:10px;border-radius:10px;color:#000;font-weight:bold">Stars To'ldirish</button>
+<header>
+  <div class="wrap" style="padding-bottom:0">
+    <div class="bar">
+      <div class="logo">◈ <b>NEON</b> CASE</div>
+      <div class="spacer"></div>
+      <div class="lvl">
+        <small>LEVEL <span id="lv">1</span></small>
+        <div class="track"><i id="lvbar" style="width:18%"></i></div>
       </div>
+      <div class="badge coins">🪙 <span id="coins">1500</span></div>
     </div>
-    <div class="info-card"><b>🎁 Yutuqlar kolleksiyasi</b><div class="inventory-grid" id="inventoryGrid"><div class="market-empty">Hozircha yutuq sovg‘alar yo‘q</div></div></div>
+  </div>
+</header>
+
+<div class="wrap">
+
+  <!-- ============ MENU ============ -->
+  <section class="screen active" id="s-menu">
+    <div class="hero">
+      <div class="orb"></div>
+      <h1>NEON <span>CASE</span></h1>
+      <p>Kutubxonani oching va kamyob boyliklarni yutib oling</p>
+      <button class="btn" onclick="go('cases')">▶ OCHISH</button>
+    </div>
+
+    <h2 class="t">Tezkor vazifalar</h2>
+    <div class="row"><div class="ico">🎁</div><div class="tx"><b>Kunlik sovg'a</b><small>Har kuni +500 🪙</small></div>
+      <button class="btn ghost" style="width:auto;padding:10px 14px;font-size:12px" id="dailyBtn" onclick="claimDaily()">OLISH</button></div>
+    <div class="row"><div class="ico">🔥</div><div class="tx"><b>Ketma-ketlik</b><small>5 kunlik seriya bonusi</small></div>
+      <div class="badge" style="color:var(--neon3)">3/5</div></div>
+    <div class="row"><div class="ico">🏆</div><div class="tx"><b>Reyting</b><small>Ombordagi eng qimmat narsa</small></div>
+      <div class="badge" id="topItem">—</div></div>
   </section>
 
-  <section id="page-tasks" class="page">
-    <h1 class="page-title">📋 VAZIFALAR</h1>
-    <div class="info-card">
-      <b>Kunlik vazifalar</b>
-      <div class="task"><span style="font-size:24px">📢</span><span style="flex:1"><b>GiftLand kanaliga obuna bo‘lish</b><small>Kanalga o'tib obuna bo'ling</small></span></div>
-      <div style="display:flex;gap:8px;margin-top:12px">
-        <a href="https://t.me/GiftLanda" target="_blank" rel="noopener" onclick="markSubscribed()" style="background:#1888f8;padding:10px;border-radius:10px;color:#fff;text-decoration:none;font-weight:bold;text-align:center;flex:1;font-size:12px">Kanalga o'tish</a>
-        <button onclick="claimReward('ton')" style="background:#22c55e;border:0;padding:10px;border-radius:10px;color:#fff;font-weight:bold;cursor:pointer;flex:1;font-size:12px">+0.1 TON olish</button>
-        <button onclick="claimReward('stars')" style="background:#eab308;border:0;padding:10px;border-radius:10px;color:#fff;font-weight:bold;cursor:pointer;flex:1;font-size:12px">+5 Stars olish</button>
+  <!-- ============ CASES ============ -->
+  <section class="screen" id="s-cases">
+    <h2 class="t">Kutubxonalar</h2>
+    <div class="cases" id="caseList"></div>
+    <h2 class="t">Oxirgi yutug'lar</h2>
+    <div class="grid2" id="lastDrops"></div>
+  </section>
+
+  <!-- ============ ROLL ============ -->
+  <section class="screen" id="s-roll">
+    <div class="rollwrap">
+      <h2 class="t" id="rollTitle">Ochilmoqda…</h2>
+      <div class="reelbox">
+        <div class="marker"></div>
+        <div class="reel" id="reel"></div>
       </div>
+      <div class="result" id="result"></div>
+      <button class="btn" id="againBtn" style="margin-top:14px;display:none" onclick="go('cases')">🔙 KUTUBXONALAR</button>
     </div>
   </section>
 
-  <section id="page-leaders" class="page">
-    <h1 class="page-title">🏆 LIDERLAR</h1>
-    <div class="info-card">
-      <b>Zinapoya bo'yicha faollik reytingi</b>
-      <div id="leaderboardList" style="margin-top:12px"></div>
-    </div>
+  <!-- ============ INVENTORY ============ -->
+  <section class="screen" id="s-inv">
+    <h2 class="t">Ombor</h2>
+    <div class="grid2" id="invList"></div>
+    <h2 class="t">Statistika</h2>
+    <div class="row"><div class="ico">📦</div><div class="tx"><b>Ochilgan kutubxonalar</b><small>Jami</small></div><div class="badge" id="stOpen">0</div></div>
+    <div class="row"><div class="ico">💎</div><div class="tx"><b>Eng qimmat topilma</b><small>Qiymati</small></div><div class="badge coins" id="stBest">0</div></div>
   </section>
 
-  <section id="page-profile" class="page">
-    <h1 class="page-title">👤 PROFIL</h1>
-    <div class="info-card">
-      <strong id="profileUserName" style="font-size:16px">Foydalanuvchi</strong>
-      <p style="margin-top:5px">Sizning shaxsiy profilingiz va to'lovlar tarixingiz.</p>
-    </div>
-    <div class="info-card">
-      <b>🧾 To'lovlar va yutuqlar tarixi</b>
-      <div id="paymentHistory" style="margin-top:8px;font-size:12px"><p class="market-empty">Hozircha tarix yo‘q</p></div>
-    </div>
+  <!-- ============ PROFILE ============ -->
+  <section class="screen" id="s-profile">
+    <h2 class="t">Profil</h2>
+    <div class="row"><div class="ico">🪙</div><div class="tx"><b>Balans</b><small>Oyna coinlari</small></div><div class="badge coins" id="pCoins">0</div></div>
+    <div class="row"><div class="ico">🪅</div><div class="tx"><b>⭐ Reyting</b><small>Daraja</small></div><div class="badge" id="pLvl">1</div></div>
+    <div class="row"><div class="ico">🔊</div><div class="tx"><b>Ovoz effektlari</b><small>UI ovozi</small></div>
+      <button class="btn ghost" style="width:auto;padding:10px 14px;font-size:12px" id="sndBtn" onclick="toggleSound()">ON</button></div>
+    <div class="row"><div class="ico">🧹</div><div class="tx"><b>Ma'lumotlarni tozalash</b><small>Balans va omborni reset qilish</small></div>
+      <button class="btn ghost" style="width:auto;padding:10px 14px;font-size:12px" onclick="resetAll()">TOZALASH</button></div>
+    <div class="row"><div class="ico">💜</div><div class="tx"><b>NEON CASE</b><small>Mini-app demo versiyasi 1.0</small></div></div>
   </section>
-</main>
+</div>
 
-<nav class="bottom-nav" aria-label="Asosiy navigatsiya">
-  <button class="nav-btn" data-tab="inventory"><span>📦</span>Inventar</button>
-  <button class="nav-btn active" data-tab="games"><span>🎮</span>O‘yinlar</button>
-  <button class="nav-btn" data-tab="tasks"><span>📋</span>Vazifalar</button>
-  <button class="nav-btn" data-tab="leaders"><span>🏆</span>Liderlar</button>
-  <button class="nav-btn" data-tab="market"><span>🛍️</span>NFT bozor</button>
-</nav>
+<nav><div class="nav" id="nav">
+  <button class="on" data-s="menu"><span>🏠</span>ASOSIY</button>
+  <button data-s="cases"><span>📦</span>KUTUBXONA</button>
+  <button data-s="inv"><span>🎒</span>OMBOR</button>
+  <button data-s="profile"><span>👤</span>PROFIL</button>
+</div></nav>
 
-<div class="toast" id="toast" role="status" aria-live="polite"></div>
+<div class="toast" id="toast"></div>
 
 <script>
-(() => {
-  const $ = s => document.querySelector(s);
-  
-  let userName = 'Foydalanuvchi';
-  let userId = 'user_default';
+/* ============ DATA ============ */
+const ITEMS=[
+  {id:'c1',ico:'🔩',n:'Tayyor element',  v:30,   r:'common'},
+  {id:'c2',ico:'🪫',n:'Energiya batareya',v:60,  r:'common'},
+  {id:'c3',ico:'🧩',n:'Protokol chipi',  v:95,   r:'common'},
+  {id:'c4',ico:'🔧',n:'Neon kalit',       v:130,  r:'common'},
+  {id:'r1',ico:'⚡',n:'Elektr toki',      v:260,  r:'rare'},
+  {id:'r2',ico:'🛡',n:'Plazma qalqon',    v:340,  r:'rare'},
+  {id:'r3',ico:'💠',n:'Kristall',         v:420,  r:'rare'},
+  {id:'e1',ico:'🔥',n:'Inferno yadrosi',  v:900,  r:'epic'},
+  {id:'e2',ico:'🌀',n:'Vortex quroli',    v:1150, r:'epic'},
+  {id:'e3',ico:'👾',n:'Neon metalizm',    v:1400, r:'epic'},
+  {id:'l1',ico:'👑',n:'Rey xakimi',       v:3200, r:'legendary'},
+  {id:'l2',ico:'🐉',n:'Kripto ajdar',     v:4500, r:'legendary'},
+  {id:'l3',ico:'💎',n:'Diamond reactor',  v:6000, r:'legendary'}
+];
+const CASES=[
+  {id:'v1',ico:'🔩',n:'Neon Starter',  price:100,  tag:'Boshlang\'ich', rare:false,
+   pool:['c1','c1','c1','c2','c2','c3','c4','r1','r2']},
+  {id:'v2',ico:'💠',n:'Cyber Vault',   price:350,  tag:'O\'rtacha',     rare:false,
+   pool:['c1','c2','c3','c4','c4','r1','r1','r2','r3','e1']},
+  {id:'v3',ico:'🌀',n:'Void Reactor',  price:900,  tag:'Nishonli',     rare:true,
+   pool:['c4','r1','r2','r3','e1','e2','e2','e3','l1']},
+  {id:'v4',ico:'👑',n:'Royal Vault',   price:2500, tag:'Legendarli',   rare:true,
+   pool:['r2','r3','e1','e2','e3','e3','l1','l2','l3']}
+];
+const RARITY={common:{n:'Common',c:'var(--common)'},rare:{n:'Rare',c:'var(--rare)'},
+              epic:{n:'Epic',c:'var(--neon2)'},legendary:{n:'Legendary',c:'var(--legendary)'}};
+const byId=id=>ITEMS.find(i=>i.id===id);
 
-  try {
-    if (window.Telegram && window.Telegram.WebApp) {
-      const tg = window.Telegram.WebApp;
-      tg.expand();
-      if (tg.initDataUnsafe && tg.initDataUnsafe.user) {
-        if (tg.initDataUnsafe.user.first_name) {
-          userName = tg.initDataUnsafe.user.first_name;
-        }
-        if (tg.initDataUnsafe.user.id) {
-          userId = 'user_' + tg.initDataUnsafe.user.id;
-        }
-      }
-    }
-  } catch (e) {
-    console.log("WebApp xatosi:", e);
+/* ============ STATE ============ */
+const KEY='neoncase_v1';
+let S={coins:1500,inv:{},opened:0,best:0,drops:[],lastDaily:'',sound:true};
+function load(){try{const r=localStorage.getItem(KEY);if(r)S=Object.assign(S,JSON.parse(r));}catch(e){}}
+function save(){try{localStorage.setItem(KEY,JSON.stringify(S));}catch(e){}}
+function lvl(){return 1+Math.floor(S.opened/10);}
+function render(){
+  document.getElementById('coins').textContent=S.coins;
+  document.getElementById('pCoins').textContent=S.coins;
+  document.getElementById('lv').textContent=lvl();
+  document.getElementById('pLvl').textContent=lvl();
+  document.getElementById('lvbar').style.width=Math.min(100,((S.opened%10)/10*100)+8)+'%';
+  document.getElementById('stOpen').textContent=S.opened;
+  document.getElementById('stBest').textContent=S.best+' 🪙';
+  document.getElementById('sndBtn').textContent=S.sound?'ON':'OFF';
+  const dailyBtn=document.getElementById('dailyBtn');
+  const today=new Date().toDateString();
+  dailyBtn.textContent=dailyBtn.dataset.claimed==='1'?'OLINGAN':'OLISH';
+  dailyBtn.disabled=dailyBtn.dataset.claimed==='1';
+  if(S.inv&&Object.keys(S.inv).length){
+    const best=Object.keys(S.inv).sort((a,b)=>byId(b).v-byId(a).v)[0];
+    document.getElementById('topItem').textContent=byId(best).ico+' '+byId(best).n;
   }
+}
 
-  $('#userName').textContent = userName;
-  $('#profileUserName').textContent = 'Foydalanuvchi: ' + userName;
-  $('#userAvatar').textContent = userName.charAt(0).toUpperCase();
+/* ============ NAV ============ */
+const SCREENS={menu:'s-menu',cases:'s-cases',roll:'s-roll',inv:'s-inv',profile:'s-profile'};
+function go(name){
+  document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active'));
+  document.getElementById(SCREENS[name]).classList.add('active');
+  document.querySelectorAll('#nav button').forEach(b=>b.classList.toggle('on',b.dataset.s===name));
+  window.scrollTo({top:0,behavior:'smooth'});
+  if(name==='cases')renderCases();
+  if(name==='inv')renderInv();
+  if(name==='profile')render();
+}
+document.querySelectorAll('#nav button').forEach(b=>b.onclick=()=>go(b.dataset.s));
 
-  let db = JSON.parse(localStorage.getItem(userId)) || {
-    ton: 0,
-    stars: 0,
-    history: [],
-    inventory: [],
-    subscribed: false,
-    claimed: false
-  };
+/* ============ CASES LIST ============ */
+function renderCases(){
+  const box=document.getElementById('caseList');
+  box.innerHTML=CASES.map((c,i)=>`
+    <div class="case c${i+1}" onclick="openCase('${c.id}')">
+      <div class="tag ${c.rare?'rare-tag':''}">${c.tag}</div>
+      <div class="ch">${c.ico}</div><h4>${c.n}</h4><div class="price">🪙 ${c.price}</div>
+    </div>`).join('');
+  const d=document.getElementById('lastDrops');
+  d.innerHTML=S.drops.length? S.drops.slice(0,6).map(x=>{
+    const it=byId(x);return `<div class="inv r-${it.r}"><div class="ico">${it.ico}</div>
+      <div class="nm">${it.n}</div><div class="qty">${RARITY[it.r].n}</div></div>`}).join('')
+    : '<div class="inv" style="grid-column:1/-1;color:var(--muted)">Hali yutug\'lar yo\'q</div>';
+}
 
-  let globalLeaders = JSON.parse(localStorage.getItem('giftland_leaders')) || [];
+/* ============ ROLL ============ */
+let rolling=false;
+function openCase(id){
+  if(rolling)return;
+  const c=CASES.find(x=>x.id===id);
+  if(S.coins<c.price){toast('Balans yetarli emas');return;}
+  S.coins-=c.price; save(); render();
+  go('roll');
+  document.getElementById('rollTitle').textContent=c.n;
+  document.getElementById('result').className='result';
+  document.getElementById('againBtn').style.display='none';
 
-  function saveData() {
-    localStorage.setItem(userId, JSON.stringify(db));
-    $('#tonBalance').textContent = db.ton.toFixed(2);
-    $('#starsBalance').textContent = db.stars;
-    
-    const histEl = $('#paymentHistory');
-    if (db.history.length === 0) {
-      histEl.innerHTML = '<p class="market-empty">Hozircha tarix yo‘q</p>';
-    } else {
-      histEl.innerHTML = db.history.map(h => `<div style="padding:6px 0;border-bottom:1px solid rgba(255,255,255,0.05)">${h}</div>`).join('');
-    }
-
-    const invGrid = $('#inventoryGrid');
-    if(db.inventory.length === 0) {
-      invGrid.innerHTML = '<div class="market-empty">Hozircha yutuq sovg‘alar yo‘q</div>';
-    } else {
-      invGrid.innerHTML = db.inventory.map(item => `
-        <div class="inventory-item">
-          <span style="font-size:28px">${item.emoji}</span>
-          <div><b>${item.name}</b><small>Kolleksiya</small></div>
-        </div>
-      `).join('');
-    }
-  }
-
-  saveData();
-
-  $('#profileOpen').addEventListener("click", () => {
-    document.querySelectorAll(".page").forEach(p => p.classList.remove("active"));
-    $("#page-profile").classList.add("active");
-    document.querySelectorAll("[data-tab]").forEach(b => b.classList.remove("active"));
-    window.scrollTo({top:0, behavior:"smooth"});
-  });
-
-  // TON to'ldirish (foydalanuvchi to'lovni o'zi tasdiqlaydi va balansga srazi tushadi)
-  window.topUpTon = function() {
-    let amountStr = prompt("Qancha TON to'lamoqchisiz?", "1.0");
-    if(!amountStr) return;
-    let amount = parseFloat(amountStr);
-    if(isNaN(amount) || amount <= 0) {
-      alert("Noto'g'ri miqdor kiritildi!");
-      return;
-    }
-
-    if(confirm(`Siz ${amount} TON to'lashni tasdiqlaysizmi? Hamyondan yechilib balansga qo'shiladi.`)) {
-      db.ton += amount;
-      let record = `💎 +${amount} TON to'landi va balansga qo'shildi ✓`;
-      db.history.push(record);
-      
-      // Liderlar reytingi: 0.1 ton = 1 ball
-      let points = (amount / 0.1);
-      updateLeaderboard(userName, points);
-      saveData();
-      showToast(`Muvaffaqiyatli! +${amount} TON qo'shildi.`);
-    }
-  }
-
-  // Stars to'ldirish (foydalanuvchi to'lovni o'zi tasdiqlaydi va balansga srazi tushadi)
-  window.topUpStars = function() {
-    let amountStr = prompt("Qancha Stars to'lamoqchisiz?", "50");
-    if(!amountStr) return;
-    let amount = parseInt(amountStr);
-    if(isNaN(amount) || amount <= 0) {
-      alert("Noto'g'ri miqdor kiritildi!");
-      return;
-    }
-
-    if(confirm(`Siz ${amount} Stars to'lashni tasdiqlaysizmi? Balansdan yechilib qo'shiladi.`)) {
-      db.stars += amount;
-      let record = `⭐ +${amount} Stars to'landi va balansga qo'shildi ✓`;
-      db.history.push(record);
-
-      // Liderlar reytingi: 5 stars = 1 ball
-      let points = (amount / 5);
-      updateLeaderboard(userName, points);
-      saveData();
-      showToast(`Muvaffaqiyatli! +${amount} Stars qo'shildi.`);
-    }
-  }
-
-  window.markSubscribed = function() {
-    db.subscribed = true;
-    localStorage.setItem(userId, JSON.stringify(db));
-  }
-
-  window.claimReward = function(type) {
-    if(!db.subscribed) {
-      alert("Avval kanalga obuna bo'lishingiz shart!");
-      return;
-    }
-    if(db.claimed) {
-      alert("Siz bu mukofotni allaqachon olgansiz!");
-      return;
-    }
-
-    if(type === 'ton') {
-      db.ton += 0.1;
-      db.history.push(`🎁 Vazifa mukofoti: +0.1 TON`);
-      showToast("Tabriklaymiz! +0.1 TON qo'shildi.");
-    } else {
-      db.stars += 5;
-      db.history.push(`🎁 Vazifa mukofoti: +5 Stars`);
-      showToast("Tabriklaymiz! +5 Stars qo'shildi.");
-    }
-    db.claimed = true;
-    saveData();
-  }
-
-  function updateLeaderboard(name, score) {
-    let found = globalLeaders.find(l => l.name === name);
-    if(found) {
-      found.score += score;
-    } else {
-      globalLeaders.push({ name: name, score: score });
-    }
-    globalLeaders.sort((a,b) => b.score - a.score);
-    localStorage.setItem('giftland_leaders', JSON.stringify(globalLeaders));
-    renderLeaders();
-  }
-
-  function renderLeaders() {
-    const listEl = $('#leaderboardList');
-    if(globalLeaders.length === 0) {
-      listEl.innerHTML = '<p class="market-empty">Hozircha reyting bo\'sh</p>';
-      return;
-    }
-    listEl.innerHTML = globalLeaders.map((l, index) => `
-      <div style="display:flex;justify-content:space-between;padding:8px 10px;background:#151923;border-radius:10px;margin-bottom:6px;border:1px solid rgba(255,255,255,0.05)">
-        <span><b>#${index + 1}</b> ${l.name}</span>
-        <span style="color:#59d9ff;font-weight:bold">${l.score.toFixed(1)} ball</span>
-      </div>
-    `).join('');
-  }
-  renderLeaders();
-
-  const marketCollections = [
-    ["Intelligence Cups", "🏆"], ["Algorithm Cups", "🧠"], ["Lucky Lockets", "🔐"], ["Durov’s Glasses", "🕶️"], ["Resistance Dogs", "🐕"], ["Heart Lockets", "💗"], ["Heroic Helmets", "🪖"], ["Mighty Arms", "💪"], ["Mirage Lamps", "🪔"], ["Nail Bracelets", "💅"], ["Precious Peaches", "🍑"], ["Perfume Bottles", "🧴"], ["Mini Oscars", "🏆"], ["Gem Signets", "💍"], ["Bling Binkies", "🍼"], ["Plush Pepes", "🐸"], ["Ion Gems", "💎"], ["Genie Lamps", "🧞"], ["Ionic Dryers", "💨"], ["Astral Shards", "✨"], ["Bonded Rings", "💍"], ["Artisan Bricks", "🧱"], ["Durov’s Caps", "🧢"], ["Magic Potions", "🧪"], ["Love Candles", "🕯️"], ["Surge Boards", "🛹"], ["Khabib’s Papakhas", "🧢"], ["Rare Birds", "🦜"], ["Fine Pens", "🖊️"], ["Sharp Tongues", "👅"], ["Valentine Boxes", "💝"], ["Neko Helmets", "🐱"], ["Joyful Bundles", "🎁"], ["Electric Skulls", "💀"], ["Sleigh Bells", "🔔"], ["Snow Mittens", "🧤"], ["Westside Signs", "🪧"], ["Record Players", "📀"], ["Eternal Roses", "🌹"], ["Cupid Charms", "💘"], ["Pretty Posies", "💐"], ["Sky Stilettos", "👠"], ["Loot Bags", "🛍️"], ["Holiday Drinks", "🥤"], ["Snow Globes", "❄️"], ["Mad Pumpkins", "🎃"], ["Flying Brooms", "🧹"], ["Low Riders", "🚗"], ["Love Potions", "💗"], ["Lush Bouquets", "💐"], ["Bunny Muffins", "🐰"], ["UFC Strikes", "🥊"], ["Skull Flowers", "💀"], ["Hanging Stars", "⭐"], ["Signet Rings", "💍"], ["Kissed Frogs", "🐸"], ["Mousse Cakes", "🍰"], ["Crystal Balls", "🔮"], ["Diamond Rings", "💎"], ["Bow Ties", "🎀"], ["Vintage Cigars", "🚬"], ["Jingle Bells", "🛎️"], ["Berry Boxes", "🫐"], ["Top Hats", "🎩"], ["Hypno Lollipops", "🍭"], ["Star Notepads", "📝"], ["Timeless Books", "📚"], ["Trapped Hearts", "❤️"], ["Money Pots", "💰"], ["Restless Jars", "🫙"], ["Winter Wreaths", "🎄"], ["Snake Boxes", "🐍"], ["Swiss Watches", "⌚"], ["Voodoo Dolls", "🪆"], ["Tama Gadgets", "🎮"], ["Happy Brownies", "🍫"], ["Pet Snakes", "🐍"], ["Faith Amulets", "📿"], ["Spiced Wines", "🍷"], ["Eternal Candles", "🕯️"], ["Fresh Socks", "🧦"], ["Santa Hats", "🎅"], ["Big Years", "🎉"], ["Moon Pendants", "🌙"], ["Jester Hats", "🤡"], ["Spring Baskets", "🧺"], ["Cookie Hearts", "🍪"], ["Jelly Bunnies", "🐇"], ["Scared Cats", "🐈"], ["Sakura Flowers", "🌸"], ["Hex Pots", "⚗️"], ["Input Keys", "⌨️"], ["Jolly Chimps", "🐵"], ["Whip Cupcakes", "🧁"], ["Victory Medals", "🏅"], ["Mood Packs", "🎭"], ["Jacks-in-the-Box", "🤹"], ["Xmas Stockings", "🧦"], ["Pool Floats", "🛟"], ["Stellar Rockets", "🚀"], ["Candy Canes", "🍬"], ["Light Swords", "⚔️"], ["Evil Eyes", "🧿"], ["Ginger Cookies", "🍪"], ["Snoop Cigars", "🚬"], ["Clover Pins", "🍀"], ["Lunar Snakes", "🐍"], ["Swag Bags", "🎒"], ["Party Sparklers", "🎇"], ["B-Day Candles", "🎂"], ["Liberty Figures", "🗽"], ["Instant Ramens", "🍜"], ["Easter Eggs", "🥚"], ["Spy Agarics", "🍄"], ["Toy Bears", "🧸"], ["Witch Hats", "🧙"], ["Homemade Cakes", "🎂"], ["Desk Calendars", "📅"], ["Ice Creams", "🍦"], ["Chill Flames", "🔥"], ["Vice Creams", "🍨"], ["Snoop Doggs", "🐶"], ["Lol Pops", "🍭"]
-  ];
-
-  const marketGrid = $("#marketGrid");
-  const marketSearch = $("#marketSearch");
-
-  function renderMarket(query="") {
-    const q = query.trim().toLocaleLowerCase();
-    const filtered = marketCollections.filter(([name]) => name.toLocaleLowerCase().includes(q));
-    marketGrid.innerHTML = filtered.length
-      ? filtered.map(([name, emoji]) => `
-          <article class="market-item" onclick="buyNft('${name}')">
-            <span class="market-emoji">${emoji}</span>
-            <span><b>${name}</b><small>Telegram collectible</small></span>
-          </article>
-        `).join("")
-      : `<div class="market-empty">Hech narsa topilmadi</div>`;
-  }
-
-  renderMarket();
-  marketSearch.addEventListener("input", () => renderMarket(marketSearch.value));
-
-  window.buyNft = function(nftName) {
-    if(confirm(`Siz "${nftName}" NFT ni sotib olmoqchimisiz? Admin (@sots12) lichkasiga o'tiladi.`)) {
-      let msg = encodeURIComponent(`Salom admin, men ${userName} (${userId}) ushbu NFTni sotib olmoqchiman: ${nftName}`);
-      window.open(`https://t.me/sots12?text=${msg}`, '_blank');
-    }
-  }
-
-  let toastTimer;
-  const showToast = message => {
-    const el = $("#toast");
-    el.textContent = message;
-    el.classList.add("show");
-    clearTimeout(toastTimer);
-    toastTimer = setTimeout(() => el.classList.remove("show"), 2200);
-  };
-
-  document.querySelectorAll("[data-tab]").forEach(btn => btn.addEventListener("click", () => {
-    const tab = btn.dataset.tab;
-    document.querySelectorAll(".page").forEach(p => p.classList.remove("active"));
-    $("#page-" + tab).classList.add("active");
-    document.querySelectorAll("[data-tab]").forEach(b => b.classList.toggle("active", b === btn));
-    window.scrollTo({top:0, behavior:"smooth"});
-  }));
-})();
-</script>
-</body>
-</html>
+  // weighted pick
+  const win=c.pool[Math.floor(Math.random()*c.pool.length)];
+  // reel: 42 chips, target at index 36
+  const TARGET=36, N=42, reel=document.getElementById('reel');
+  let html='';
+  for(let i=0;i<N;i++){
+    const it=byId(i===TARGET?win:c.pool[Math.floor(Math.random()*c.pool.length)]);
+    html+=`<div class="chip r-${it.r}"><div class="ico">${it.ico}</div>
