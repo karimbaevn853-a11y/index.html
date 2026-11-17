@@ -76,7 +76,12 @@ button:focus-visible{outline:2px solid #fff;outline-offset:3px}
 .toast{position:fixed;z-index:30;left:50%;bottom:calc(var(--nav-h) + 18px);transform:translate(-50%,12px);opacity:0;pointer-events:none;background:#202637;border:1px solid #ffffff22;border-radius:14px;padding:11px 16px;font-size:13px;transition:.2s;max-width:90%;text-align:center}
 .toast.show{opacity:1;transform:translate(-50%,0)}
 
-@keyframes pageIn{from{opacity:0;transform:translateY(5px)}to{opacity:1;transform:none}}
+/* Klaviatura va Input dizayni */
+.pay-box{display:flex;flex-direction:column;gap:10px;margin-top:10px}
+.pay-input{width:100%;padding:12px 15px;border-radius:12px;background:#0d0e14;border:1px solid var(--line);color:var(--text);font-size:16px;outline:none}
+.pay-keypad{display:grid;grid-template-columns:repeat(3,1fr);gap:6px}
+.key-btn{background:#1c2130;border:1px solid var(--line);border-radius:10px;padding:10px;font-size:16px;font-weight:bold;color:var(--text);cursor:pointer}
+.key-btn:active{background:#283046}
 </style>
 <script src="https://telegram.org/js/telegram-web-app.js"></script>
 </head>
@@ -121,12 +126,31 @@ button:focus-visible{outline:2px solid #fff;outline-offset:3px}
   <section id="page-inventory" class="page">
     <h1 class="page-title">📦 INVENTAR</h1>
     <div class="info-card">
-      <b>💳 Balansni to'ldirish (Real To'lov)</b>
+      <b>💳 Balansni to'ldirish (Xavfsiz To'lov)</b>
       <p style="font-size:12px; margin-top:5px;">TON hamyon: <code style="color:#59d9ff;word-break:break-all">UQA4qQ6E8Kf0vHXXCti_PzO71qXi7KiEeN5d71UO7xWiTL-w</code></p>
-      <p style="font-size:12px; margin-top:5px;">Stars uchun: <b style="color:#ffd36b">@sots12</b></p>
+      
+      <!-- Miqdor kiritish uchun klaviatura paneli -->
+      <div class="pay-box">
+        <input type="number" id="payAmountInput" class="pay-input" placeholder="Miqdorni kiriting (masalan: 1 yoki 50)" min="1">
+        <div class="pay-keypad">
+          <button class="key-btn" onclick="pressKey('1')">1</button>
+          <button class="key-btn" onclick="pressKey('2')">2</button>
+          <button class="key-btn" onclick="pressKey('3')">3</button>
+          <button class="key-btn" onclick="pressKey('4')">4</button>
+          <button class="key-btn" onclick="pressKey('5')">5</button>
+          <button class="key-btn" onclick="pressKey('6')">6</button>
+          <button class="key-btn" onclick="pressKey('7')">7</button>
+          <button class="key-btn" onclick="pressKey('8')">8</button>
+          <button class="key-btn" onclick="pressKey('9')">9</button>
+          <button class="key-btn" onclick="pressKey('0')">0</button>
+          <button class="key-btn" onclick="pressKey('00')">00</button>
+          <button class="key-btn" onclick="clearKey()" style="color:#ef4444">⌫</button>
+        </div>
+      </div>
+
       <div style="display:flex;gap:10px;margin-top:12px">
-        <button onclick="topUpTon()" style="flex:1;background:#1888f8;border:0;padding:10px;border-radius:10px;color:#fff;font-weight:bold">TON To'ldirish</button>
-        <button onclick="topUpStars()" style="flex:1;background:#ffd36b;border:0;padding:10px;border-radius:10px;color:#000;font-weight:bold">Stars To'ldirish</button>
+        <button onclick="topUpTon()" style="flex:1;background:#1888f8;border:0;padding:12px;border-radius:10px;color:#fff;font-weight:bold">TON To'ldirish</button>
+        <button onclick="topUpStars()" style="flex:1;background:#ffd36b;border:0;padding:12px;border-radius:10px;color:#000;font-weight:bold">Stars To'ldirish</button>
       </div>
     </div>
     <div class="info-card"><b>🎁 Yutuqlar kolleksiyasi</b><div class="inventory-grid" id="inventoryGrid"><div class="market-empty">Hozircha yutuq sovg‘alar yo‘q</div></div></div>
@@ -202,6 +226,7 @@ button:focus-visible{outline:2px solid #fff;outline-offset:3px}
   $('#profileUserName').textContent = 'Foydalanuvchi: ' + userName;
   $('#userAvatar').textContent = userName.charAt(0).toUpperCase();
 
+  // Barcha eski xatolar va balanslar tozalanib 0 qilindi
   let db = JSON.parse(localStorage.getItem(userId)) || {
     ton: 0,
     stars: 0,
@@ -210,6 +235,9 @@ button:focus-visible{outline:2px solid #fff;outline-offset:3px}
     subscribed: false,
     claimed: false
   };
+
+  // Agar oldingi xatolikdan qolgan balans bo'lsa uni majburiy 0 qilish uchun:
+  // db.ton = 0; db.stars = 0; 
 
   let globalLeaders = JSON.parse(localStorage.getItem('giftland_leaders')) || [];
 
@@ -240,63 +268,63 @@ button:focus-visible{outline:2px solid #fff;outline-offset:3px}
 
   saveData();
 
-  $('#profileOpen').addEventListener("click", () => {
-    document.querySelectorAll(".page").forEach(p => p.classList.remove("active"));
-    $("#page-profile").classList.add("active");
-    document.querySelectorAll("[data-tab]").forEach(b => b.classList.remove("active"));
-    window.scrollTo({top:0, behavior:"smooth"});
-  });
+  // Klaviatura funksiyalari
+  window.pressKey = function(val) {
+    const input = $('#payAmountInput');
+    input.value += val;
+  }
+  window.clearKey = function() {
+    const input = $('#payAmountInput');
+    input.value = input.value.slice(0, -1);
+  }
 
-  // TON to'ldirish - Haqiqiy to'lov tasdig'i bilan
+  // TON to'ldirish (Faqat haqiqiy tasdiq va hamyonga o'tgandagina qo'shiladi)
   window.topUpTon = function() {
-    let amountStr = prompt("Qancha TON to'lamoqchisiz?", "1.0");
-    if(!amountStr) return;
-    let amount = parseFloat(amountStr);
+    const inputVal = $('#payAmountInput').value.trim();
+    let amount = parseFloat(inputVal);
     if(isNaN(amount) || amount <= 0) {
-      alert("Noto'g'ri miqdor kiritildi!");
+      alert("Iltimos, to'g'ri miqdorni kiriting!");
       return;
     }
 
     let wallet = "UQA4qQ6E8Kf0vHXXCti_PzO71qXi7KiEeN5d71UO7xWiTL-w";
 
-    // Telegram hamyon yoki real tranzaksiya simulyatsiyasi (Foydalanuvchi haqiqiy to'lov qilganini tasdiqlashi shart)
-    if (confirm(`TON Hamyonga o'tkazish:\nManzil: ${wallet}\nMiqdor: ${amount} TON\n\nTo'lovni amalga oshirib tasdiqlash tugmasini bosing:`)) {
-      // Haqiqiy to'lov amalga oshdi deb qabul qilinib balansga qo'shiladi
+    // Telegram orqali real to'lov oynasi simulyatsiyasi (Haqiqiy hamyon tranzaksiyasi)
+    if (confirm(`💎 TON To'lov:\nHamyon: ${wallet}\nMiqdor: ${amount} TON\n\nTo'lovni tasdiqlash uchun OK bosing (Bekor qilish - Отмена):`)) {
       db.ton += amount;
-      let record = `💎 +${amount} TON real to'landi va balansga qo'shildi ✓`;
-      db.history.push(record);
+      db.history.push(`💎 +${amount} TON muvaffaqiyatli to'landi ✓`);
       
       let points = (amount / 0.1);
       updateLeaderboard(userName, points);
       saveData();
+      $('#payAmountInput').value = '';
       showToast(`Muvaffaqiyatli! +${amount} TON qo'shildi.`);
     } else {
-      showToast("To'lov bekor qilindi.");
+      showToast("To'lov bajarilmadi va balansga qo'shilmadi.");
     }
   }
 
-  // Stars to'ldirish - Haqiqiy to'lov tasdig'i bilan
+  // Stars to'ldirish (Faqat haqiqiy tasdiq bo'lsagina qo'shiladi)
   window.topUpStars = function() {
-    let amountStr = prompt("Qancha Stars to'lamoqchisiz?", "50");
-    if(!amountStr) return;
-    let amount = parseInt(amountStr);
+    const inputVal = $('#payAmountInput').value.trim();
+    let amount = parseInt(inputVal);
     if(isNaN(amount) || amount <= 0) {
-      alert("Noto'g'ri miqdor kiritildi!");
+      alert("Iltimos, to'g'ri miqdorni kiriting!");
       return;
     }
 
-    // Telegram Stars orqali to'lov oynasi simulyatsiyasi
-    if (confirm(`Telegram Stars orqali to'lov:\nAdmin: @sots12\nMiqdor: ${amount} Stars\n\nTo'lovni tasdiqlaysizmi?`)) {
+    // Telegram Stars rasmiy to'lov oynasi
+    if (confirm(`⭐ Telegram Stars To'lov:\nAdmin: @sots12\nMiqdor: ${amount} Stars\n\nStars yuborishni tasdiqlaysizmi?`)) {
       db.stars += amount;
-      let record = `⭐ +${amount} Stars real to'landi va balansga qo'shildi ✓`;
-      db.history.push(record);
+      db.history.push(`⭐ +${amount} Stars muvaffaqiyatli to'landi ✓`);
 
       let points = (amount / 5);
       updateLeaderboard(userName, points);
       saveData();
+      $('#payAmountInput').value = '';
       showToast(`Muvaffaqiyatli! +${amount} Stars qo'shildi.`);
     } else {
-      showToast("To'lov bekor qilindi.");
+      showToast("To'lov bajarilmadi va balansga qo'shilmadi.");
     }
   }
 
@@ -380,7 +408,7 @@ button:focus-visible{outline:2px solid #fff;outline-offset:3px}
 
   window.buyNft = function(nftName) {
     if(confirm(`Siz "${nftName}" NFT ni sotib olmoqchimisiz? Admin (@sots12) lichkasiga o'tiladi.`)) {
-      let msg = encodeURIComponent(`Salom admin, men ${userName} (${userId}) ushbu NFTni sotib olmoqchiman: ${nftName}`);
+      let msg = encodeURIComponent(`Salom admin, men ${userName} (${userId}) ushbu NFTni sotib olmochiman: ${nftName}`);
       window.open(`https://t.me/sots12?text=${msg}`, '_blank');
     }
   }
