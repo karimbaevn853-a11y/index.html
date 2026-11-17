@@ -155,7 +155,7 @@ nav{position:fixed;left:0;right:0;bottom:0;z-index:30;display:flex;justify-conte
 
  <!-- NFT -->
  <section class="page" id="page-nft">
-  <h2 class="tt">NFT Боор</h2>
+  <h2 class="tt">NFT Бозор</h2>
   <div class="g2" id="nftList"></div>
   <p style="color:var(--mu);font-size:11.5px;text-align:center;margin-top:14px">Нажмите на NFT — администратору <b>@sots12</b> автоматически отправится сообщение с вашим заказом.</p>
  </section>
@@ -221,13 +221,13 @@ nav{position:fixed;left:0;right:0;bottom:0;z-index:30;display:flex;justify-conte
 <script>
 /* ================= CONFIG ================= */
 var CONFIG={
-  API:'',                 /* https://your-backend.com  (bo'sh bo'lsa demo-rejim) */
+  API:'',                 
   ADMIN_WALLET:'UQA4qQ6E8Kf0vHXXCti_PzO71qXi7KiEeN5d71UO7xWiTL-w',
   ADMIN_USER:'sots12',
   CHANNEL:'https://t.me/+your_channel',
-  WELCOME_GIFT:100,       /* yangi foydalanuvchiga sovg'a */
-  TON_POINT_RATE:5,       /* 0.1 TON -> 5 ball */
-  STAR_POINT_RATE:1       /* 5 Stars -> 1 ball */
+  WELCOME_GIFT:100,       
+  TON_POINT_RATE:5,       
+  STAR_POINT_RATE:1       
 };
 
 /* ================= DATA ================= */
@@ -236,4 +236,300 @@ var ITEMS=[
  {id:'c3',ic:'🧩',n:'Protokol chipi',v:95,r:0},{id:'c4',ic:'🔧',n:'Neon kalit',v:130,r:0},
  {id:'r1',ic:'⚡',n:'Tok',v:260,r:1},{id:'r2',ic:'🛡',n:'Plazma qalqon',v:340,r:1},
  {id:'r3',ic:'💠',n:'Kristall',v:420,r:1},{id:'e1',ic:'🔥',n:'Inferno yadrosi',v:900,r:2},
- {id:'e2',ic:'🌀',n:'Vortex',v:1150,r:2},{id:'e3',ic:'👾',n:'Neon metalizm',v:1400,r:2},
+ {id:'e2',ic:'🌀',n:'Vortex',v:1150,r:2},{id:'e3',ic:'👾',n:'Neon metalizm',v:1400,r:2}
+];
+
+var NFTS=[
+ {id:'n1',ic:'🪐',n:'Neon Planet',p:'1.5 TON'},
+ {id:'n2',ic:'⚡',n:'Cyber Core',p:'3.0 TON'},
+ {id:'n3',ic:'💎',n:'Matrix Diamond',p:'5.0 TON'},
+ {id:'n4',ic:'🚀',n:'Astro Pass',p:'10.0 TON'}
+];
+
+var STATE={
+ coins:150, points:10, inv:{}, openCount:0, crashCount:0, bonusClaimed:false,
+ tg:{id:782910,first_name:'Игрок'}, payMode:'ton'
+};
+
+function save(){
+ try{localStorage.setItem('neon_arcade_st',JSON.stringify(STATE));}catch(e){}
+}
+function load(){
+ try{
+  let s=localStorage.getItem('neon_arcade_st');
+  if(s) STATE=JSON.parse(s);
+  else STATE.coins=CONFIG.WELCOME_GIFT;
+ }catch(e){STATE.coins=CONFIG.WELCOME_GIFT;}
+}
+
+function showToast(m){
+ var t=document.getElementById('toast');
+ t.innerText=m;t.classList.add('on');
+ setTimeout(()=>t.classList.remove('on'),2500);
+}
+
+/* ================= NAV & PAGES (TUZATILGAN QISM) ================= */
+function switchPage(id){
+ document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
+ var target = document.getElementById(id);
+ if(target) target.classList.add('active');
+
+ document.querySelectorAll('#nav button').forEach(b=>{
+  if(b.getAttribute('data-page') === id) b.classList.add('on');
+  else b.classList.remove('on');
+ });
+ window.scrollTo(0,0);
+}
+
+document.querySelectorAll('#nav button').forEach(btn=>{
+ btn.addEventListener('click', function(){
+  var pageId = this.getAttribute('data-page');
+  switchPage(pageId);
+ });
+});
+
+function switchPay(m){
+ STATE.payMode=m;
+ document.getElementById('segTon').classList.toggle('on', m==='ton');
+ document.getElementById('segStars').classList.toggle('on', m==='stars');
+}
+
+function renderAll(){
+ document.getElementById('coins').innerText=STATE.coins;
+ document.getElementById('points').innerText=STATE.points;
+ document.getElementById('pName').innerText=STATE.tg.first_name||'Игрок';
+ document.getElementById('pId').innerText=STATE.tg.id||'782910';
+ document.getElementById('crashProg').innerText=STATE.crashCount;
+ document.getElementById('stOpen').innerText=STATE.openCount;
+ document.getElementById('chanLink').href=CONFIG.CHANNEL;
+
+ // Inv
+ var il=document.getElementById('invList');
+ il.innerHTML='';
+ var keys=Object.keys(STATE.inv);
+ if(keys.length===0){
+  il.innerHTML='<div style="grid-column:span 3;text-align:center;color:var(--mu);padding:20px">Инвентарь пуст</div>';
+  document.getElementById('stBest').innerText='—';
+ } else {
+  let bestVal=0, bestName='—';
+  keys.forEach(id=>{
+   let it=ITEMS.find(x=>x.id===id);
+   let qt=STATE.inv[id];
+   if(it){
+    if(it.v>bestVal){bestVal=it.v;bestName=it.n;}
+    let rc=it.r===2?'rleg':(it.r===1?'rep':'rrare');
+    il.innerHTML+=`<div class="inv ${rc}"><div class="ic">${it.ic}</div><div class="nm">${it.n}</div><div class="qt">x${qt}</div></div>`;
+   }
+  });
+  document.getElementById('stBest').innerText=bestName;
+ }
+
+ // Drops
+ var dr=document.getElementById('drops');
+ dr.innerHTML='';
+ for(let i=0;i<3;i++){
+  let it=ITEMS[Math.floor(Math.random()*ITEMS.length)];
+  dr.innerHTML+=`<div class="inv"><div class="ic">${it.ic}</div><div class="nm">${it.n}</div><div class="qt">${it.v} 💎</div></div>`;
+ }
+
+ // NFT
+ var nl=document.getElementById('nftList');
+ nl.innerHTML='';
+ NFTS.forEach(n=>{
+  nl.innerHTML+=`<div class="nf" onclick="buyNft('${n.n}','${n.p}')"><div class="img">${n.ic}</div><b>${n.n}</b><div class="pr">${n.p}</div><button class="btn v" style="padding:8px;font-size:12px">КУПИТЬ</button></div>`;
+ });
+
+ // Leaders
+ var ld=document.getElementById('leadList');
+ ld.innerHTML='';
+ let dummy=[{n:'Sotsev',p:450},{n:'CyberBoy',p:380},{n:'NeonQueen',p:290},{n:STATE.tg.first_name||'Вы',p:STATE.points,me:true}];
+ dummy.sort((a,b)=>b.p-a.p);
+ dummy.forEach((u,idx)=>{
+  ld.innerHTML+=`<div class="row" ${u.me?'style="border-color:var(--cy)"':''}><div class="ic">#${idx+1}</div><div class="tx"><b>${u.n}</b><small>очки рейтинга</small></div><span class="pill">${u.p} ⭐</span></div>`;
+  if(u.me) document.getElementById('myPlace').innerText='#'+(idx+1);
+ });
+}
+
+function buyNft(name, price){
+ var url = `https://t.me/${CONFIG.ADMIN_USER}?text=Здравствуйте,%20хочу%20купить%20NFT:%20${encodeURIComponent(name)}%20за%20${encodeURIComponent(price)}`;
+ window.open(url, '_blank');
+}
+
+function claimBonus(){
+ if(STATE.bonusClaimed){showToast('Бонус уже получен!');return;}
+ STATE.bonusClaimed=true;
+ STATE.coins+=500;
+ document.getElementById('bonusBtn').innerText='ПОЛУЧЕНО';
+ document.getElementById('bonusBtn').disabled=true;
+ showToast('+500 💎 зачислено!');
+ save(); renderAll();
+}
+
+function resetAll(){
+ if(confirm('Сбросить данные?')){
+  localStorage.removeItem('neon_arcade_st');
+  location.reload();
+ }
+}
+
+/* Modal utility */
+function openModal(id){document.getElementById(id).classList.add('on');}
+function closeModal(){document.querySelectorAll('.modal').forEach(m=>m.classList.remove('on'));}
+
+/* Mines logic */
+var mCols=1, mBetAmt=10, mActive=false, mBoard=[], mStep=0;
+function setM(c,el){
+ if(mActive)return;
+ mCols=c;
+ document.querySelectorAll('.mch div').forEach(d=>d.classList.remove('on'));
+ el.classList.add('on');
+}
+function mBet(d){mBetAmt=Math.max(5,mBetAmt+d*5);document.getElementById('mBetIn').value=mBetAmt;mUpd();}
+function mBetSet(v){mBetAmt=parseInt(v)||5;mUpd();}
+function mUpd(){
+ document.getElementById('mBet').innerText=mBetAmt+' 💎';
+ document.getElementById('mBal').innerText=STATE.coins+' 💎';
+}
+function initMinesGrid(){
+ var mg=document.getElementById('mGrid');
+ mg.innerHTML='';
+ for(let i=0;i<15;i++){
+  mg.innerHTML+=`<div class="cl" onclick="mCell(${i})">❓</div>`;
+ }
+}
+function mAct(){
+ if(!mActive){
+  if(STATE.coins<mBetAmt){showToast('Недостаточно монет!');return;}
+  STATE.coins-=mBetAmt; mActive=true; mStep=0;
+  document.getElementById('mBtn').innerText='ЗАБРАТЬ';
+  initMinesGrid();
+  mBoard=[];
+  for(let i=0;i<15;i++) mBoard.push('gem');
+  for(let i=0;i<mCols;i++){
+   let idx=Math.floor(Math.random()*15);
+   while(mBoard[idx]==='bomb') idx=Math.floor(Math.random()*15);
+   mBoard[idx]='bomb';
+  }
+  document.getElementById('mMul').innerText='1.00x';
+  save(); renderAll(); mUpd();
+ } else {
+  let win=Math.floor(mBetAmt*(1+mStep*0.4));
+  STATE.coins+=win;
+  showToast('Выигрыш: +'+win+' 💎');
+  mActive=false; document.getElementById('mBtn').innerText='ИГРАТЬ';
+  save(); renderAll(); mUpd();
+ }
+}
+function mCell(idx){
+ if(!mActive)return;
+ var cl=document.querySelectorAll('#mGrid .cl')[idx];
+ if(cl.classList.contains('open'))return;
+ cl.classList.add('open');
+ if(mBoard[idx]==='bomb'){
+  cl.innerHTML='💣'; cl.classList.add('bomb');
+  showToast('Вы подорвались!');
+  mActive=false; document.getElementById('mBtn').innerText='ИГРАТЬ';
+ } else {
+  cl.innerHTML='💎'; cl.classList.add('gem');
+  mStep++;
+  let mul=(1+mStep*0.4).toFixed(2);
+  document.getElementById('mMul').innerText=mul+'x';
+  if(mStep>= (15-mCols)){
+    mAct();
+  }
+ }
+}
+
+/* Case logic */
+function openModal(id){
+ document.getElementById(id).classList.add('on');
+ if(id==='mMines'){mUpd();initMinesGrid();}
+ if(id==='mCase') spinCase();
+}
+function spinCase(){
+ var cg=document.getElementById('cg')||document.getElementById('cGrid');
+ cg.innerHTML='';
+ document.getElementById('cRes').style.display='none';
+ document.getElementById('cTitle').innerText='Открываем кейс...';
+ for(let i=0;i<6;i++){
+  let it=ITEMS[Math.floor(Math.random()*ITEMS.length)];
+  cg.innerHTML+=`<div class="cc">${it.ic}</div>`;
+ }
+ setTimeout(()=>{
+  let winItem=ITEMS[Math.floor(Math.random()*ITEMS.length)];
+  STATE.inv[winItem.id]=(STATE.inv[winItem.id]||0)+1;
+  STATE.openCount++;
+  document.getElementById('cTitle').innerText='Вы выиграли!';
+  document.getElementById('cIco').innerText=winItem.ic;
+  document.getElementById('cName').innerText=winItem.n;
+  document.getElementById('cRar').innerText='Стоимость: '+winItem.v+' 💎';
+  document.getElementById('cRes').style.display='block';
+  save(); renderAll();
+ }, 1500);
+}
+
+/* Crash logic */
+var cBetAmt=20, cRunning=false;
+function cBet(d){cBetAmt=Math.max(10,cBetAmt+d*10);document.getElementById('cBetIn').value=cBetAmt;}
+function cBetSet(v){cBetAmt=parseInt(v)||10;}
+function cStart(){
+ if(cRunning)return;
+ if(STATE.coins<cBetAmt){showToast('Недостаточно монет!');return;}
+ STATE.coins-=cBetAmt; cRunning=true;
+ document.getElementById('cBtn').innerText='ЗАБРАТЬ';
+ document.getElementById('cBtn').className='btn gd';
+ let mult=1.00;
+ let crashAt=(1.1 + Math.random()*3).toFixed(2);
+ var tm=setInterval(()=>{
+  mult+=0.05;
+  document.getElementById('cMult').innerText=mult.toFixed(2)+'x';
+  document.getElementById('cBar').style.width=Math.min(100,(mult/3)*100)+'%';
+  if(mult>=crashAt){
+   clearInterval(tm);
+   cRunning=false;
+   document.getElementById('cMult').innerText='CRASHED ('+crashAt+'x)';
+   document.getElementById('cBtn').innerText='СТАРТ';
+   document.getElementById('cBtn').className='btn gr';
+   showToast('Краш! Вы проиграли.');
+   save(); renderAll();
+  }
+ }, 120);
+ document.getElementById('cBtn').onclick=function(){
+  if(!cRunning)return;
+  clearInterval(tm);
+  cRunning=false;
+  let win=Math.floor(cBetAmt*mult);
+  STATE.coins+=win;
+  STATE.crashCount++;
+  document.getElementById('cBtn').innerText='СТАРТ';
+  document.getElementById('cBtn').className='btn gr';
+  showToast('Успех! +'+win+' 💎');
+  save(); renderAll();
+ };
+}
+
+/* PVP logic */
+var pvpAmt=50;
+function pvpBet(d){pvpAmt=Math.max(10,pvpAmt+d*10);document.getElementById('pvpIn').value=pvpAmt;}
+function pvpBetSet(v){pvpAmt=parseInt(v)||10;}
+function pvpStart(){
+ if(STATE.coins<pvpAmt){showToast('Недостаточно монет!');return;}
+ STATE.coins-=pvpAmt;
+ showToast('Поиск соперника...');
+ setTimeout(()=>{
+  if(Math.random()>0.5){
+   let win=pvpAmt*2;
+   STATE.coins+=win;
+   showToast('Победа в PvP! +'+win+' 💎');
+  } else {
+   showToast('Поражение в PvP!');
+  }
+  save(); renderAll();
+ }, 1500);
+}
+
+load();
+renderAll();
+</script>
+</body>
+</html>
