@@ -2,238 +2,216 @@
 <html lang="uz">
 <head>
 <meta charset="utf-8">
-<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
-<meta name="theme-color" content="#070b18">
-<meta name="description" content="NEON CASE — neon uslubdagi mini-app demo">
-<title>NEON CASE</title>
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#05070f">
+<title>NEON CASE — Play &amp; Win</title>
 <style>
 :root{
-  --bg:#070b18; --bg2:#0d1430;
-  --neon:#00e5ff; --neon2:#b14bff; --neon3:#ff3d81; --gold:#ffcf4d; --green:#39ff88;
-  --txt:#e9edff; --muted:#8b93c0;
-  --line:rgba(120,200,255,.18);
-  --glass:rgba(255,255,255,.05);
-  --common:#8b93c0; --rare:#00e5ff; --epic:#b14bff; --legendary:#ffcf4d;
-  --safe-b: env(safe-area-inset-bottom,0px);
+  --bg:#05070f; --bg2:#0a0f22; --glass:rgba(255,255,255,.05);
+  --neon:#00e5ff; --violet:#b14bff; --pink:#ff3d81; --gold:#ffcf4d; --green:#39ff88;
+  --txt:#eaf0ff; --muted:#8790bd; --line:rgba(120,200,255,.18);
+  --sb: env(safe-area-inset-bottom,0px);
 }
 *{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
 html,body{margin:0;padding:0}
 body{
-  background:var(--bg); color:var(--txt); min-height:100vh; overflow-x:hidden;
-  font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,"Helvetica Neue",Arial,sans-serif;
+  background:var(--bg);color:var(--txt);min-height:100vh;overflow-x:hidden;
+  font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Arial,sans-serif;
   background-image:
-    radial-gradient(900px 500px at 15% -5%, rgba(0,229,255,.20), transparent 60%),
-    radial-gradient(800px 500px at 90% 10%, rgba(177,75,255,.20), transparent 60%),
-    radial-gradient(700px 500px at 50% 110%, rgba(255,61,129,.14), transparent 60%),
+    radial-gradient(900px 520px at 12% -8%,rgba(0,229,255,.20),transparent 60%),
+    radial-gradient(820px 520px at 92% 6%,rgba(177,75,255,.20),transparent 60%),
+    radial-gradient(700px 480px at 50% 108%,rgba(255,61,129,.13),transparent 60%),
     linear-gradient(180deg,var(--bg),var(--bg2));
   background-attachment:fixed;
 }
-body::before{
-  content:"";position:fixed;inset:0;pointer-events:none;opacity:.35;
-  background-image:linear-gradient(rgba(120,200,255,.06) 1px,transparent 1px),
-                   linear-gradient(90deg,rgba(120,200,255,.06) 1px,transparent 1px);
-  background-size:44px 44px;mask-image:radial-gradient(circle at 50% 30%,#000,transparent 78%);
-}
-.wrap{max-width:520px;margin:0 auto;padding:0 16px calc(96px + var(--safe-b))}
+body::before{content:"";position:fixed;inset:0;pointer-events:none;opacity:.3;
+  background-image:linear-gradient(rgba(120,200,255,.055) 1px,transparent 1px),linear-gradient(90deg,rgba(120,200,255,.055) 1px,transparent 1px);
+  background-size:46px 46px;mask-image:radial-gradient(circle at 50% 25%,#000,transparent 78%)}
+.wrap{max-width:520px;margin:0 auto;padding:0 15px calc(104px + var(--sb))}
+.scr{display:none}.scr.on{display:block;animation:f .25s ease}
+@keyframes f{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}
+h2.tt{margin:16px 0 10px;font-size:13px;letter-spacing:1.5px;text-transform:uppercase;color:var(--muted);font-weight:800}
 
-/* ---------- header ---------- */
-header{position:sticky;top:0;z-index:20;padding:14px 0 10px;
-  background:linear-gradient(180deg,rgba(7,11,24,.95),rgba(7,11,24,.55) 70%,transparent);
-  backdrop-filter:blur(14px)}
-.bar{display:flex;align-items:center;gap:10px}
-.logo{display:flex;align-items:center;gap:9px;font-weight:800;letter-spacing:.5px;font-size:15px}
-.logo b{color:var(--neon);text-shadow:0 0 12px rgba(0,229,255,.7)}
-.badge{display:inline-flex;align-items:center;gap:6px;padding:7px 12px;border-radius:999px;
-  background:var(--glass);border:1px solid var(--line);font-size:13px;font-weight:700}
-.badge.coins{color:var(--gold);text-shadow:0 0 10px rgba(255,207,77,.5)}
-.spacer{flex:1}
-.lvl{display:flex;flex-direction:column;gap:5px;min-width:96px}
-.lvl small{color:var(--muted);font-size:10px;letter-spacing:.6px}
-.track{height:5px;border-radius:99px;background:rgba(255,255,255,.08);overflow:hidden}
-.track i{display:block;height:100%;border-radius:99px;background:linear-gradient(90deg,var(--neon),var(--neon2));
-  box-shadow:0 0 10px rgba(0,229,255,.7)}
+/* header */
+header{position:sticky;top:0;z-index:25;padding:12px 0 10px;backdrop-filter:blur(16px);
+  background:linear-gradient(180deg,rgba(5,7,15,.96),rgba(5,7,15,.55) 70%,transparent)}
+.hrow{display:flex;align-items:center;gap:10px}
+.logo{display:flex;align-items:center;gap:8px;font-weight:900;font-size:15px;letter-spacing:.6px}
+.logo b{color:var(--neon);text-shadow:0 0 14px rgba(0,229,255,.75)}
+.ava{width:36px;height:36px;border-radius:50%;flex:0 0 36px;display:grid;place-items:center;font-size:17px;
+  background:linear-gradient(135deg,var(--neon),var(--violet));border:1px solid rgba(255,255,255,.22);cursor:pointer}
+.sp{flex:1}
+.bal{display:inline-flex;align-items:center;gap:6px;padding:7px 12px;border-radius:999px;font-size:13px;font-weight:800;
+  background:var(--glass);border:1px solid var(--line);color:var(--gold);text-shadow:0 0 10px rgba(255,207,77,.45)}
+.lvl{display:flex;flex-direction:column;gap:4px;width:82px}
+.lvl small{color:var(--muted);font-size:9px;letter-spacing:.6px}
+.trk{height:4px;border-radius:99px;background:rgba(255,255,255,.09);overflow:hidden}
+.trk i{display:block;height:100%;background:linear-gradient(90deg,var(--neon),var(--violet));box-shadow:0 0 9px rgba(0,229,255,.75)}
 
-/* ---------- screens ---------- */
-.screen{display:none}
-.screen.active{display:block;animation:fade .28s ease}
-@keyframes fade{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}
-h2.t{margin:16px 0 12px;font-size:15px;letter-spacing:1.4px;text-transform:uppercase;color:var(--muted);font-weight:700}
-
-/* ---------- hero ---------- */
-.hero{margin-top:14px;padding:22px 18px;border-radius:22px;text-align:center;position:relative;overflow:hidden;
+/* hero + tiles */
+.hero{margin-top:12px;padding:20px 16px;border-radius:22px;text-align:center;position:relative;overflow:hidden;
   border:1px solid var(--line);background:linear-gradient(160deg,rgba(0,229,255,.10),rgba(177,75,255,.08) 60%,rgba(255,61,129,.08))}
-.hero:before{content:"";position:absolute;inset:-40% -10% auto;height:220px;
-  background:radial-gradient(circle,rgba(0,229,255,.30),transparent 62%);filter:blur(24px)}
-.hero h1{margin:0 0 6px;font-size:26px;font-weight:900;letter-spacing:.5px}
-.hero h1 span{background:linear-gradient(90deg,var(--neon),var(--neon2),var(--neon3));
-  -webkit-background-clip:text;background-clip:text;color:transparent}
-.hero p{margin:0 0 16px;color:var(--muted);font-size:13px}
-.orb{width:96px;height:96px;margin:0 auto 14px;border-radius:50%;position:relative;
-  background:radial-gradient(circle at 35% 30%,#fff,var(--neon) 30%,var(--neon2) 65%,#2a0f4d);
-  box-shadow:0 0 40px rgba(0,229,255,.6),0 0 90px rgba(177,75,255,.4);
-  animation:pulse 2.6s ease-in-out infinite}
-.orb:after{content:"";position:absolute;inset:-14px;border-radius:50%;border:1px solid rgba(0,229,255,.45);
-  border-top-color:transparent;border-right-color:transparent;animation:spin 6s linear infinite}
-@keyframes pulse{50%{transform:scale(1.06)}}
-@keyframes spin{to{transform:rotate(360deg)}}
-.btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;width:100%;padding:15px;border:0;
-  border-radius:16px;font-size:15px;font-weight:800;letter-spacing:.4px;color:#04121a;cursor:pointer;
-  background:linear-gradient(90deg,var(--neon),#6ef0ff);
-  box-shadow:0 10px 30px rgba(0,229,255,.28),inset 0 1px 0 rgba(255,255,255,.5);
-  transition:transform .12s ease,filter .2s}
+.hero b{display:block;font-size:24px;font-weight:900;letter-spacing:.5px}
+.hero b span{background:linear-gradient(90deg,var(--neon),var(--violet),var(--pink));-webkit-background-clip:text;background-clip:text;color:transparent}
+.hero p{margin:6px 0 0;color:var(--muted);font-size:12.5px}
+.orb{width:86px;height:86px;margin:0 auto 12px;border-radius:50%;position:relative;
+  background:radial-gradient(circle at 34% 28%,#fff,var(--neon) 28%,var(--violet) 64%,#280e49);
+  box-shadow:0 0 38px rgba(0,229,255,.55),0 0 85px rgba(177,75,255,.38);animation:pl 2.6s ease-in-out infinite}
+.orb:after{content:"";position:absolute;inset:-13px;border-radius:50%;border:1px solid rgba(0,229,255,.42);
+  border-top-color:transparent;border-right-color:transparent;animation:sp 6s linear infinite}
+@keyframes pl{50%{transform:scale(1.06)}} @keyframes sp{to{transform:rotate(360deg)}}
+
+.tiles{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:14px}
+.tile{position:relative;border-radius:18px;padding:18px 14px;text-align:center;overflow:hidden;cursor:pointer;
+  border:1px solid var(--line);background:var(--glass);transition:transform .15s}
+.tile:active{transform:scale(.97)}
+.tile:before{content:"";position:absolute;inset:auto -30% -65% -30%;height:120px;filter:blur(28px);opacity:.6}
+.t1:before{background:var(--neon)} .t2:before{background:var(--pink)} .t3:before{background:var(--violet)} .t4:before{background:var(--gold)}
+.tile .ic{font-size:40px;filter:drop-shadow(0 0 13px rgba(255,255,255,.32))}
+.tile h4{margin:8px 0 3px;font-size:14px}
+.tile small{color:var(--muted);font-size:11px}
+
+/* buttons */
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;width:100%;padding:14px;border:0;border-radius:15px;
+  font-size:14.5px;font-weight:800;color:#04121a;cursor:pointer;background:linear-gradient(90deg,var(--neon),#6ef0ff);
+  box-shadow:0 9px 26px rgba(0,229,255,.26),inset 0 1px 0 rgba(255,255,255,.5)}
 .btn:active{transform:scale(.97)}
-.btn.ghost{background:var(--glass);border:1px solid var(--line);color:var(--txt);box-shadow:none}
-.btn.violet{background:linear-gradient(90deg,var(--neon2),#e07bff);color:#fff}
+.btn.g{background:var(--glass);border:1px solid var(--line);color:var(--txt);box-shadow:none}
+.btn.v{background:linear-gradient(90deg,var(--violet),#e07bff);color:#fff}
 .btn.gold{background:linear-gradient(90deg,var(--gold),#ffb03a);color:#2a1a00}
-.btn[disabled]{opacity:.45;pointer-events:none}
+.btn.gr{background:linear-gradient(90deg,var(--green),#9dffcb);color:#03210f}
+.btn[disabled]{opacity:.4;pointer-events:none}
 
-/* ---------- case cards ---------- */
-.cases{display:grid;grid-template-columns:1fr 1fr;gap:12px}
-.case{position:relative;border-radius:18px;padding:16px 14px;text-align:center;overflow:hidden;cursor:pointer;
-  border:1px solid var(--line);background:var(--glass);transition:transform .16s ease,border-color .2s}
-.case:active{transform:scale(.97)}
-.case:before{content:"";position:absolute;inset:auto -30% -60% -30%;height:120px;filter:blur(28px);opacity:.55}
-.case.c1:before{background:var(--neon)} .case.c2:before{background:var(--neon2)}
-.case.c3:before{background:var(--neon3)} .case.c4:before{background:var(--gold)}
-.case .ch{font-size:46px;filter:drop-shadow(0 0 14px rgba(255,255,255,.35))}
-.case h4{margin:8px 0 4px;font-size:14px}
-.case .price{font-size:12px;color:var(--gold);font-weight:700}
-.case .tag{position:absolute;top:10px;right:10px;font-size:10px;padding:4px 8px;border-radius:99px;
-  background:rgba(0,0,0,.35);border:1px solid var(--line);color:var(--muted)}
-.case .rare-tag{color:var(--legendary);border-color:rgba(255,207,77,.5)}
-
-/* ---------- roll ---------- */
-.rollwrap{margin-top:20px;text-align:center}
-.reelbox{position:relative;height:264px;border-radius:22px;overflow:hidden;margin:14px 0;
-  border:1px solid var(--line);background:linear-gradient(180deg,rgba(0,229,255,.08),rgba(177,75,255,.10));
-  box-shadow:inset 0 0 40px rgba(0,0,0,.55)}
-.reelbox:before,.reelbox:after{content:"";position:absolute;left:0;right:0;height:64px;z-index:3;pointer-events:none}
-.reelbox:before{top:0;background:linear-gradient(180deg,rgba(7,11,24,.95),transparent)}
-.reelbox:after{bottom:0;background:linear-gradient(0deg,rgba(7,11,24,.95),transparent)}
-.reelbox .marker{position:absolute;left:0;right:0;top:50%;height:2px;transform:translateY(-1px);z-index:4;
-  background:linear-gradient(90deg,transparent,var(--neon),transparent);box-shadow:0 0 18px var(--neon)}
-.reel{position:absolute;left:0;right:0;top:0;transition:transform 4.2s cubic-bezier(.12,.75,.05,1)}
-.chip{height:88px;margin:0 12px;display:flex;align-items:center;gap:12px;padding:0 16px;border-radius:16px;
-  margin-bottom:10px;border:1px solid var(--line);background:rgba(255,255,255,.04)}
-.chip .ico{font-size:32px;filter:drop-shadow(0 0 10px rgba(255,255,255,.3))}
-.chip .nm{font-size:14px;font-weight:700}
-.chip .rr{font-size:11px;font-weight:800;letter-spacing:1px;text-transform:uppercase}
-.r-common{border-color:rgba(139,147,192,.45)} .r-common .rr{color:var(--common)}
-.r-rare{border-color:rgba(0,229,255,.5);box-shadow:0 0 22px rgba(0,229,255,.18)} .r-rare .rr{color:var(--rare)}
-.r-epic{border-color:rgba(177,75,255,.55);box-shadow:0 0 22px rgba(177,75,255,.22)} .r-epic .rr{color:var(--neon2)}
-.r-legendary{border-color:rgba(255,207,77,.7);box-shadow:0 0 30px rgba(255,207,77,.32)} .r-legendary .rr{color:var(--legendary)}
-
-.result{margin-top:6px;padding:18px;border-radius:20px;text-align:center;border:1px solid var(--line);
-  background:var(--glass);opacity:0;transform:scale(.9);transition:.4s}
-.result.show{opacity:1;transform:none}
-.result .big{font-size:56px;filter:drop-shadow(0 0 18px rgba(255,255,255,.4))}
-.result h3{margin:6px 0 4px;font-size:19px}
-.celebrate{position:fixed;inset:0;pointer-events:none;z-index:60}
-.conf{position:absolute;width:9px;height:14px;border-radius:2px;animation:fall linear forwards}
-@keyframes fall{to{transform:translateY(105vh) rotate(720deg);opacity:.1}}
-
-/* ---------- inventory / rows ---------- */
-.grid2{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}
-.inv{border-radius:16px;padding:12px 8px;text-align:center;border:1px solid var(--line);background:var(--glass)}
-.inv .ico{font-size:30px} .inv .nm{font-size:11px;margin-top:6px;font-weight:600}
-.inv .qty{font-size:10px;color:var(--muted);margin-top:2px}
+/* rows / grid */
 .row{display:flex;align-items:center;gap:12px;padding:13px;border-radius:16px;border:1px solid var(--line);
   background:var(--glass);margin-bottom:10px}
-.row .ico{font-size:26px} .row .tx{flex:1}
-.row .tx b{display:block;font-size:14px} .row .tx small{color:var(--muted);font-size:11px}
+.row .ic{font-size:24px} .row .tx{flex:1;min-width:0}
+.row .tx b{display:block;font-size:13.5px} .row .tx small{color:var(--muted);font-size:11px}
+.g3{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}
+.inv{border-radius:15px;padding:12px 8px;text-align:center;border:1px solid var(--line);background:var(--glass)}
+.inv .ic{font-size:28px} .inv .nm{font-size:11px;margin-top:5px;font-weight:600}
+.inv .qt{font-size:10px;color:var(--muted);margin-top:2px}
+.cases{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.case{position:relative;border-radius:18px;padding:16px 12px;text-align:center;overflow:hidden;cursor:pointer;
+  border:1px solid var(--line);background:var(--glass)}
+.case:active{transform:scale(.97)}
+.case .ic{font-size:42px;filter:drop-shadow(0 0 14px rgba(255,255,255,.3))}
+.case h4{margin:8px 0 4px;font-size:13.5px}
+.case .pr{font-size:12px;color:var(--gold);font-weight:800}
+.case .tg{position:absolute;top:9px;right:9px;font-size:9.5px;padding:4px 8px;border-radius:99px;background:rgba(0,0,0,.35);
+  border:1px solid var(--line);color:var(--muted)}
+.case .tg.hot{color:var(--gold);border-color:rgba(255,207,77,.5)}
+.r-common{border-color:rgba(135,144,189,.4)} .r-rare{border-color:rgba(0,229,255,.5)}
+.r-epic{border-color:rgba(177,75,255,.55)} .r-legendary{border-color:rgba(255,207,77,.65);box-shadow:0 0 22px rgba(255,207,77,.18)}
 
-/* ---------- nav ---------- */
-nav{position:fixed;left:0;right:0;bottom:0;z-index:30;display:flex;justify-content:center;padding:0 12px calc(10px + var(--safe-b));
-  background:linear-gradient(0deg,rgba(7,11,24,.98),rgba(7,11,24,.6) 70%,transparent);backdrop-filter:blur(16px)}
-.nav{max-width:520px;width:100%;display:flex;background:var(--glass);border:1px solid var(--line);
-  border-radius:20px;padding:8px;gap:4px}
-.nav button{flex:1;border:0;background:transparent;color:var(--muted);font-size:10px;font-weight:700;
-  padding:8px 2px;border-radius:14px;cursor:pointer;display:flex;flex-direction:column;align-items:center;gap:3px}
+/* nav */
+nav{position:fixed;left:0;right:0;bottom:0;z-index:30;display:flex;justify-content:center;padding:0 12px calc(9px + var(--sb));
+  background:linear-gradient(0deg,rgba(5,7,15,.98),rgba(5,7,15,.6) 70%,transparent);backdrop-filter:blur(16px)}
+.nav{max-width:520px;width:100%;display:flex;background:var(--glass);border:1px solid var(--line);border-radius:19px;padding:7px;gap:3px}
+.nav button{flex:1;border:0;background:transparent;color:var(--muted);font-size:9.5px;font-weight:800;padding:7px 2px;
+  border-radius:13px;cursor:pointer;display:flex;flex-direction:column;align-items:center;gap:3px}
 .nav button span{font-size:18px;line-height:1}
-.nav button.on{color:var(--neon);background:rgba(0,229,255,.10);box-shadow:inset 0 0 0 1px rgba(0,229,255,.25)}
+.nav button.on{color:var(--neon);background:rgba(0,229,255,.10);box-shadow:inset 0 0 0 1px rgba(0,229,255,.24)}
 
-.toast{position:fixed;left:50%;bottom:calc(100px + var(--safe-b));transform:translate(-50%,20px);z-index:70;
-  padding:12px 18px;border-radius:14px;font-size:13px;font-weight:600;opacity:0;pointer-events:none;
-  background:rgba(13,20,48,.95);border:1px solid var(--line);box-shadow:0 10px 30px rgba(0,0,0,.5);transition:.28s}
-.toast.show{opacity:1;transform:translate(-50%,0)}
+/* modal */
+.modal{position:fixed;inset:0;z-index:60;display:none;align-items:center;justify-content:center;padding:16px}
+.modal.on{display:flex}
+.mask{position:absolute;inset:0;background:rgba(3,5,12,.78);backdrop-filter:blur(8px)}
+.sheet{position:relative;width:100%;max-width:420px;max-height:92vh;overflow:auto;border-radius:22px;padding:18px;
+  border:1px solid var(--line);background:linear-gradient(170deg,#0d1430,#080c1c);
+  box-shadow:0 24px 70px rgba(0,0,0,.6);animation:up .28s cubic-bezier(.2,.9,.3,1)}
+@keyframes up{from{opacity:0;transform:translateY(30px) scale(.96)}to{opacity:1;transform:none}}
+.x{position:absolute;top:12px;right:12px;width:32px;height:32px;border-radius:50%;border:1px solid var(--line);
+  background:var(--glass);color:var(--txt);font-size:16px;cursor:pointer;line-height:1}
+.sh-t{font-size:17px;font-weight:900;margin:2px 0 12px}
+.chips{display:flex;gap:8px;margin-bottom:12px}
+.chip{flex:1;padding:9px 0;border-radius:12px;border:1px solid var(--line);background:var(--glass);color:var(--muted);
+  font-size:12px;font-weight:800;cursor:pointer;text-align:center}
+.chip.on{border-color:rgba(0,229,255,.6);color:var(--neon);background:rgba(0,229,255,.10)}
+.mgrid{display:grid;grid-template-columns:repeat(5,1fr);gap:7px}
+.cell{aspect-ratio:1;border-radius:11px;border:1px solid var(--line);background:rgba(255,255,255,.05);
+  display:grid;place-items:center;font-size:20px;cursor:pointer;transition:transform .1s,background .2s}
+.cell:active{transform:scale(.94)}
+.cell.open{background:rgba(0,229,255,.12);border-color:rgba(0,229,255,.45);cursor:default}
+.cell.gem{background:rgba(57,255,136,.14);border-color:rgba(57,255,136,.55)}
+.cell.bomb{background:rgba(255,61,129,.16);border-color:rgba(255,61,129,.6);animation:sh .35s}
+@keyframes sh{25%{transform:translateX(-5px)}50%{transform:translateX(5px)}75%{transform:translateX(-3px)}}
+.mstat{display:flex;gap:8px;margin:12px 0}
+.mstat div{flex:1;text-align:center;padding:9px 4px;border-radius:12px;border:1px solid var(--line);background:var(--glass)}
+.mstat small{display:block;color:var(--muted);font-size:9.5px;letter-spacing:.5px}
+.mstat b{font-size:15px}
+.mstat .mult b{color:var(--gold)}
+.toast{position:fixed;left:50%;bottom:calc(110px + var(--sb));transform:translate(-50%,20px);z-index:80;padding:11px 17px;
+  border-radius:13px;font-size:13px;font-weight:700;opacity:0;pointer-events:none;background:rgba(12,18,44,.96);
+  border:1px solid var(--line);box-shadow:0 10px 30px rgba(0,0,0,.5);transition:.28s;max-width:90vw;text-align:center}
+.toast.on{opacity:1;transform:translate(-50%,0)}
+.conf{position:fixed;inset:0;pointer-events:none;z-index:90}
+.cf{position:absolute;width:8px;height:12px;border-radius:2px;animation:fl linear forwards}
+@keyframes fl{to{transform:translateY(104vh) rotate(700deg);opacity:.1}}
 </style>
 </head>
 <body>
 
 <header>
   <div class="wrap" style="padding-bottom:0">
-    <div class="bar">
+    <div class="hrow">
+      <div class="ava" id="ava" onclick="go('profile')">😎</div>
       <div class="logo">◈ <b>NEON</b> CASE</div>
-      <div class="spacer"></div>
-      <div class="lvl">
-        <small>LEVEL <span id="lv">1</span></small>
-        <div class="track"><i id="lvbar" style="width:18%"></i></div>
-      </div>
-      <div class="badge coins">🪙 <span id="coins">1500</span></div>
+      <div class="sp"></div>
+      <div class="lvl"><small>LEVEL <span id="lv">1</span></small><div class="trk"><i id="lvbar" style="width:15%"></i></div></div>
+      <div class="bal">💎 <span id="coins">0</span></div>
     </div>
   </div>
 </header>
 
 <div class="wrap">
 
-  <!-- ============ MENU ============ -->
-  <section class="screen active" id="s-menu">
+  <!-- ASOSIY -->
+  <section class="scr on" id="s-menu">
     <div class="hero">
       <div class="orb"></div>
-      <h1>NEON <span>CASE</span></h1>
-      <p>Kutubxonani oching va kamyob boyliklarni yutib oling</p>
-      <button class="btn" onclick="go('cases')">▶ OCHISH</button>
+      <b>NEON <span>CASE</span></b>
+      <p>Play &amp; Win • kutubxonani och, o'yin o'yna</p>
     </div>
-
-    <h2 class="t">Tezkor vazifalar</h2>
-    <div class="row"><div class="ico">🎁</div><div class="tx"><b>Kunlik sovg'a</b><small>Har kuni +500 🪙</small></div>
-      <button class="btn ghost" style="width:auto;padding:10px 14px;font-size:12px" id="dailyBtn" onclick="claimDaily()">OLISH</button></div>
-    <div class="row"><div class="ico">🔥</div><div class="tx"><b>Ketma-ketlik</b><small>5 kunlik seriya bonusi</small></div>
-      <div class="badge" style="color:var(--neon3)">3/5</div></div>
-    <div class="row"><div class="ico">🏆</div><div class="tx"><b>Reyting</b><small>Ombordagi eng qimmat narsa</small></div>
-      <div class="badge" id="topItem">—</div></div>
+    <div class="tiles">
+      <div class="tile t1" onclick="openMines()"><div class="ic">⛏️</div><h4>MINES</h4><small>O'yin boshlash</small></div>
+      <div class="tile t2" onclick="openCase('v1')"><div class="ic">📦</div><h4>KEYS</h4><small>🔑 3 ta kalit</small></div>
+      <div class="tile t3" onclick="go('cases')"><div class="ic">🎁</div><h4>CASES</h4><small>Kutubxonalar</small></div>
+      <div class="tile t4" onclick="claimDaily()"><div class="ic">🎯</div><h4>DAILY</h4><small>Kunlik +50 💎</small></div>
+    </div>
+    <h2 class="tt">Oxirgi yutug'lar</h2>
+    <div class="g3" id="drops"></div>
   </section>
 
-  <!-- ============ CASES ============ -->
-  <section class="screen" id="s-cases">
-    <h2 class="t">Kutubxonalar</h2>
+  <!-- KUTUBXONA -->
+  <section class="scr" id="s-cases">
+    <h2 class="tt">Kutubxonalar</h2>
     <div class="cases" id="caseList"></div>
-    <h2 class="t">Oxirgi yutug'lar</h2>
-    <div class="grid2" id="lastDrops"></div>
+    <h2 class="tt">Mening kalitlarim 🔑 <span id="keys">3</span></h2>
+    <div class="row"><div class="ic">🔑</div><div class="tx"><b>Kalit qoldig'i</b><small>Kutubxonani ochish uchun</small></div>
+      <div class="bal" id="keyCount">3</div></div>
   </section>
 
-  <!-- ============ ROLL ============ -->
-  <section class="screen" id="s-roll">
-    <div class="rollwrap">
-      <h2 class="t" id="rollTitle">Ochilmoqda…</h2>
-      <div class="reelbox">
-        <div class="marker"></div>
-        <div class="reel" id="reel"></div>
-      </div>
-      <div class="result" id="result"></div>
-      <button class="btn" id="againBtn" style="margin-top:14px;display:none" onclick="go('cases')">🔙 KUTUBXONALAR</button>
-    </div>
+  <!-- OMBOR -->
+  <section class="scr" id="s-inv">
+    <h2 class="tt">Ombor / Inventar</h2>
+    <div class="g3" id="invList"></div>
+    <h2 class="tt">Statistika</h2>
+    <div class="row"><div class="ic">📦</div><div class="tx"><b>Ochilgan kutubxonalar</b><small>Jami</small></div><div class="bal" id="stOpen">0</div></div>
+    <div class="row"><div class="ic">💎</div><div class="tx"><b>Eng qimmat topilma</b><small>Qiymati</small></div><div class="bal" id="stBest">0</div></div>
   </section>
 
-  <!-- ============ INVENTORY ============ -->
-  <section class="screen" id="s-inv">
-    <h2 class="t">Ombor</h2>
-    <div class="grid2" id="invList"></div>
-    <h2 class="t">Statistika</h2>
-    <div class="row"><div class="ico">📦</div><div class="tx"><b>Ochilgan kutubxonalar</b><small>Jami</small></div><div class="badge" id="stOpen">0</div></div>
-    <div class="row"><div class="ico">💎</div><div class="tx"><b>Eng qimmat topilma</b><small>Qiymati</small></div><div class="badge coins" id="stBest">0</div></div>
-  </section>
-
-  <!-- ============ PROFILE ============ -->
-  <section class="screen" id="s-profile">
-    <h2 class="t">Profil</h2>
-    <div class="row"><div class="ico">🪙</div><div class="tx"><b>Balans</b><small>Oyna coinlari</small></div><div class="badge coins" id="pCoins">0</div></div>
-    <div class="row"><div class="ico">🪅</div><div class="tx"><b>⭐ Reyting</b><small>Daraja</small></div><div class="badge" id="pLvl">1</div></div>
-    <div class="row"><div class="ico">🔊</div><div class="tx"><b>Ovoz effektlari</b><small>UI ovozi</small></div>
-      <button class="btn ghost" style="width:auto;padding:10px 14px;font-size:12px" id="sndBtn" onclick="toggleSound()">ON</button></div>
-    <div class="row"><div class="ico">🧹</div><div class="tx"><b>Ma'lumotlarni tozalash</b><small>Balans va omborni reset qilish</small></div>
-      <button class="btn ghost" style="width:auto;padding:10px 14px;font-size:12px" onclick="resetAll()">TOZALASH</button></div>
-    <div class="row"><div class="ico">💜</div><div class="tx"><b>NEON CASE</b><small>Mini-app demo versiyasi 1.0</small></div></div>
+  <!-- PROFIL -->
+  <section class="scr" id="s-profile">
+    <h2 class="tt">Profil</h2>
+    <div class="row"><div class="ic">💎</div><div class="tx"><b>Balans</b><small>Oyna valyutasi</small></div><div class="bal" id="pCoins">0</div></div>
+    <div class="row"><div class="ic">🪅</div><div class="tx"><b>Reyting</b><small>Daraja</small></div><div class="bal" id="pLvl">1</div></div>
+    <div class="row"><div class="ic">🏆</div><div class="tx"><b>Eng qimmat</b><small>Ombordan</small></div><div class="bal" id="pBest">—</div></div>
+    <div class="row"><div class="ic">🔊</div><div class="tx"><b>Ovoz effektlari</b><small>UI ovozi</small></div>
+      <button class="btn g" style="width:auto;padding:9px 13px;font-size:12px" id="sndBtn" onclick="toggleSound()">ON</button></div>
+    <div class="row"><div class="ic">🧹</div><div class="tx"><b>Ma'lumotlarni tozalash</b><small>Balans + ombor reset</small></div>
+      <button class="btn g" style="width:auto;padding:9px 13px;font-size:12px" onclick="resetAll()">TOZALASH</button></div>
+    <div class="row"><div class="ic">💜</div><div class="tx"><b>NEON CASE</b><small>Mini-app v1.0</small></div></div>
   </section>
 </div>
 
@@ -244,109 +222,166 @@ nav{position:fixed;left:0;right:0;bottom:0;z-index:30;display:flex;justify-conte
   <button data-s="profile"><span>👤</span>PROFIL</button>
 </div></nav>
 
+<!-- ============ MINES MODAL ============ -->
+<div class="modal" id="mMines">
+  <div class="mask" onclick="closeMines()"></div>
+  <div class="sheet">
+    <button class="x" onclick="closeMines()">✕</button>
+    <div class="sh-t">⛏️ MINES</div>
+    <div class="chips">
+      <div class="chip on" data-mines="1" onclick="setMines(1,this)">1 bomba</div>
+      <div class="chip" data-mines="3" onclick="setMines(3,this)">3 bomba</div>
+      <div class="chip" data-mines="5" onclick="setMines(5,this)">5 bomba</div>
+    </div>
+    <div class="mstat">
+      <div><small>MUROJAT</small><b id="mBet">10 💎</b></div>
+      <div class="mult"><small>MULTIPLIER</small><b id="mMult">1.00x</b></div>
+      <div><small>BALANS</small><b id="mBal">0 💎</b></div>
+    </div>
+    <div class="mgrid" id="mGrid"></div>
+    <button class="btn" style="margin-top:14px" id="mBtn" onclick="mAction()">O'YNASHNI BOSHLASH</button>
+    <p style="color:var(--muted);font-size:11px;text-align:center;margin:10px 0 0">
+      💎 ni toping va ko'proq multiplier oling. Bomba bosilsa — hammasi yotadi.</p>
+  </div>
+</div>
+
+<!-- ============ CASE MODAL ============ -->
+<div class="modal" id="mCase">
+  <div class="mask" onclick="closeCase()"></div>
+  <div class="sheet">
+    <button class="x" onclick="closeCase()">✕</button>
+    <div class="sh-t" id="cTitle">Ochilmoqda…</div>
+    <div class="mgrid" id="cGrid" style="grid-template-columns:repeat(3,1fr)"></div>
+    <div class="result" id="cResult" style="margin-top:14px;text-align:center;padding:16px;border-radius:18px;border:1px solid var(--line);background:var(--glass);display:none">
+      <div style="font-size:44px" id="cIco">💎</div>
+      <b id="cName" style="display:block;margin:4px 0"></b>
+      <small id="cRar" style="color:var(--muted)"></small>
+    </div>
+    <button class="btn" style="margin-top:12px" onclick="closeCase()">YOPISH</button>
+  </div>
+</div>
+
 <div class="toast" id="toast"></div>
 
 <script>
-/* ============ DATA ============ */
-const ITEMS=[
-  {id:'c1',ico:'🔩',n:'Tayyor element',  v:30,   r:'common'},
-  {id:'c2',ico:'🪫',n:'Energiya batareya',v:60,  r:'common'},
-  {id:'c3',ico:'🧩',n:'Protokol chipi',  v:95,   r:'common'},
-  {id:'c4',ico:'🔧',n:'Neon kalit',       v:130,  r:'common'},
-  {id:'r1',ico:'⚡',n:'Elektr toki',      v:260,  r:'rare'},
-  {id:'r2',ico:'🛡',n:'Plazma qalqon',    v:340,  r:'rare'},
-  {id:'r3',ico:'💠',n:'Kristall',         v:420,  r:'rare'},
-  {id:'e1',ico:'🔥',n:'Inferno yadrosi',  v:900,  r:'epic'},
-  {id:'e2',ico:'🌀',n:'Vortex quroli',    v:1150, r:'epic'},
-  {id:'e3',ico:'👾',n:'Neon metalizm',    v:1400, r:'epic'},
-  {id:'l1',ico:'👑',n:'Rey xakimi',       v:3200, r:'legendary'},
-  {id:'l2',ico:'🐉',n:'Kripto ajdar',     v:4500, r:'legendary'},
-  {id:'l3',ico:'💎',n:'Diamond reactor',  v:6000, r:'legendary'}
+/* ================= DATA ================= */
+var ITEMS=[
+ {id:'c1',ico:'🔩',n:'Neon bolt',v:30,r:'common'},
+ {id:'c2',ico:'🪫',n:'Energiya',v:60,r:'common'},
+ {id:'c3',ico:'🧩',n:'Protokol chipi',v:95,r:'common'},
+ {id:'c4',ico:'🔧',n:'Neon kalit',v:130,r:'common'},
+ {id:'r1',ico:'⚡',n:'Tok',v:260,r:'rare'},
+ {id:'r2',ico:'🛡',n:'Plazma qalqon',v:340,r:'rare'},
+ {id:'r3',ico:'💠',n:'Kristall',v:420,r:'rare'},
+ {id:'e1',ico:'🔥',n:'Inferno yadrosi',v:900,r:'epic'},
+ {id:'e2',ico:'🌀',n:'Vortex',v:1150,r:'epic'},
+ {id:'e3',ico:'👾',n:'Neon metalizm',v:1400,r:'epic'},
+ {id:'l1',ico:'👑',n:'Rey xakimi',v:3200,r:'legendary'},
+ {id:'l2',ico:'🐉',n:'Kripto ajdar',v:4500,r:'legendary'},
+ {id:'l3',ico:'💎',n:'Diamond reactor',v:6000,r:'legendary'}
 ];
-const CASES=[
-  {id:'v1',ico:'🔩',n:'Neon Starter',  price:100,  tag:'Boshlang\'ich', rare:false,
-   pool:['c1','c1','c1','c2','c2','c3','c4','r1','r2']},
-  {id:'v2',ico:'💠',n:'Cyber Vault',   price:350,  tag:'O\'rtacha',     rare:false,
-   pool:['c1','c2','c3','c4','c4','r1','r1','r2','r3','e1']},
-  {id:'v3',ico:'🌀',n:'Void Reactor',  price:900,  tag:'Nishonli',     rare:true,
-   pool:['c4','r1','r2','r3','e1','e2','e2','e3','l1']},
-  {id:'v4',ico:'👑',n:'Royal Vault',   price:2500, tag:'Legendarli',   rare:true,
-   pool:['r2','r3','e1','e2','e3','e3','l1','l2','l3']}
+var CASES=[
+ {id:'v1',ico:'🔩',n:'Neon Starter',tag:"Boshlang'ich",hot:false,pool:['c1','c1','c2','c2','c3','c4','r1','r2']},
+ {id:'v2',ico:'💠',n:'Cyber Vault',tag:"O'rtacha",hot:false,pool:['c1','c2','c3','c4','r1','r1','r2','r3','e1']},
+ {id:'v3',ico:'🌀',n:'Void Reactor',tag:'Nishonli',hot:true,pool:['c4','r1','r2','r3','e1','e2','e2','e3','l1']},
+ {id:'v4',ico:'👑',n:'Royal Vault',tag:'Legendarli',hot:true,pool:['r2','r3','e1','e2','e3','e3','l1','l2','l3']}
 ];
-const RARITY={common:{n:'Common',c:'var(--common)'},rare:{n:'Rare',c:'var(--rare)'},
-              epic:{n:'Epic',c:'var(--neon2)'},legendary:{n:'Legendary',c:'var(--legendary)'}};
-const byId=id=>ITEMS.find(i=>i.id===id);
+var RAR={common:'Common',rare:'Rare',epic:'Epic',legendary:'Legendary'};
+function byId(id){for(var i=0;i<ITEMS.length;i++)if(ITEMS[i].id===id)return ITEMS[i];return ITEMS[0];}
 
-/* ============ STATE ============ */
-const KEY='neoncase_v1';
-let S={coins:1500,inv:{},opened:0,best:0,drops:[],lastDaily:'',sound:true};
-function load(){try{const r=localStorage.getItem(KEY);if(r)S=Object.assign(S,JSON.parse(r));}catch(e){}}
+/* ================= STATE ================= */
+var KEY='neoncase_v1';
+var S={coins:1000,keys:3,opened:0,best:0,drops:[],daily:'',sound:true,inv:{}};
+function load(){try{var r=localStorage.getItem(KEY);if(r){var o=JSON.parse(r);for(var k in o)S[k]=o[k];}}catch(e){}}
 function save(){try{localStorage.setItem(KEY,JSON.stringify(S));}catch(e){}}
 function lvl(){return 1+Math.floor(S.opened/10);}
+
+/* ================= UI ================= */
+function toast(m){var t=document.getElementById('toast');t.textContent=m;t.classList.add('on');
+  clearTimeout(t._t);t._t=setTimeout(function(){t.classList.remove('on');},1900);}
+function buzz(){try{if(navigator.vibrate)navigator.vibrate(12);}catch(e){}}
 function render(){
   document.getElementById('coins').textContent=S.coins;
   document.getElementById('pCoins').textContent=S.coins;
   document.getElementById('lv').textContent=lvl();
   document.getElementById('pLvl').textContent=lvl();
-  document.getElementById('lvbar').style.width=Math.min(100,((S.opened%10)/10*100)+8)+'%';
+  document.getElementById('lvbar').style.width=Math.min(100,((S.opened%10)*10)+10)+'%';
   document.getElementById('stOpen').textContent=S.opened;
-  document.getElementById('stBest').textContent=S.best+' 🪙';
+  document.getElementById('stBest').textContent=S.best+' 💎';
   document.getElementById('sndBtn').textContent=S.sound?'ON':'OFF';
-  const dailyBtn=document.getElementById('dailyBtn');
-  const today=new Date().toDateString();
-  dailyBtn.textContent=dailyBtn.dataset.claimed==='1'?'OLINGAN':'OLISH';
-  dailyBtn.disabled=dailyBtn.dataset.claimed==='1';
-  if(S.inv&&Object.keys(S.inv).length){
-    const best=Object.keys(S.inv).sort((a,b)=>byId(b).v-byId(a).v)[0];
-    document.getElementById('topItem').textContent=byId(best).ico+' '+byId(best).n;
+  document.getElementById('keys').textContent=S.keys;
+  document.getElementById('keyCount').textContent=S.keys;
+  var ids=Object.keys(S.inv);
+  if(ids.length){
+    var top=ids.sort(function(a,b){return byId(b).v-byId(a).v;})[0];
+    document.getElementById('pBest').textContent=byId(top).ico+' '+byId(top).n;
   }
+  document.getElementById('mBal').textContent=S.coins+' 💎';
 }
-
-/* ============ NAV ============ */
-const SCREENS={menu:'s-menu',cases:'s-cases',roll:'s-roll',inv:'s-inv',profile:'s-profile'};
+function renderDrops(){
+  var d=document.getElementById('drops');
+  if(!S.drops.length){d.innerHTML='<div class="inv" style="grid-column:1/-1;color:var(--muted)">Hali yutug\'lar yo\'q</div>';return;}
+  d.innerHTML=S.drops.slice(0,6).map(function(x){var it=byId(x);
+    return '<div class="inv r-'+it.r+'"><div class="ic">'+it.ico+'</div><div class="nm">'+it.n+'</div><div class="qt">'+RAR[it.r]+'</div></div>';}).join('');
+}
+function renderCases(){
+  document.getElementById('caseList').innerHTML=CASES.map(function(c,i){
+    return '<div class="case" onclick="openCase(\''+c.id+'\')"><div class="tg'+(c.hot?' hot':'')+'">'+c.tag+'</div>'+
+      '<div class="ic">'+c.ico+'</div><h4>'+c.n+'</h4><div class="pr">🔑 1 kalit</div></div>';}).join('');
+}
+function renderInv(){
+  var ids=Object.keys(S.inv);
+  if(!ids.length){document.getElementById('invList').innerHTML='<div class="inv" style="grid-column:1/-1;color:var(--muted)">Ombor bo\'sh</div>';return;}
+  document.getElementById('invList').innerHTML=ids.map(function(x){var it=byId(x);
+    return '<div class="inv r-'+it.r+'"><div class="ic">'+it.ico+'</div><div class="nm">'+it.n+'</div><div class="qt">x'+S.inv[x]+'</div></div>';}).join('');
+}
+var SCR={menu:'s-menu',cases:'s-cases',inv:'s-inv',profile:'s-profile'};
 function go(name){
-  document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active'));
-  document.getElementById(SCREENS[name]).classList.add('active');
-  document.querySelectorAll('#nav button').forEach(b=>b.classList.toggle('on',b.dataset.s===name));
-  window.scrollTo({top:0,behavior:'smooth'});
+  document.querySelectorAll('.scr').forEach(function(s){s.classList.remove('on');});
+  document.getElementById(SCR[name]).classList.add('on');
+  document.querySelectorAll('#nav button').forEach(function(b){b.classList.toggle('on',b.dataset.s===name);});
+  window.scrollTo(0,0);
   if(name==='cases')renderCases();
   if(name==='inv')renderInv();
-  if(name==='profile')render();
+  if(name==='menu')renderDrops();
+  render();
 }
-document.querySelectorAll('#nav button').forEach(b=>b.onclick=()=>go(b.dataset.s));
+document.querySelectorAll('#nav button').forEach(function(b){b.onclick=function(){go(b.dataset.s);};});
 
-/* ============ CASES LIST ============ */
-function renderCases(){
-  const box=document.getElementById('caseList');
-  box.innerHTML=CASES.map((c,i)=>`
-    <div class="case c${i+1}" onclick="openCase('${c.id}')">
-      <div class="tag ${c.rare?'rare-tag':''}">${c.tag}</div>
-      <div class="ch">${c.ico}</div><h4>${c.n}</h4><div class="price">🪙 ${c.price}</div>
-    </div>`).join('');
-  const d=document.getElementById('lastDrops');
-  d.innerHTML=S.drops.length? S.drops.slice(0,6).map(x=>{
-    const it=byId(x);return `<div class="inv r-${it.r}"><div class="ico">${it.ico}</div>
-      <div class="nm">${it.n}</div><div class="qty">${RARITY[it.r].n}</div></div>`}).join('')
-    : '<div class="inv" style="grid-column:1/-1;color:var(--muted)">Hali yutug\'lar yo\'q</div>';
+/* ================= DAILY / MISC ================= */
+function claimDaily(){
+  var t=new Date().toDateString();
+  if(S.daily===t){toast('Bugun allaqachon olgan');return;}
+  S.daily=t;S.coins+=50;S.opened+=0;save();render();toast('+50 💎 olindi!');
+}
+function toggleSound(){S.sound=!S.sound;save();render();}
+function resetAll(){if(confirm('Ma\'lumotlarni tozalash?')){S={coins:1000,keys:3,opened:0,best:0,drops:[],daily:'',sound:true,inv:{}};save();render();renderDrops();renderInv();toast('Tozalandi');}}
+
+/* ================= CONFETTI ================= */
+function confetti(){
+  var box=document.createElement('div');box.className='conf';document.body.appendChild(box);
+  var cs=['#00e5ff','#b14bff','#ff3d81','#ffcf4d','#39ff88'];
+  for(var i=0;i<70;i++){
+    var e=document.createElement('div');e.className='cf';
+    e.style.left=Math.random()*100+'vw';e.style.top='-20px';
+    e.style.background=cs[Math.floor(Math.random()*cs.length)];
+    e.style.animationDuration=(1.6+Math.random()*1.4)+'s';
+    e.style.animationDelay=(Math.random()*.4)+'s';
+    box.appendChild(e);
+  }
+  setTimeout(function(){box.remove();},4000);
 }
 
-/* ============ ROLL ============ */
-let rolling=false;
-function openCase(id){
-  if(rolling)return;
-  const c=CASES.find(x=>x.id===id);
-  if(S.coins<c.price){toast('Balans yetarli emas');return;}
-  S.coins-=c.price; save(); render();
-  go('roll');
-  document.getElementById('rollTitle').textContent=c.n;
-  document.getElementById('result').className='result';
-  document.getElementById('againBtn').style.display='none';
-
-  // weighted pick
-  const win=c.pool[Math.floor(Math.random()*c.pool.length)];
-  // reel: 42 chips, target at index 36
-  const TARGET=36, N=42, reel=document.getElementById('reel');
-  let html='';
-  for(let i=0;i<N;i++){
-    const it=byId(i===TARGET?win:c.pool[Math.floor(Math.random()*c.pool.length)]);
-    html+=`<div class="chip r-${it.r}"><div class="ico">${it.ico}</div>
+/* ================= MINES GAME ================= */
+var M={mines:1,bet:10,grid:[],state:'idle',opened:0,gems:0,mult:1};
+function setMines(n,el){
+  M.mines=n;
+  document.querySelectorAll('#mMines .chip').forEach(function(c){c.classList.remove('on');});
+  el.classList.add('on');
+  if(M.state==='idle'){buildGrid();}
+  updateMult();
+}
+function buildGrid(){
+  var cells=[],i;
+  for(i=0;i<25;i++)cells.push(i);
+  for(i=cells.length-1;i>0;i--){var j=Math.floor(Math.random()*(i+1));var t=cells[i];cells[i]=cells[j];cells[j]=t;}
