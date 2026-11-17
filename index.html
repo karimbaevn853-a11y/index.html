@@ -1,1 +1,107 @@
+import logging
+from aiogram import Bot, Dispatcher, types, F
+from aiogram.filters import Command
+from aiogram.fsm.context import FSMContext
+from aiogram.fsm.state import State, StatesGroup
+from aiogram.types import InlineKeyboardMarkup, InlineKeyboardButton
+
+# Bot tokeningizni shu yerga yozasiz
+TOKEN = "SIZNING_BOT_TOKENINGIZ"
+
+bot = Bot(token=TOKEN)
+dp = Dispatcher()
+
+logging.basicConfig(level=logging.INFO)
+
+# Narxlar va mavjud davlatlar bazasi
+COUNTRIES = {
+    "usa": {"name": "🇺🇸 AQSh (USA)", "price_stars": 20, "price_ton": 0.5, "number": "+1 (742) 747-9688"},
+    "uk": {"name": "🇬🇧 Angliya (UK)", "price_stars": 25, "price_ton": 0.6, "number": "+44 7911 123456"},
+    "ind": {"name": "🇮🇩 Indoneziya", "price_stars": 15, "price_ton": 0.3, "number": "+62 812 3456 7890"}
+}
+
+# Holatlar (FSM)
+class BuyState(StatesGroup):
+    waiting_for_payment = State()
+
+@dp.message(Command("start"))
+async def cmd_start(message: types.Message):
+    keyboard = InlineKeyboardMarkup(inline_keyboard=[
+        [InlineKeyboardButton(text="🇺🇸 AQSh raqamini olish", callback_data="buy_usa")],
+        [InlineKeyboardButton(text="🇬🇧 Angliya raqamini olish", callback_data="buy_uk")],
+        [InlineKeyboardButton(text="🇮🇩 Indoneziya raqamini olish", callback_data="buy_ind")],
+        [InlineKeyboardButton(text="👤 Profil va Balans", callback_data="profile")]
+    ])
+    
+    await message.answer(
+        "👋 **Xush kelibsiz, GiftLand Raqamlar Botiga!**\n\n"
+        "Ijtimoiy tarmoqlar va Telegram uchun onlayn virtual raqamni sotib oling. Kerakli davlatni tanlang:",
+        reply_markup=keyboard,
+        parse_mode="Markdown"
+    )
+
+@dp.callback_query(F.data.startswith("buy_"))
+async def process_buy(callback: types.CallbackQuery):
+    country_key = callback.data.split("_")[1]
+    country = COUNTRIES.get(country_key)
+    
+    keyboard = InlineKeyboardMarkup(inline_keyboard=[
+        [InlineKeyboardButton(text=f"⭐ Stars bilan to'lash ({country['price_stars']} Stars)", callback_data=f"pay_stars_{country_key}")],
+        [InlineKeyboardButton(text=f"💎 TON bilan to'lash ({country['price_ton']} TON)", callback_data=f"pay_ton_{country_key}")],
+        [InlineKeyboardButton(text="⬅️ Orqaga", callback_data="back_home")]
+    ])
+    
+    await callback.message.edit_text(
+        f"📦 **Tanlangan raqam:** {country['name']}\n"
+        f"📞 **Narxi:** {country['price_stars']} Stars yoki {country['price_ton']} TON\n\n"
+        f"To'lov turini tanlang:",
+        reply_markup=keyboard,
+        parse_mode="Markdown"
+    )
+    await callback.answer()
+
+@dp.callback_query(F.data.startswith("pay_"))
+async def process_payment(callback: types.CallbackQuery):
+    _, pay_type, country_key = callback.data.split("_")
+    country = COUNTRIES.get(country_key)
+    
+    if pay_type == "stars":
+        # Bu yerda Telegram Stars invoice chaqiriladi yoki @sots12 ga yo'naltiriladi
+        await callback.message.answer(
+            f"✅ **To'lov tasdiqlandi!**\n\n"
+            f"Siz sotib olgan raqam: `{country['number']}`\n\n"
+            f"Ushbu raqamni Telegram yoki boshqa ilovaga kiritib, SMS kodni shu botdan olasiz.",
+            parse_mode="Markdown"
+        )
+    else:
+        await callback.message.answer(
+            f"💎 TON orqali to'lov uchun admin hamyoniga o'tkazing:\n"
+            f"`UQA4qQ6E8Kf0vHXXCti_PzO71qXi7KiEeN5d71UO7xWiTL-w`\n\n"
+            f"Miqdor: {country['price_ton']} TON\n"
+            f"To'lov qilgach adminga yozing: @sots12",
+            parse_mode="Markdown"
+        )
+    await callback.answer()
+
+@dp.callback_query(F.data == "back_home")
+async def back_home(callback: types.CallbackQuery):
+    await cmd_start(callback.message)
+    await callback.answer()
+
+@dp.callback_query(F.data == "profile")
+async def profile_info(callback: types.CallbackQuery):
+    user = callback.from_user
+    await callback.message.answer(
+        f"👤 **Foydalanuvchi:** {user.first_name}\n"
+        f"🆔 **ID:** `{user.id}`\n"
+        f"⭐ **Stars:** 0\n"
+        f"💎 **TON:** 0.00\n\n"
+        f"Xaridlar tarixi bo'sh.",
+        parse_mode="Markdown"
+    )
+    await callback.answer()
+
+if __name__ == "__main__":
+    import asyncio
+    asyncio.run(dp.start_polling(bot))
 
