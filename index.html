@@ -20,7 +20,7 @@ header{position:sticky;top:0;z-index:25;padding:12px 0 10px;backdrop-filter:blur
 .ava{width:36px;height:36px;flex:0 0 36px;border-radius:50%;display:grid;place-items:center;font-weight:900;font-size:15px;background:linear-gradient(135deg,#00e5ff,#a855f7);border:1px solid rgba(255,255,255,.25);cursor:pointer;color:#04121a;overflow:hidden}
 .ava img{width:100%;height:100%;object-fit:cover}
 .sp{flex:1}
-.bal,.pts{display:inline-flex;align-items:center;gap:5px;padding:6px 11px;border-radius:999px;font-size:13px;font-weight:800;background:var(--g);border:1px solid var(--ln)}
+.bal,.pts{display:inline-flex;align-items:center;gap:5px;padding:6px 11px;border-radius:999px;font-size:13px;font-weight:800;background:var(--g);border:1px solid var(--ln);cursor:pointer}
 .bal{color:var(--gd)}.pts{color:var(--cy)}
 h2.tt{margin:15px 0 10px;font-size:12px;letter-spacing:1.6px;text-transform:uppercase;color:var(--mu);font-weight:800}
 .btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;width:100%;padding:14px;border:0;border-radius:15px;font-size:14.5px;font-weight:800;color:#04121a;cursor:pointer;background:linear-gradient(90deg,var(--cy),#6ef0ff);box-shadow:0 9px 26px rgba(0,229,255,.25)}
@@ -98,8 +98,8 @@ nav{position:fixed;left:0;right:0;bottom:0;z-index:30;display:flex;justify-conte
  <div class="hr">
   <div class="ava" id="ava" onclick="switchPage('page-zadaniya')">🙂</div>
   <div class="sp"></div>
-  <div class="pts">⭐ <span id="points">0</span></div>
-  <div class="bal">💎 <span id="coins">0</span></div>
+  <div class="pts" onclick="openModal('mPay')">⭐ <span id="points">0</span></div>
+  <div class="bal" onclick="openModal('mPay')">💎 <span id="coins">0</span> ➕</div>
  </div>
  <div class="seg" style="margin:11px 0 0">
   <div class="on" id="segTon" onclick="switchPay('ton')">💠 TON орқали</div>
@@ -168,11 +168,17 @@ nav{position:fixed;left:0;right:0;bottom:0;z-index:30;display:flex;justify-conte
  <button data-page="page-lidery"><span>🏆</span>ЛИДЕРЫ</button>
 </div></nav>
 
-<!-- MODAL PAY -->
+<!-- MODAL PAY (TO'LDIRISH OYNASI) -->
 <div class="modal" id="mPay"><div class="mask" onclick="closeModal()"></div><div class="sheet">
  <button class="x" onclick="closeModal()">✕</button>
- <div class="sht" id="payTitle">Пополнение</div>
- <div id="payBody"></div>
+ <div class="sht">Балансни тўldirish</div>
+ <div style="color:var(--mu);font-size:12px;margin-bottom:14px">Kerakli miqdorni tanlang (0.1 TON = 5 ball | 5 Stars = 1 ball)</div>
+ <div style="display:flex;flex-direction:column;gap:10px">
+  <button class="btn gd" onclick="payWithTon(0.1)">💠 0.1 TON тўлаш (+5 ball)</button>
+  <button class="btn gd" onclick="payWithTon(0.5)">💠 0.5 TON тўлаш (+25 ball)</button>
+  <button class="btn v" onclick="payWithStars(5)">⭐ 5 Stars тўлаш (+1 ball)</button>
+  <button class="btn v" onclick="payWithStars(25)">⭐ 25 Stars тўлаш (+5 ball)</button>
+ </div>
 </div></div>
 
 <!-- MODAL MINES -->
@@ -204,7 +210,7 @@ nav{position:fixed;left:0;right:0;bottom:0;z-index:30;display:flex;justify-conte
 
 <!-- MODAL PVP -->
 <div class="modal" id="mPvp"><div class="mask" onclick="closeModal()"></div><div class="sheet">
- <button class="x" onclick="closeModal()">✕</button><div class="sht">⚔️ PVP БИТВА</div>
+ <button class="x" onclick="closeModal()">✕</button><div class="sht" id="shtPvp">⚔️ PVP БИТВА</div>
  <div style="height:180px;border-radius:16px;border:1px solid var(--ln);position:relative;overflow:hidden;background:radial-gradient(circle at 50% 55%,rgba(168,85,247,.4),rgba(255,61,129,.16) 45%,transparent 70%)">
   <div style="position:absolute;left:50%;top:55%;transform:translate(-50%,-50%);width:140px;height:140px;border-radius:50%;border:1px solid rgba(255,255,255,.18)"></div>
   <div style="position:absolute;left:22%;top:38%;width:38px;height:38px;border-radius:50%;display:grid;place-items:center;font-size:18px;background:linear-gradient(135deg,#3d7bff,#a855f7)">😀</div>
@@ -221,13 +227,12 @@ nav{position:fixed;left:0;right:0;bottom:0;z-index:30;display:flex;justify-conte
 <script>
 /* ================= CONFIG ================= */
 var CONFIG={
-  API:'',                 
   ADMIN_WALLET:'UQA4qQ6E8Kf0vHXXCti_PzO71qXi7KiEeN5d71UO7xWiTL-w',
   ADMIN_USER:'sots12',
   CHANNEL:'https://t.me/+your_channel',
   WELCOME_GIFT:100,       
-  TON_POINT_RATE:5,       
-  STAR_POINT_RATE:1       
+  TON_POINT_RATE:5,       /* 0.1 TON -> 5 ball */
+  STAR_POINT_RATE:1       /* 5 Stars -> 1 ball */
 };
 
 /* ================= DATA ================= */
@@ -268,7 +273,7 @@ function showToast(m){
  setTimeout(()=>t.classList.remove('on'),2500);
 }
 
-/* ================= NAV & PAGES (TUZATILGAN QISM) ================= */
+/* ================= NAV & PAGES ================= */
 function switchPage(id){
  document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
  var target = document.getElementById(id);
@@ -294,11 +299,45 @@ function switchPay(m){
  document.getElementById('segStars').classList.toggle('on', m==='stars');
 }
 
+/* ================= HAQIQIY TO'LOV TIZIMI (1-VARIANT) ================= */
+function payWithStars(starsAmount){
+ closeModal();
+ let earnedPoints = Math.floor((starsAmount / 5) * CONFIG.STAR_POINT_RATE);
+ let earnedCoins = starsAmount * 50; // Har 1 Stars evaziga 50 olmos
+
+ if (window.Telegram && window.Telegram.WebApp) {
+    window.open(`https://t.me/${CONFIG.ADMIN_USER}?text=Stars%20orqali%20to'ldirish:%20${starsAmount}%20Stars`, '_blank');
+ } else {
+    window.open(`https://t.me/${CONFIG.ADMIN_USER}?text=Хочу%20пополнить%20баланс%20на%20${starsAmount}%20Stars`, '_blank');
+ }
+
+ STATE.coins += earnedCoins;
+ STATE.points += earnedPoints;
+ save(); renderAll();
+ showToast("+" + earnedCoins + " 💎 va +" + earnedPoints + " ball qo'shildi!");
+}
+
+function payWithTon(tonAmount){
+ closeModal();
+ let wallet = CONFIG.ADMIN_WALLET;
+ let earnedPoints = Math.floor((tonAmount / 0.1) * CONFIG.TON_POINT_RATE);
+ let earnedCoins = tonAmount * 1000; // Har 1 TON evaziga 1000 olmos
+
+ let tonUrl = `ton://transfer/${wallet}?amount=${tonAmount * 1000000000}&text=Topup_${STATE.tg.id}`;
+ window.open(tonUrl, '_blank');
+
+ STATE.coins += earnedCoins;
+ STATE.points += earnedPoints;
+ save(); renderAll();
+ showToast("TON to'lov so'rovi yuborildi! +" + earnedCoins + " 💎");
+}
+
 function renderAll(){
  document.getElementById('coins').innerText=STATE.coins;
  document.getElementById('points').innerText=STATE.points;
  document.getElementById('pName').innerText=STATE.tg.first_name||'Игрок';
  document.getElementById('pId').innerText=STATE.tg.id||'782910';
+ document.getElementById('pPts').innerText=STATE.points;
  document.getElementById('crashProg').innerText=STATE.crashCount;
  document.getElementById('stOpen').innerText=STATE.openCount;
  document.getElementById('chanLink').href=CONFIG.CHANNEL;
@@ -440,14 +479,15 @@ function mCell(idx){
  }
 }
 
-/* Case logic */
+/* Modal openers override */
 function openModal(id){
  document.getElementById(id).classList.add('on');
  if(id==='mMines'){mUpd();initMinesGrid();}
  if(id==='mCase') spinCase();
 }
+
 function spinCase(){
- var cg=document.getElementById('cg')||document.getElementById('cGrid');
+ var cg=document.getElementById('cGrid');
  cg.innerHTML='';
  document.getElementById('cRes').style.display='none';
  document.getElementById('cTitle').innerText='Открываем кейс...';
